@@ -9,6 +9,27 @@ export default function InfluencerAccountManagement() {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    const navigate = useNavigate();
+
+    function linkInstagramAccount() {
+        const APP_ID = "953649116498281";
+        const REDIRECT_URI = "https://361e3dbcf910367999535abb1896389c.loophole.site/authenticate/instagram"; 
+        const url = `https://www.facebook.com/v12.0/dialog/oauth?client_id=${APP_ID}&redirect_uri=${REDIRECT_URI}&scope=instagram_basic,instagram_manage_insights,ads_management,ads_read,business_management,pages_read_engagement,pages_show_list`;
+
+        window.location.href = url;
+        // navigate(url); 
+        // fetch(url)
+        // .then((response) => {
+        //     if (!response.ok) {
+        //         throw new Error("Network response was not ok");
+        //     }
+        //     return response.json();
+        // })
+        // .catch((error) => {
+        //     console.error("Error:", error);
+        // });
+    }
+
     return (
         <div className="account-container">
             <div className="header">
@@ -16,7 +37,7 @@ export default function InfluencerAccountManagement() {
                     <p>Your Connected Accounts</p>
                 </div>
                 <div className="add-container">
-                    <button className="add-button">Add Account</button>
+                    <button className="add-button" onClick={linkInstagramAccount}>Add Account</button>
                 </div>
             </div>
             <div className="connected-accounts">

@@ -7,8 +7,9 @@ import BusinessRegister from './pages/BusinessRegister';
 import InfluencerRegister from './pages/InfluencerRegister';
 import InfluencerAccountManagement from './pages/InfluencerAccountManagement';
 import { useState, createContext, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Switch } from 'react-router-dom';
 import { baseUrl } from './shared';
+import InstagramAuthCallBack from './components/InstagramAuthCallBack';
 
 export const LoginContext = createContext();
 
@@ -63,6 +64,9 @@ function App() {
           <Route element={<Core title="Account Management"/>}>
             <Route path="/account" element={<InfluencerAccountManagement />} />
           </Route>
+
+          <Route path="/authenticate/instagram" element={<InstagramAuthCallBack />} />
+
           <Route path="/404" element={<NotFound />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
