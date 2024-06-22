@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.login-email-input,
+.login-password-input
+{
+    border-color: #1878f1;
+    outline-color: #1878f1;
+}
+
+.login-forgot, .login-14 {
+    color: #1878f1;     
+}
+
+.login-forgot:hover, 
+.login-14:hover
+{
+    color: #83b6f8;
+}
+
+.login-submit {
+    background-color: #1878f1;
+}
+
+.login-submit:hover {
+    background-color: #83b6f8;
+}

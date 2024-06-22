@@ -1,0 +1,92 @@
+.core-container {
+    display: grid;
+    grid-template-areas: 
+    'aside header'
+    'aside main'
+    ;
+    grid-template-columns: 1fr 4fr;
+    grid-template-rows: 7vh 93vh;
+}
+
+.core-container header {
+    grid-area: header;
+    border-bottom: 1px solid #373737;
+    padding-left: 2%;
+    padding-right: 2%;
+    line-height: 7vh;
+}
+
+.core-container aside {
+    grid-area: aside;
+    background-color: #1878F1;
+}
+
+.core-container aside .logo {
+    width: 100%;
+    height: 10vh;
+}
+
+.core-container aside nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.core-container aside nav .nav-btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    color: #fff;
+
+    width: 80%;
+    height: 10vh;
+    line-height: 10vh;
+    border-radius: 20px;
+    cursor: pointer;
+}
+.core-container aside nav .nav-btn .icon {
+    width: 30%;
+    line-height: 11vh;
+    text-align: center;
+}
+
+.core-container aside nav .nav-btn .icon span {
+    font-size: 1.5em;
+}
+
+.core-container aside nav .nav-btn .icon text {
+
+}
+
+.core-container aside nav .nav-btn:hover {
+    background-color: #83b6f8;
+}
+
+.core-container main {
+    grid-area: main;
+}
+
+.sidebar-toggle {
+    position: absolute;
+    top: 10vh;
+    left: 19%;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #f29219;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.sidebar-toggle .left-arrow {
+    width: 10px;
+    height: 10px;
+    border-left: 2px solid #fff;
+    border-top: 2px solid #fff;
+    margin-left: 3px;
+    transform: rotate(-45deg);
+}

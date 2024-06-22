@@ -1,0 +1,138 @@
+.register-logo-link {
+    color: black;
+}
+
+.register-label {
+
+}
+
+.register-input {
+    outline-color: #1878f1;
+}
+
+.register-submit {
+    background-color: #1878f1;
+    color: #fff;
+}
+
+.register-terms-check {
+    accent-color: #1878f1;
+
+}
+
+.register-submit:hover {
+    background-color: #83b6f8;
+}
+
+.register-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column; 
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.register-container .buttons {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.register-container .buttons button {
+    width: 5%;
+    min-width: 100px;
+    margin: 10px;
+    background-color: #1878f1;
+    padding: 10px;
+    border-radius: 5px;
+    color: #fff;
+}
+
+.register-container .buttons button:hover {
+    background-color: #83b6f8;
+}
+
+.register-container .page {
+    width: 100%;
+    height: 90vh;
+    display: flex;
+    /* flex-direction: column;
+    justify-content: center;
+    align-items: center; */
+}
+
+.register-container .page .page-content {
+    min-width: 300px;
+    min-height: 500px;
+    width: 50%;
+    height: 70vh;
+    /* border: 1px solid #1878f1; */
+    border-radius: 10px;
+} 
+
+.register-container .name-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.register-container .name-container  div {
+    width: 45%;
+}
+
+
+.register-container .page .page-content .company-location-container {
+    display: grid; 
+    grid-template-areas:
+    'title title'
+    'address phone'
+    'city state'
+    'zip country'
+    ;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 2rem;
+}
+
+.register-container .page .page-content .company-location-container > div input {
+    width: 90%;
+    margin-bottom: 5vh;
+}
+
+.register-container .page .page-content .company-location-container .Address title {
+    grid-area: title;
+}
+.register-container .page .page-content .company-location-container .Address {
+    grid-area: address;
+}
+
+.register-container .page .page-content .company-location-container .Phone {
+    grid-area: phone;
+}
+
+.register-container .page .page-content .company-location-container .City {
+    grid-area: city;
+}
+
+.register-container .page .page-content .company-location-container .State {
+    grid-area: state;
+}
+
+.register-container .page .page-content .company-location-container .Zip {
+    grid-area: zip;
+}
+#company-zip { 
+    width: 50%;
+}
+
+#company-zip::-webkit-inner-spin-button,
+#company-zip::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.register-container .page .page-content .company-location-container .Country {
+    grid-area: country;
+}
