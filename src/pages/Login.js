@@ -31,6 +31,7 @@ export default function Login() {
             .then((data) => {
                 localStorage.setItem("access", data.access);
                 localStorage.setItem("refresh", data.refresh);
+                localStorage.setItem("username", username);
                 setLoggedIn(true);
                 navigate(
                     location?.state?.previousUrl

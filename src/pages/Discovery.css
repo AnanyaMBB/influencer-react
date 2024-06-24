@@ -1,0 +1,116 @@
+.discovery-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    width: 100%;
+    height: 93vh;
+
+}
+
+.discovery-container .header {
+    width: 100%;
+    height: 10vh;
+    border-bottom: 1px solid lightgray;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-bottom: 1vh;
+    color: gray;
+}
+
+.discovery-container .header .name-search .title, 
+.discovery-container .header .location-search .title {
+    margin-bottom: 0.5vh;
+}
+
+.discovery-container .header .name-search {
+    width: 45%;
+}
+
+.discovery-container .header .name-search input, 
+.discovery-container .header .location-search input {
+    border: 2px solid #000;
+    color: #000;
+    width: 100%;
+    border-radius: 13px;
+    padding-left: 20px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.discovery-container .header .name-search input:focus,
+.discovery-container .header .location-search input:focus {
+    outline-color: #1878F1;
+    outline-offset: 1px;
+    border: 2px solid #1878F1;
+}
+
+.discovery-container .header .location-search {
+    width: 45%;
+}
+
+.discovery-container .header .more-filters .title {
+    visibility: hidden;
+}
+
+.discovery-container .header .more-filters span {
+    background-color: #1878F1;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 13px;
+
+    cursor: pointer; 
+    color: #fff;
+}
+
+.discovery-container .header .more-filters span:hover {
+    background-color: #83b6f8;
+}
+
+.discovery-container .chat-search-container {
+    width: 100%;
+    height: 10vh;
+    border-bottom: 1px solid lightgray;
+
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-bottom: 1vh;
+}
+
+.discovery-container .chat-search-container .title {
+    color: gray;
+    margin-bottom: 0.5vh;
+}
+
+.discovery-container .chat-search-container .chat-search {
+    width: 100%;
+}
+
+.discovery-container .chat-search-container .chat-search input {
+    border: 2px solid #000;
+    color: #000;
+    width: 93%;
+    border-radius: 13px;
+    padding-left: 20px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.discovery-container .chat-search-container .chat-search input:focus {
+    outline-color: #1878F1;
+    outline-offset: 1px;
+    border: 2px solid #1878F1;
+}
+
+.discovery-container .body {
+    width: 100%;
+    height: 83vh;
+}

@@ -12,6 +12,7 @@ import { baseUrl } from './shared';
 import InstagramAuthCallBack from './components/InstagramAuthCallBack';
 
 export const LoginContext = createContext();
+export const LONG_ACCESS_TOKEN = createContext();
 
 function App() {
   useEffect(() => {
@@ -44,6 +45,7 @@ function App() {
   }, []);
 
   const [loggedIn, setLoggedIn] = useState(localStorage.access ? true : false);
+
   function changeLoggedIn(value) {
     setLoggedIn(value);
     if(value == false) {
