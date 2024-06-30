@@ -1,0 +1,45 @@
+.component-container {
+    padding-right: 5%;
+}
+
+.component-container .title {
+    color: gray;
+    margin-bottom: 0.5vh;
+}
+
+.component-container .chat-search {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.component-container .chat-search input {
+    border: 2px solid #000;
+    color: #000;
+    width: 93%;
+    border-radius: 13px;
+    padding-left: 20px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.component-container button {
+    background-color: #1878F1;
+    width: 38px;
+    height: 38px;
+    
+    border-radius: 50%;
+    color: #fff;
+    line-height: 1vh;
+}
+
+.component-container button:hover {
+    background-color: #0F5BDA;
+}
+.component-container .chat-search input:focus {
+    outline-color: #1878F1;
+    outline-offset: 1px;
+    border: 2px solid #1878F1;
+}

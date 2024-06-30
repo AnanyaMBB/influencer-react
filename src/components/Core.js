@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import { useState } from "react";
 
 export default function Core(props) {
-    const [isCollapsed, setIsCollapsed] = useState(false);  
+    const [isCollapsed, setIsCollapsed] = useState(true);  
     function handleToggle() {
         setIsCollapsed(!isCollapsed);
     }

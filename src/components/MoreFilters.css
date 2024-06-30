@@ -1,0 +1,70 @@
+.more-filters-container {
+    z-index: 1000;
+    position: absolute;
+    top:  20vh;
+    left: 40%;
+
+    width: 40%;
+    min-width: 500px;
+    height: 55vh;
+    border-radius: 10px;
+    background-color: #fff;
+    border: 2px solid #83b6f8;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.more-filters-container .header {
+    width: 100%; 
+    height: 5vh;
+    padding-left: 15%;
+    padding-right: 2%;
+    border: none;
+    color: #000;
+}
+
+.more-filters-container .header .title {
+    width: 80%;
+    text-align: center;
+    font-weight: bold;
+    line-height: 6vh;
+    color: #000;
+    font-size: 1.3em;
+    visibility: visible;
+}
+
+.more-filters-container .header .title p {
+    color: #000;
+    visibility: visible;
+}
+
+.more-filters-container .header .close {
+    line-height: 7vh;
+    cursor: pointer;
+    color: #000;
+    background: #fff;
+}
+.more-filters-container .header .close span {
+    background: none;
+    color: #000;
+}
+
+.more-filters-container .header .close span:hover {
+    background: none;
+    color: #83b6f8;
+}
+
+
+.more-filters-container .filters {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.more-filters-container .filters .filter {
+    width: 100%;
+    height: 10vh;
+    border-bottom: 1px solid red;
+}

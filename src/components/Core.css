@@ -19,6 +19,9 @@
     padding-left: 2%;
     padding-right: 2%;
     line-height: 7vh;
+
+    font-weight: bold;
+    font-size: 1.5em;
 }
 
 .core-container aside {
@@ -134,3 +137,4 @@
 .collapsed main {
     width: 100%;
 }
+

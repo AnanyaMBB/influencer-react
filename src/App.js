@@ -6,6 +6,9 @@ import Login from './pages/Login';
 import BusinessRegister from './pages/BusinessRegister';
 import InfluencerRegister from './pages/InfluencerRegister';
 import InfluencerAccountManagement from './pages/InfluencerAccountManagement';
+import InfluencerProfile from './pages/InfluencerProfile';
+import Contract from './pages/Contract';
+import Chat from './pages/Chat';
 import { useState, createContext, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Switch } from 'react-router-dom';
 import { baseUrl } from './shared';
@@ -65,6 +68,17 @@ function App() {
           </Route>
           <Route element={<Core title="Account Management"/>}>
             <Route path="/account" element={<InfluencerAccountManagement />} />
+          </Route>
+          <Route element={<Core title="Profile"/>}>
+            <Route path="/profile" element={<InfluencerProfile />} />
+          </Route>
+
+          <Route element={<Core title="Contract"/>}>
+            <Route path="/contract" element={<Contract />} />
+          </Route>
+
+          <Route element={<Core title="Chat"/>}>
+            <Route path="/chat" element={<Chat />} />
           </Route>
 
           <Route path="/authenticate/instagram" element={<InstagramAuthCallBack />} />

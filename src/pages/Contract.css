@@ -1,0 +1,361 @@
+.contract-container {
+  display: grid;
+  grid-template-areas: 
+  'menubar sidebar'
+  'content sidebar'
+  'sign sidebar'
+  'versions sidebar'
+  ;
+
+  grid-template-columns: 4fr 1fr;
+  grid-template-rows: 7vh 69vh 7vh 10vh;
+}
+
+.contract-container .menubar {
+    grid-area: menubar;
+    border-bottom: 1px solid lightgray;
+
+    padding-left: 5%;
+    padding-right: 5%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.contract-container .menubar .text-tools {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-right: 10%;
+}
+
+.contract-container .menubar .text-tools .bold,
+.contract-container .menubar .text-tools .italic, 
+.contract-container .menubar .text-tools .underline,
+.contract-container .menubar .text-tools .font-size {
+    height:5vh;
+    
+    
+    /* height: 7vh;
+    line-height: 7vh; */
+}
+
+.contract-container .menubar .text-tools span, 
+.contract-container .menubar .text-tools select {
+    border: 1px solid lightgray;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+
+}
+
+.contract-container .menubar .text-tools select:focus {
+    outline-color: #1878F1;
+}
+
+.contract-container .menubar .text-tools span:hover {
+    background-color: #83b6f8;
+    color: #fff;
+}
+
+.contract-container .menubar .text-tools span.selected {
+    background-color: #1878F1;
+    color: #fff;
+}
+
+.contract-container .menubar .contract-tools {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.contract-container .menubar .contract-tools .comment, 
+.contract-container .menubar .contract-tools .new-version, 
+.contract-container .menubar .contract-tools .save,
+.contract-container .menubar .contract-tools .upload, 
+.contract-container .menubar .contract-tools .share {
+    height: 5vhl
+}
+
+.contract-container .menubar .contract-tools span {
+    border: 1px solid lightgray;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.contract-container .menubar .contract-tools span:hover {
+    background-color: #83b6f8;
+    color: #fff;
+}
+
+.contract-container .content {
+    grid-area: content;
+    border-bottom: 1px solid lightgray;
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+    outline: none;
+}
+
+.contract-container .sign {
+    grid-area: sign;
+    border-bottom: 1px solid lightgray;
+}
+
+.contract-container .versions {
+    grid-area: versions;
+
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;    
+    padding-left: 2%;
+    padding-right: 2%;
+
+    
+}
+
+.contract-container .versions .version-list {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    
+}
+
+.contract-container .versions .version {
+    width: 13%;
+    min-width: 85px;
+    height: 5vh;
+    padding-left: 1%;
+    padding-right: 1%;
+    border: 1px solid lightgray;
+    cursor: pointer; 
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.contract-container .versions .version:hover {
+    background-color: #f0cea5;
+}
+
+.contract-container .versions .version.selected {
+    background-color: #f29219;
+    color: #fff;
+}
+
+.contract-container .versions .history {
+    border: 1px solid lightgray;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #1878F1;
+    color: #fff;
+    line-height: 1vh;
+    cursor: pointer;
+}
+
+.contract-container .history-overlay {
+    position: absolute;
+    width: 40%;
+    height: 65vh;
+    top: 15vh;
+    left: 25%;
+    border-radius: 15px;
+    border: 1px solid lightgray;
+    padding-left: 2%;
+    padding-right: 2%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.contract-container .history-overlay .title {
+    width: 100%;
+    height: 7vh;
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 2vh;
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.contract-container .history-overlay .title p {
+    width: 80%;
+    text-align: center;
+}
+
+.contract-container .history-overlay .title span {
+    width: 20%;
+    text-align: right;
+    padding-right: 2%;
+    cursor: pointer;
+}
+
+.contract-container .history-overlay .title span:hover {
+    color: #83b6f8;
+    /* color: #1878F1; */
+}
+
+.contract-container .history-overlay .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border: none;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.contract-container .history-overlay .content .row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border: none;
+    text-align: center;
+
+    border-radius: 5px;
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+    border-bottom: 1px solid lightgray;
+    
+
+}
+
+.contract-container .history-overlay .content .row.title-row {
+    font-weight: bold;
+    background-color: #83b6f8;
+    border: none;
+}
+
+.contract-container .history-overlay .content .row.title-row:hover {
+    background-color: #83b6f8;
+    cursor: default;
+}
+
+.contract-container .history-overlay .content .row:hover {
+    cursor: pointer;
+    background-color: #d2e4fc;
+}
+
+.contract-container .history-overlay .content .row .column.version-id {
+    width: 16%;
+    padding-left: 1%;
+}
+
+.contract-container .history-overlay .content .row .column.owner {
+    width: 20%;
+}
+
+.contract-container .history-overlay .content .row .column.created {
+    width: 30%;
+}
+
+.contract-container .history-overlay .content .row .column.last-change {
+    width: 30%;
+}
+
+.contract-container .history-overlay .content .row .column {
+ 
+}
+
+.contract-container .versions .history:hover {
+    background-color: #83b6f8;
+}
+
+.contract-container .sidebar {
+    grid-area: sidebar;
+    min-width: 305px;
+    border-left: 1px solid lightgray;
+}
+
+.contract-container .sidebar .contracts-list-container {
+    display: flex;
+    flex-direction: column; 
+    justify-content: flex-start;
+}
+
+.contract-container .sidebar .contracts-list-container .title {
+    height: 7vh;
+    line-height: 7vh;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.contract-container .sidebar .contracts-list-container .contracts {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.contract-container .sidebar .contracts-list-container .contracts .contract {
+    width: 90%;
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    margin-bottom: 2vh;
+    cursor: pointer;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.contract-container .sidebar .contracts-list-container .contracts .contract:hover {
+    background-color: #f0cea5;
+    background-color: #d2e4fc;
+}
+
+.contract-container .sidebar .contracts-list-container .contracts .contract .contract-id {
+    font-size: 0.9em;
+    color: gray;
+    font-weight: bold;
+}
+
+.contract-container .sidebar .contracts-list-container .contracts .contract .between {
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.contract-container .sidebar .contracts-list-container .contracts .contract .between .business,
+.contract-container .sidebar .contracts-list-container .contracts .contract .between .influencer {
+    background-color: #83b6f8;
+    background-color: #1878F1;
+    padding: 5px;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: bold;
+}
+.contract-container .sidebar .contracts-list-container .contracts .contract .between .icon {
+    vertical-align: middle;
+    color: #1878F1;
+    font-size: 2em;
+}
+
+
+
