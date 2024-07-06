@@ -1,0 +1,13 @@
+#react-autowhatever-1 {
+    background-color: #fff;
+    border-radius: 15px;
+    padding-left: 5%; 
+    padding-right: 5%;
+    
+}
+
+#react-autowhatever-1 li {
+    padding-bottom: 0.5vh;
+    border-bottom: 0.5px solid lightgray;
+}
+

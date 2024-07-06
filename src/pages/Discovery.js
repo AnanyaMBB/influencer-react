@@ -4,16 +4,115 @@ import { LoginContext } from "../App";
 import "./Discovery.css";
 import MoreFilters from "../components/MoreFilters";
 import ChatSearch from "../components/ChatSearch";
+import { baseUrl } from "../shared";
+import ReactFlagsSelect from "react-flags-select";
+import NicheSelect from "../components/NicheSelect";
 
 export default function Discovery() {
     const [loggedIn, setLoggedIn] = useContext(LoginContext);
     const navigate = useNavigate();
+    const [filterValues, setFilterValues] = useState({
+        username: "",
+        name: "",
+        followers: 0,
+        price: 0,
+        location: "",
+        niche: "",
+    });
+    const [selected, setSelected] = useState("");
+    const [selectedCountryName, setSelectedCountryName] = useState("");
+    const [selectedCountryFlag, setSelectedCountryFlag] = useState("");
+    const [selectedCountry, setSelectedCountry] = useState([]);
+    const [filterResponse, setFilterResponse] = useState([]);
 
     useEffect(() => {
         if (!loggedIn) {
             navigate("/login");
         }
     }, []);
+
+    function filterResults() {
+        const url =
+            baseUrl +
+            `api/instagram/filter?username=${filterValues.username}&name=${filterValues.name}&followers=${filterValues.followers}&price=${filterValues.price}&location=${filterValues.location}`;
+        fetch(url)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Error fetching data");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log(data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    function updateSelectedCountry(code) {
+        setSelected(code);
+        const countryContainer = document.querySelectorAll(
+            ".menu-flags-select button span span"
+        );
+
+        setTimeout(() => {
+            const countryContainer = document.querySelectorAll(
+                ".menu-flags-select button span span"
+            );
+            const countryName = countryContainer[1]?.textContent;
+            const countryFlag = countryContainer[0]?.innerHTML;
+
+            const newCountry = { code, name: countryName, flag: countryFlag };
+
+            setSelectedCountry((prevSelected) => {
+                // Check if the country already exists in the array
+                if (!prevSelected.some((country) => country.code === code)) {
+                    // If it doesn't exist, add it
+                    return [...prevSelected, newCountry];
+                }
+                // If it exists, return the array unchanged
+                return prevSelected;
+            });
+        }, 0);
+    }
+
+    useEffect(() => {
+        const countryCodes = selectedCountry.map((country) => country.code);
+        const url = new URL(baseUrl + `api/instagram/filter`);
+        const params = {
+            username: filterValues.username,
+            name: filterValues.name,
+            followers: filterValues.followers,
+            price: filterValues.price,
+            location: countryCodes,
+        };
+
+        Object.keys(params).forEach((key) =>
+            url.searchParams.append(key, params[key])
+        );
+
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Error fetching data");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log(data);
+                setFilterResponse(data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, [selectedCountry, filterValues]);
 
     return (
         <div className="main-container">
@@ -30,7 +129,17 @@ export default function Discovery() {
                             <p>Username</p>
                         </div>
                         <div className="filter-content">
-                            <input type="text" />
+                            <input
+                                type="text"
+                                value={filterValues.username}
+                                onChange={(e) => {
+                                    setFilterValues({
+                                        ...filterValues,
+                                        username: e.target.value,
+                                    });
+                                    filterResults();
+                                }}
+                            />
                         </div>
                     </div>
                     <div className="filter name">
@@ -39,7 +148,17 @@ export default function Discovery() {
                             <p>Name</p>
                         </div>
                         <div className="filter-content">
-                            <input type="text" />
+                            <input
+                                type="text"
+                                value={filterValues.name}
+                                onChange={(e) => {
+                                    setFilterValues({
+                                        ...filterValues,
+                                        name: e.target.value,
+                                    });
+                                    filterResults();
+                                }}
+                            />
                         </div>
                     </div>
                     <div className="filter followers">
@@ -50,8 +169,20 @@ export default function Discovery() {
                             <p>Followers</p>
                         </div>
                         <div className="filter-content">
-                            <input type="range" />
-                            <p>50</p>
+                            <input
+                                type="range"
+                                min="0"
+                                max="100000"
+                                value={filterValues.followers}
+                                onChange={(e) => {
+                                    setFilterValues({
+                                        ...filterValues,
+                                        followers: e.target.value,
+                                    });
+                                    filterResults();
+                                }}
+                            />
+                            <p>{filterValues.followers}</p>
                         </div>
                     </div>
                     <div className="filter followers">
@@ -62,11 +193,23 @@ export default function Discovery() {
                             <p>Price</p>
                         </div>
                         <div className="filter-content">
-                            <input type="range" />
-                            <p>50</p>
+                            <input
+                                type="range"
+                                min="0"
+                                max="100000"
+                                value={filterValues.price}
+                                onChange={(e) => {
+                                    setFilterValues({
+                                        ...filterValues,
+                                        price: e.target.value,
+                                    });
+                                    filterResults();
+                                }}
+                            />
+                            <p>{filterValues.price}</p>
                         </div>
                     </div>
-                    <div className="filter followers">
+                    <div className="filter location">
                         <div className="filter-title">
                             <span class="material-symbols-outlined">
                                 location_on
@@ -74,19 +217,82 @@ export default function Discovery() {
                             <p>Audience Location</p>
                         </div>
                         <div className="filter-content">
-                            <input type="text" />
+                            {/* <input type="text" /> */}
+                            {/* <LocationSuggest /> */}
+                            <ReactFlagsSelect
+                                selected={selected}
+                                onSelect={(code) => updateSelectedCountry(code)}
+                                searchable
+                                searchPlaceholder="Search countries"
+                                className="menu-flags-select"
+                                showSelectedLabel={true}
+                                onCountrySelect={(country) =>
+                                    console.log("djkfdjkfdjk")
+                                }
+                            />
                             <div className="selected-locations">
                                 <span>Selected Locations</span>
+                                <div className="container">
+                                    {selectedCountry.map((country, index) => {
+                                        return (
+                                            <>
+                                                <div className="location">
+                                                    <div
+                                                        className="flag"
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: country.flag,
+                                                        }}
+                                                    />
+                                                    <div className="name">
+                                                        {country.code}
+                                                    </div>
+                                                    <div className="delete">
+                                                        <span
+                                                            class="material-symbols-outlined"
+                                                            onClick={() => {
+                                                                setSelectedCountry(
+                                                                    selectedCountry.filter(
+                                                                        (
+                                                                            item,
+                                                                            i
+                                                                        ) =>
+                                                                            i !==
+                                                                            index
+                                                                    )
+                                                                );
+                                                            }}
+                                                        >
+                                                            close
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        );
+                                    })}
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div className="filter name">
                         <div className="filter-title">
-                            <span class="material-symbols-outlined">category</span>
+                            <span class="material-symbols-outlined">
+                                category
+                            </span>
                             <p>Niche</p>
                         </div>
                         <div className="filter-content">
-                            <input type="text" />
+                            {/* <input
+                                type="text"
+                                value={filterValues.niche}
+                                onChange={(e) => {
+                                    setFilterValues({
+                                        ...filterValues,
+                                        niche: e.target.value,
+                                    });
+                                    filterResults();
+                                }}
+                            /> */}
+                            <NicheSelect />
                         </div>
                     </div>
                 </div>
@@ -178,75 +384,70 @@ export default function Discovery() {
                         </div>
                     </div>
                     <div className="results">
-                        <div className="result">
-                            <div className="profile">
-                                <img src="https://picsum.photos/200" />
-                            </div>
-                            <div className="username">
-                                <p>@ananya</p>
-                            </div>
-                            <div className="followers">
-                                <p>100k</p>
-                            </div>
-                            <div className="location">
-                                <p>USA</p>
-                            </div>
-                            <div className="engagement">
-                                <p>10</p>
-                            </div>
-                            <div className="niche">
-                                <p>Beauty</p>
-                            </div>
-                            <div className="price">
-                                <p>10</p>
-                            </div>
-                        </div>
-                        <div className="result">
-                            <div className="profile">
-                                <img src="https://picsum.photos/202" />
-                            </div>
-                            <div className="username">
-                                <strong>@ananya</strong>
-                            </div>
-                            <div className="followers">
-                                <p>100k</p>
-                            </div>
-                            <div className="location">
-                                <p>USA</p>
-                            </div>
-                            <div className="engagement">
-                                <p>10</p>
-                            </div>
-                            <div className="niche">
-                                <p>Beauty</p>
-                            </div>
-                            <div className="price">
-                                <p>10</p>
-                            </div>
-                        </div>
-                        <div className="result">
-                            <div className="profile">
-                                <img src="https://picsum.photos/202" />
-                            </div>
-                            <div className="username">
-                                <strong>@ananya</strong>
-                            </div>
-                            <div className="followers">
-                                <p>100k</p>
-                            </div>
-                            <div className="location">
-                                <p>USA</p>
-                            </div>
-                            <div className="engagement">
-                                <p>10</p>
-                            </div>
-                            <div className="niche">
-                                <p>Beauty</p>
-                            </div>
-                            <div className="price">
-                                <p>10</p>
-                            </div>
-                        </div>
+                        {filterResponse.map((result) => {
+                            return (
+                                <div
+                                    className="result"
+                                    data-influencer-id={result.influencer}
+                                    data-instagram-id={result.instagram_id}
+                                    onClick={(e) => {
+                                        console.log(
+                                            e.currentTarget.getAttribute(
+                                                "data-influencer-id"
+                                            )
+                                        );
+                                    }}
+                                >
+                                    <div className="profile">
+                                        <img
+                                            src={
+                                                result
+                                                    .instagram_initial_information
+                                                    .profile_picture_url
+                                            }
+                                        />
+                                    </div>
+                                    <div className="username">
+                                        <p>
+                                            {
+                                                result
+                                                    .instagram_initial_information
+                                                    .username
+                                            }
+                                        </p>
+                                    </div>
+                                    <div className="followers">
+                                        <p>
+                                            {
+                                                result
+                                                    .instagram_initial_information
+                                                    .followers_count
+                                            }
+                                        </p>
+                                    </div>
+                                    <div className="location">
+                                        <p>
+                                            {
+                                                result
+                                                    .instagram_country_demographics
+                                                    .this_week_country
+                                            }
+                                        </p>
+                                    </div>
+                                    <div className="engagement">
+                                        <p>{result.engagement}</p>
+                                    </div>
+                                    <div className="niche">
+                                        <p>{result.niche}</p>
+                                    </div>
+                                    <div className="price">
+                                        <p>{result.price}</p>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                        {/* <img src="https://picsum.photos/200" /> */}
+                        
                         <div className="result">
                             <div className="profile">
                                 <img src="https://picsum.photos/202" />
@@ -270,11 +471,6 @@ export default function Discovery() {
                                 <p>10</p>
                             </div>
                         </div>
-                        {/* <div className="result"></div>
-                        <div className="result"></div>
-                        <div className="result"></div>
-                        <div className="result"></div>
-                        <div className="result"></div> */}
                     </div>
                 </div>
             </div>

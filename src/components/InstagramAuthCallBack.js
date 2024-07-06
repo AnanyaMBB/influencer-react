@@ -16,7 +16,7 @@ export default function InstagramAuthCallBack() {
 
         const facebook_url = "https://graph.facebook.com/v12.0/oauth/access_token";
         const APP_ID = "953649116498281";
-        const REDIRECT_URI = "https://4b87fdd3364da9d7d6a96493295368ee.loophole.site/authenticate/instagram";
+        const REDIRECT_URI = "https://93c301590d5dd7f37ad0e33c7f196edf.loophole.site/authenticate/instagram";
         const CLIENT_SECRET = "ade8f07908a46a420330640d9fd857fd";
 
         // Get long access token
@@ -74,14 +74,14 @@ export default function InstagramAuthCallBack() {
                                                 body: JSON.stringify({
                                                     "user": localStorage.username,
                                                     "instagram_id": data.id,
-                                                    "name": data.name,
-                                                    "username": data.username,
-                                                    "profile_picture_url": data.profile_picture_url, 
-                                                    "biography": data.biography,
-                                                    "followers": data.followers_count,
-                                                    "following": data.follows_count,
-                                                    "posts": data.media_count,
-                                                    "website": data.website,
+                                                    // "name": data.name,
+                                                    // "username": data.username,
+                                                    // "profile_picture_url": data.profile_picture_url, 
+                                                    // "biography": data.biography,
+                                                    // "followers": data.followers_count,
+                                                    // "following": data.follows_count,
+                                                    // "posts": data.media_count,
+                                                    // "website": data.website,
                                                     "long_access_token": accessData.access_token
                                                 })
                                             })

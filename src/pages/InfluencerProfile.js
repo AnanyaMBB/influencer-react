@@ -6,6 +6,7 @@ import FollowUnfollowChart from "../components/FollowUnfollowChart";
 import DateRangePicker from "../components/DateRangePicker";
 import AgeGroupChart from "../components/AgeGroupChart";
 import GenderChart from "../components/GenderChart";
+import { baseUrl } from "../shared";
 
 export default function InfluencerProfile() {
     const [page, setPage] = useState("services");
@@ -13,12 +14,470 @@ export default function InfluencerProfile() {
     const [engagementPage, setEngagementPage] = useState("account-metrics");
     const [demographicsPage, setDemographicsPage] = useState("country");
 
-    const data = [
-        // Your data goes here: each item should have coordinates [longitude, latitude] and a value
-        { coordinates: [-99.1332, 19.4326], value: 20 },
-        { coordinates: [-99.1332, 10], value: 20 },
-        // More data points...
-    ];
+    const [accountMetrics, setAccountMetrics] = useState({
+        impressions: {
+            label: "",
+            labels: [],
+            data: [],
+        },
+        reach: {
+            label: "",
+            labels: [],
+            data: [],
+        },
+        likes: {
+            label: "",
+            labels: [],
+            data: [],
+        },
+        views: {
+            label: "",
+            labels: [],
+            data: [],
+        },
+        shares: {
+            label: "",
+            labels: [],
+            data: [],
+        },
+        comments: {
+            label: "",
+            labels: [],
+            data: [],
+        },
+        website_clicks: {
+            label: "",
+            labels: [],
+            data: [],
+        },
+        sentiment_analysis: {
+            label: "",
+            labels: [],
+            data: [],
+        },
+        follow_unfollow: {
+            label: "",
+            labels: [],
+            data: [],
+        },
+    });
+
+    const [postMetrics, setPostMetrics] = useState({
+        impressions: {
+            label: "",
+            labels: [],
+            data: [],
+        },
+        reach: {
+            label: "",
+            labels: [],
+            data: [],
+        },
+        like_count: {
+            label: "",
+            labels: [],
+            data: [],
+        },
+        views: {
+            label: "",
+            labels: [],
+            data: [],
+        },
+        shares: {
+            label: "",
+            labels: [],
+            data: [],
+        },
+        comments_count: {
+            label: "",
+            labels: [],
+            data: [],
+        },
+        saved: {
+            label: "",
+            labels: [],
+            data: [],
+        },
+        video_views: {
+            label: "",
+            labels: [],
+            data: [],
+        },
+    });
+
+    const [reelMetrics, setReelMetrics] = useState({
+        ig_reels_avg_watch_time: {
+            label: "",
+            labels: [],
+            data: [],
+        },
+        plays: {
+            label: "",
+            labels: [],
+            data: [],
+        },
+        ig_reels_video_view_total_time: {
+            label: "",
+            labels: [],
+            data: [],
+        },
+    });
+
+    const [ageDemographics, setAgeDemographics] = useState({
+        follower_demographics: {},
+        engaged_audience_demographics: {},
+        reached_audience_demographics: {},
+    });
+    // const [ageDemographics, setAgeDemographics] = useState({
+    //     this_week_13_17: 0,
+    //     this_week_18_24: 0,
+    //     this_week_25_34: 0,
+    //     this_week_35_44: 0,
+    //     this_week_45_54: 0,
+    //     this_week_55_64: 0,
+    //     this_week_65: 0,
+    //     last_14_days_13_17: 0,
+    //     last_14_days_18_24: 0,
+    //     last_14_days_25_34: 0,
+    //     last_14_days_35_44: 0,
+    //     last_14_days_45_54: 0,
+    //     last_14_days_55_64: 0,
+    //     last_14_days_65: 0,
+    //     last_30_days_13_17: 0,
+    //     last_30_days_18_24: 0,
+    //     last_30_days_25_34: 0,
+    //     last_30_days_35_44: 0,
+    //     last_30_days_45_54: 0,
+    //     last_30_days_55_64: 0,
+    //     last_30_days_65: 0,
+    //     last_90_days_13_17: 0,
+    //     last_90_days_18_24: 0,
+    //     last_90_days_25_34: 0,
+    //     last_90_days_35_44: 0,
+    //     last_90_days_45_54: 0,
+    //     last_90_days_55_64: 0,
+    //     last_90_days_65: 0,
+    //     prev_month_13_17: 0,
+    //     prev_month_18_24: 0,
+    //     prev_month_25_34: 0,
+    //     prev_month_35_44: 0,
+    //     prev_month_45_54: 0,
+    //     prev_month_55_64: 0,
+    //     prev_month_65: 0,
+    //     this_month_13_17: 0,
+    //     this_month_18_24: 0,
+    //     this_month_25_34: 0,
+    //     this_month_35_44: 0,
+    //     this_month_45_54: 0,
+    //     this_month_55_64: 0,
+    //     this_month_65: 0,
+    // });
+    const [genderDemographics, setGenderDemographics] = useState({
+        follower_demographics: {},
+        engaged_audience_demographics: {},
+        reached_audience_demographics: {},
+    });
+    const [cityDemographics, setCityDemographics] = useState({
+        follower_demographics: [],
+        engaged_audience_demographics: [],
+        reached_audience_demographics: [],
+    });
+    const [countryDemographics, setCountryDemographics] = useState({
+        follower_demographics: [],
+        engaged_audience_demographics: [],
+        reached_audience_demographics: [],
+    });
+
+    useEffect(() => {
+        const url =
+            baseUrl +
+            "api/instagram/data/details?instagram_id=17841439310660818";
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + localStorage.getItem("access"),
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Error in fetching data");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                data.instagram_details.forEach((item) => {
+                    Object.keys(accountMetrics).forEach((key) => {
+                        accountMetrics[key].label = key;
+                        accountMetrics[key].labels.push(
+                            item.date.split("T")[0]
+                        );
+                        accountMetrics[key].data.push(item[`${key}`]);
+                    });
+                });
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
+
+    useEffect(() => {
+        const url =
+            baseUrl + "api/instagram/data/media?instagram_id=17841439310660818";
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + localStorage.getItem("access"),
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Error in fetching data");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                data.instagram_media_data.forEach((item) => {
+                    Object.keys(postMetrics).forEach((key) => {
+                        postMetrics[key].label = key;
+                        postMetrics[key].labels.push(item.media_id);
+                        postMetrics[key].data.push(item[`${key}`]);
+                    });
+                    Object.keys(reelMetrics).forEach((key) => {
+                        reelMetrics[key].label = key;
+                        reelMetrics[key].labels.push(item.media_id);
+                        if (item[`${key}`] == null) {
+                            reelMetrics[key].data.push(0);
+                        } else {
+                            reelMetrics[key].data.push(item[`${key}`]);
+                        }
+                    });
+                });
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
+
+    useEffect(() => {
+        const url =
+            baseUrl +
+            "api/instagram/data/demographics/age?instagram_id=17841439310660818";
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + localStorage.getItem("access"),
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Error in fetching data");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                data.instagram_age_demographics.forEach((item) => {
+                    delete item.id;
+                    delete item.date;
+                    delete item.influencer_instagram_information;
+
+                    let newDemographics = {};
+                    if (item.type_identifier == 0) {
+                        delete item.type_identifier;
+                        newDemographics = {
+                            follower_demographics: { ...item },
+                        };
+                    } else if (item.type_identifier == 1) {
+                        delete item.type_identifier;
+                        newDemographics = {
+                            engaged_audience_demographics: { ...item },
+                        };
+                    } else if (item.type_identifier == 2) {
+                        delete item.type_identifier;
+                        newDemographics = {
+                            reached_audience_demographics: { ...item },
+                        };
+                    }
+
+                    setAgeDemographics((prevState) => ({
+                        ...prevState,
+                        ...newDemographics,
+                    }));
+                });
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
+
+    useEffect(() => {
+        const url =
+            baseUrl +
+            "api/instagram/data/demographics/gender?instagram_id=17841439310660818";
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + localStorage.getItem("access"),
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Error in fetching data");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                data.instagram_gender_demographics.forEach((item) => {
+                    delete item.id;
+                    delete item.date;
+                    delete item.influencer_instagram_information;
+
+                    let newDemographics = {};
+                    if (item.type_identifier == 0) {
+                        delete item.type_identifier;
+                        newDemographics = {
+                            follower_demographics: { ...item },
+                        };
+                    } else if (item.type_identifier == 1) {
+                        delete item.type_identifier;
+                        newDemographics = {
+                            engaged_audience_demographics: { ...item },
+                        };
+                    } else if (item.type_identifier == 2) {
+                        delete item.type_identifier;
+                        newDemographics = {
+                            reached_audience_demographics: { ...item },
+                        };
+                    }
+
+                    setGenderDemographics((prevState) => ({
+                        ...prevState,
+                        ...newDemographics,
+                    }));
+                });
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
+
+    useEffect(() => {
+        const url =
+            baseUrl +
+            "api/instagram/data/demographics/city?instagram_id=17841439310660818";
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + localStorage.getItem("access"),
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Error in fetching data");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                let newDemographics = {
+                    follower_demographics: [],
+                    engaged_audience_demographics: [],
+                    reached_audience_demographics: [],
+                };
+
+                data.instagram_city_demographics.forEach((item) => {
+                    if (item.type_identifier == 0) {
+                        let newItem = { ...item };
+                        delete newItem.id;
+                        delete newItem.date;
+                        delete newItem.influencer_instagram_information;
+                        delete newItem.type_identifier;
+                        newDemographics.follower_demographics.push(newItem);
+                    } else if (item.type_identifier == 1) {
+                        let newItem = { ...item };
+                        delete newItem.id;
+                        delete newItem.date;
+                        delete newItem.influencer_instagram_information;
+                        delete newItem.type_identifier;
+                        newDemographics.engaged_audience_demographics.push(
+                            newItem
+                        );
+                    } else if (item.type_identifier == 2) {
+                        let newItem = { ...item };
+                        delete newItem.id;
+                        delete newItem.date;
+                        delete newItem.influencer_instagram_information;
+                        delete newItem.type_identifier;
+                        newDemographics.reached_audience_demographics.push(
+                            newItem
+                        );
+                    }
+                });
+
+                setCityDemographics(newDemographics);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
+
+    useEffect(() => {
+        const url =
+            baseUrl +
+            "api/instagram/data/demographics/country?instagram_id=17841439310660818";
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + localStorage.getItem("access"),
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Error in fetching data");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                let newDemographics = {
+                    follower_demographics: [],
+                    engaged_audience_demographics: [],
+                    reached_audience_demographics: [],
+                };
+
+                data.instagram_country_demographics.forEach((item) => {
+                    delete item.id;
+                    delete item.date;
+                    delete item.influencer_instagram_information;
+
+                    if (item.type_identifier == 0) {
+                        delete item.type_identifier;
+                        newDemographics.follower_demographics.push({ ...item });
+                    } else if (item.type_identifier == 1) {
+                        delete item.type_identifier;
+                        newDemographics.engaged_audience_demographics.push({
+                            ...item,
+                        });
+                    } else if (item.type_identifier == 2) {
+                        delete item.type_identifier;
+                        newDemographics.reached_audience_demographics.push({
+                            ...item,
+                        });
+                    }
+                });
+
+                setCountryDemographics((prevState) => ({
+                    ...prevState,
+                    ...newDemographics,
+                }));
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
 
     return (
         <div className="profile-container">
@@ -305,7 +764,20 @@ export default function InfluencerProfile() {
                                             <p>Impressions</p>
                                         </div>
                                         <div className="graph">
-                                            <LineGraph />
+                                            <LineGraph
+                                                label={
+                                                    accountMetrics.impressions
+                                                        .label
+                                                }
+                                                labels={
+                                                    accountMetrics.impressions
+                                                        .labels
+                                                }
+                                                data={
+                                                    accountMetrics.impressions
+                                                        .data
+                                                }
+                                            />
                                         </div>
                                     </div>
                                     <div className="graph-container">
@@ -313,7 +785,15 @@ export default function InfluencerProfile() {
                                             <p>Reach</p>
                                         </div>
                                         <div className="graph">
-                                            <LineGraph />
+                                            <LineGraph
+                                                label={
+                                                    accountMetrics.reach.label
+                                                }
+                                                labels={
+                                                    accountMetrics.reach.labels
+                                                }
+                                                data={accountMetrics.reach.data}
+                                            />
                                         </div>
                                     </div>
                                     <div className="graph-container">
@@ -321,7 +801,15 @@ export default function InfluencerProfile() {
                                             <p>Likes</p>
                                         </div>
                                         <div className="graph">
-                                            <LineGraph />
+                                            <LineGraph
+                                                label={
+                                                    accountMetrics.likes.label
+                                                }
+                                                labels={
+                                                    accountMetrics.likes.labels
+                                                }
+                                                data={accountMetrics.likes.data}
+                                            />
                                         </div>
                                     </div>
                                     <div className="graph-container">
@@ -329,7 +817,15 @@ export default function InfluencerProfile() {
                                             <p>Views</p>
                                         </div>
                                         <div className="graph">
-                                            <LineGraph />
+                                            <LineGraph
+                                                label={
+                                                    accountMetrics.views.label
+                                                }
+                                                labels={
+                                                    accountMetrics.views.labels
+                                                }
+                                                data={accountMetrics.views.data}
+                                            />
                                         </div>
                                     </div>
                                     <div className="graph-container">
@@ -337,7 +833,17 @@ export default function InfluencerProfile() {
                                             <p>Shares</p>
                                         </div>
                                         <div className="graph">
-                                            <LineGraph />
+                                            <LineGraph
+                                                label={
+                                                    accountMetrics.shares.label
+                                                }
+                                                labels={
+                                                    accountMetrics.shares.labels
+                                                }
+                                                data={
+                                                    accountMetrics.shares.data
+                                                }
+                                            />
                                         </div>
                                     </div>
                                     <div className="graph-container">
@@ -345,7 +851,19 @@ export default function InfluencerProfile() {
                                             <p>Comments</p>
                                         </div>
                                         <div className="graph">
-                                            <LineGraph />
+                                            <LineGraph
+                                                label={
+                                                    accountMetrics.comments
+                                                        .label
+                                                }
+                                                labels={
+                                                    accountMetrics.comments
+                                                        .labels
+                                                }
+                                                data={
+                                                    accountMetrics.comments.data
+                                                }
+                                            />
                                         </div>
                                     </div>
                                     <div className="graph-container website-clicks">
@@ -354,7 +872,22 @@ export default function InfluencerProfile() {
                                         </div>
                                         <div className="graph">
                                             <div className="content">
-                                                <LineGraph />
+                                                <LineGraph
+                                                    label={
+                                                        accountMetrics
+                                                            .website_clicks
+                                                            .label
+                                                    }
+                                                    labels={
+                                                        accountMetrics
+                                                            .website_clicks
+                                                            .labels
+                                                    }
+                                                    data={
+                                                        accountMetrics
+                                                            .website_clicks.data
+                                                    }
+                                                />
                                             </div>
                                             <div className="changes">
                                                 <div className="quantity">
@@ -403,7 +936,19 @@ export default function InfluencerProfile() {
                                             <p>Impressions</p>
                                         </div>
                                         <div className="graph">
-                                            <LineGraph />
+                                            <LineGraph
+                                                label={
+                                                    postMetrics.impressions
+                                                        .label
+                                                }
+                                                labels={
+                                                    postMetrics.impressions
+                                                        .labels
+                                                }
+                                                data={
+                                                    postMetrics.impressions.data
+                                                }
+                                            />
                                         </div>
                                     </div>
                                     <div className="graph-container reach">
@@ -411,7 +956,13 @@ export default function InfluencerProfile() {
                                             <p>Reach</p>
                                         </div>
                                         <div className="graph">
-                                            <LineGraph />
+                                            <LineGraph
+                                                label={postMetrics.reach.label}
+                                                labels={
+                                                    postMetrics.reach.labels
+                                                }
+                                                data={postMetrics.reach.data}
+                                            />
                                         </div>
                                     </div>
                                     <div className="graph-container likes">
@@ -419,7 +970,18 @@ export default function InfluencerProfile() {
                                             <p>Likes</p>
                                         </div>
                                         <div className="graph">
-                                            <LineGraph />
+                                            <LineGraph
+                                                label={
+                                                    postMetrics.like_count.label
+                                                }
+                                                labels={
+                                                    postMetrics.like_count
+                                                        .labels
+                                                }
+                                                data={
+                                                    postMetrics.like_count.data
+                                                }
+                                            />
                                         </div>
                                     </div>
                                     <div className="graph-container views">
@@ -435,7 +997,13 @@ export default function InfluencerProfile() {
                                             <p>Shares</p>
                                         </div>
                                         <div className="graph">
-                                            <LineGraph />
+                                            <LineGraph
+                                                label={postMetrics.shares.label}
+                                                labels={
+                                                    postMetrics.shares.labels
+                                                }
+                                                data={postMetrics.shares.data}
+                                            />
                                         </div>
                                     </div>
                                     <div className="graph-container comments">
@@ -443,7 +1011,20 @@ export default function InfluencerProfile() {
                                             <p>Comments</p>
                                         </div>
                                         <div className="graph">
-                                            <LineGraph />
+                                            <LineGraph
+                                                label={
+                                                    postMetrics.comments_count
+                                                        .label
+                                                }
+                                                labels={
+                                                    postMetrics.comments_count
+                                                        .labels
+                                                }
+                                                data={
+                                                    postMetrics.comments_count
+                                                        .data
+                                                }
+                                            />
                                         </div>
                                     </div>
                                     <div className="graph-container saves">
@@ -451,7 +1032,13 @@ export default function InfluencerProfile() {
                                             <p>Saves</p>
                                         </div>
                                         <div className="graph">
-                                            <LineGraph />
+                                            <LineGraph
+                                                label={postMetrics.saved.label}
+                                                labels={
+                                                    postMetrics.saved.labels
+                                                }
+                                                data={postMetrics.saved.data}
+                                            />
                                         </div>
                                     </div>
                                     <div className="graph-container video-views">
@@ -459,7 +1046,19 @@ export default function InfluencerProfile() {
                                             <p>Video Views</p>
                                         </div>
                                         <div className="graph">
-                                            <LineGraph />
+                                            <LineGraph
+                                                label={
+                                                    postMetrics.video_views
+                                                        .label
+                                                }
+                                                labels={
+                                                    postMetrics.video_views
+                                                        .labels
+                                                }
+                                                data={
+                                                    postMetrics.video_views.data
+                                                }
+                                            />
                                         </div>
                                     </div>
                                     <div className="graph-container hidden"></div>
@@ -575,14 +1174,28 @@ export default function InfluencerProfile() {
                                                     <p>#</p>
                                                 </div>
                                             </div>
-                                            <div className="row">
-                                                <div className="column">
-                                                    <p>USA</p>
-                                                </div>
-                                                <div className="column">
-                                                    <p>10</p>
-                                                </div>
-                                            </div>
+                                            {countryDemographics.follower_demographics.map(
+                                                (item) => {
+                                                    return (
+                                                        <div className="row">
+                                                            <div className="column">
+                                                                <p>
+                                                                    {
+                                                                        item.this_week_country
+                                                                    }
+                                                                </p>
+                                                            </div>
+                                                            <div className="column">
+                                                                <p>
+                                                                    {
+                                                                        item.this_week_follower_count
+                                                                    }
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                }
+                                            )}
                                         </div>
                                     </div>
                                     <div className="engaged-demographics">
@@ -598,6 +1211,28 @@ export default function InfluencerProfile() {
                                                     <p>#</p>
                                                 </div>
                                             </div>
+                                            {countryDemographics.engaged_audience_demographics.map(
+                                                (item) => {
+                                                    return (
+                                                        <div className="row">
+                                                            <div className="column">
+                                                                <p>
+                                                                    {
+                                                                        item.this_week_country
+                                                                    }
+                                                                </p>
+                                                            </div>
+                                                            <div className="column">
+                                                                <p>
+                                                                    {
+                                                                        item.this_week_follower_count
+                                                                    }
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                }
+                                            )}
                                         </div>
                                     </div>
                                     <div className="reached-demographics">
@@ -613,6 +1248,28 @@ export default function InfluencerProfile() {
                                                     <p>#</p>
                                                 </div>
                                             </div>
+                                            {countryDemographics.reached_audience_demographics.map(
+                                                (item) => {
+                                                    return (
+                                                        <div className="row">
+                                                            <div className="column">
+                                                                <p>
+                                                                    {
+                                                                        item.this_week_country
+                                                                    }
+                                                                </p>
+                                                            </div>
+                                                            <div className="column">
+                                                                <p>
+                                                                    {
+                                                                        item.this_week_follower_count
+                                                                    }
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                }
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -632,14 +1289,32 @@ export default function InfluencerProfile() {
                                                     <p>#</p>
                                                 </div>
                                             </div>
-                                            <div className="row">
-                                                <div className="column">
-                                                    <p>fd</p>
-                                                </div>
-                                                <div className="column">
-                                                    <p>10</p>
-                                                </div>
-                                            </div>
+                                            {cityDemographics.follower_demographics.map(
+                                                (item) => {
+                                                    return (
+                                                        <div className="row">
+                                                            <div className="column">
+                                                                <p>
+                                                                    {item.this_week_city
+                                                                        .split(
+                                                                            ","
+                                                                        )[0]
+                                                                        .substring(
+                                                                            2
+                                                                        )}
+                                                                </p>
+                                                            </div>
+                                                            <div className="column">
+                                                                <p>
+                                                                    {
+                                                                        item.this_week_follower_count
+                                                                    }
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                }
+                                            )}
                                         </div>
                                     </div>
                                     <div className="engaged-demographics">
@@ -655,6 +1330,32 @@ export default function InfluencerProfile() {
                                                     <p>#</p>
                                                 </div>
                                             </div>
+                                            {cityDemographics.engaged_audience_demographics.map(
+                                                (item) => {
+                                                    return (
+                                                        <div className="row">
+                                                            <div className="column">
+                                                                <p>
+                                                                    {item.this_week_city
+                                                                        .split(
+                                                                            ","
+                                                                        )[0]
+                                                                        .substring(
+                                                                            2
+                                                                        )}
+                                                                </p>
+                                                            </div>
+                                                            <div className="column">
+                                                                <p>
+                                                                    {
+                                                                        item.this_week_follower_count
+                                                                    }
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                }
+                                            )}
                                         </div>
                                     </div>
                                     <div className="reached-demographics">
@@ -670,6 +1371,32 @@ export default function InfluencerProfile() {
                                                     <p>#</p>
                                                 </div>
                                             </div>
+                                            {cityDemographics.reached_audience_demographics.map(
+                                                (item) => {
+                                                    return (
+                                                        <div className="row">
+                                                            <div className="column">
+                                                                <p>
+                                                                    {item.this_week_city
+                                                                        .split(
+                                                                            ","
+                                                                        )[0]
+                                                                        .substring(
+                                                                            2
+                                                                        )}
+                                                                </p>
+                                                            </div>
+                                                            <div className="column">
+                                                                <p>
+                                                                    {
+                                                                        item.this_week_follower_count
+                                                                    }
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                }
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -681,7 +1408,7 @@ export default function InfluencerProfile() {
                                             <p>Follower Demographics</p>
                                         </div>
                                         <div className="content">
-                                            <AgeGroupChart />
+                                            <AgeGroupChart data={ageDemographics.follower_demographics}/>
                                         </div>
                                     </div>
                                     <div className="engaged-demographics">
@@ -689,7 +1416,7 @@ export default function InfluencerProfile() {
                                             <p>Engaged Demographics</p>
                                         </div>
                                         <div className="content">
-                                            <AgeGroupChart />
+                                            <AgeGroupChart data={ageDemographics.engaged_audience_demographics} />
                                         </div>
                                     </div>
                                     <div className="reached-demographics">
@@ -697,7 +1424,7 @@ export default function InfluencerProfile() {
                                             <p>Reached Demographics</p>
                                         </div>
                                         <div className="content">
-                                            <AgeGroupChart />
+                                            <AgeGroupChart data={ageDemographics.reached_audience_demographics} />
                                         </div>
                                     </div>
                                 </div>
@@ -709,7 +1436,7 @@ export default function InfluencerProfile() {
                                             <p>Follower Demographics</p>
                                         </div>
                                         <div className="content">
-                                            <GenderChart />
+                                            <GenderChart data={genderDemographics.follower_demographics} />
                                         </div>
                                     </div>
                                     <div className="engaged-demographics">
@@ -717,7 +1444,7 @@ export default function InfluencerProfile() {
                                             <p>Engaged Demographics</p>
                                         </div>
                                         <div className="content">
-                                            <GenderChart />
+                                            <GenderChart data={genderDemographics.engaged_audience_demographics} />
                                         </div>
                                     </div>
                                     <div className="reached-demographics">
@@ -725,7 +1452,7 @@ export default function InfluencerProfile() {
                                             <p>Reached Demographics</p>
                                         </div>
                                         <div className="content">
-                                            <GenderChart />
+                                            <GenderChart data={genderDemographics.reached_audience_demographics} />
                                         </div>
                                     </div>
                                 </div>

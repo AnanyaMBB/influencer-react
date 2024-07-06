@@ -6,13 +6,15 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
-const LineChart = () => {
+const LineChart = (props) => {
   const data = {
-    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    labels: props.labels,
     datasets: [
       {
-        label: 'Sales',
-        data: [2000, 4000, 3000, 5000, 6000, 7000, 8000],
+        // label: 'Sales',
+        label: props.label,
+        data: props.data,
+        // data: [2000, 4000, 3000, 5000, 6000, 7000, 8000],
         borderColor: '#1878F1',
         backgroundColor: 'rgba(24, 120, 241, 0.2)',
         fill: true,

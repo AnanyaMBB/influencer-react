@@ -44,7 +44,7 @@ export default function InfluencerAccountManagement() {
     function linkInstagramAccount() {
         const APP_ID = "953649116498281";
         const REDIRECT_URI =
-            "https://4b87fdd3364da9d7d6a96493295368ee.loophole.site/authenticate/instagram";
+            "https://93c301590d5dd7f37ad0e33c7f196edf.loophole.site/authenticate/instagram";
         const url = `https://www.facebook.com/v12.0/dialog/oauth?client_id=${APP_ID}&redirect_uri=${REDIRECT_URI}&scope=instagram_basic,instagram_manage_insights,ads_management,ads_read,business_management,pages_read_engagement,pages_show_list,read_insights,email`;
 
         window.location.href = url;
