@@ -41,11 +41,18 @@ const getSuggestionValue = (suggestion) => suggestion;
 
 const renderSuggestion = (suggestion) => <div>{suggestion}</div>;
 
-export default function NicheSelect() {
+export default function NicheSelect(props) {
     const [value, setValue] = useState("");
     const [suggestions, setSuggestions] = useState([]);
+    
     const onChange = (event, { newValue }) => {
         setValue(newValue);
+    };
+
+    const onSuggestionSelected = (event, { suggestion }) => {
+        if (!props.selectedNiches.includes(suggestion)) {
+            props.setSelectedNiches([...props.selectedNiches, suggestion]);
+        }
     };
 
     const onSuggestionsFetchRequested = ({ value }) => {
@@ -71,6 +78,7 @@ export default function NicheSelect() {
             renderSuggestion={renderSuggestion}
             inputProps={inputProps}
             highlightFirstSuggestion={true}
+            onSuggestionSelected={onSuggestionSelected}
         />
     );
 }

@@ -1,5 +1,6 @@
 import "./InfluencerProfile.css";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import LineGraph from "../components/LineGraph";
 import SentimentChart from "../components/SentimentChart";
 import FollowUnfollowChart from "../components/FollowUnfollowChart";
@@ -13,6 +14,8 @@ export default function InfluencerProfile() {
     const [servicePage, setServicePage] = useState("ugc-service");
     const [engagementPage, setEngagementPage] = useState("account-metrics");
     const [demographicsPage, setDemographicsPage] = useState("country");
+    const { instagram_id } = useParams();
+
 
     const [accountMetrics, setAccountMetrics] = useState({
         impressions: {
@@ -128,50 +131,6 @@ export default function InfluencerProfile() {
         engaged_audience_demographics: {},
         reached_audience_demographics: {},
     });
-    // const [ageDemographics, setAgeDemographics] = useState({
-    //     this_week_13_17: 0,
-    //     this_week_18_24: 0,
-    //     this_week_25_34: 0,
-    //     this_week_35_44: 0,
-    //     this_week_45_54: 0,
-    //     this_week_55_64: 0,
-    //     this_week_65: 0,
-    //     last_14_days_13_17: 0,
-    //     last_14_days_18_24: 0,
-    //     last_14_days_25_34: 0,
-    //     last_14_days_35_44: 0,
-    //     last_14_days_45_54: 0,
-    //     last_14_days_55_64: 0,
-    //     last_14_days_65: 0,
-    //     last_30_days_13_17: 0,
-    //     last_30_days_18_24: 0,
-    //     last_30_days_25_34: 0,
-    //     last_30_days_35_44: 0,
-    //     last_30_days_45_54: 0,
-    //     last_30_days_55_64: 0,
-    //     last_30_days_65: 0,
-    //     last_90_days_13_17: 0,
-    //     last_90_days_18_24: 0,
-    //     last_90_days_25_34: 0,
-    //     last_90_days_35_44: 0,
-    //     last_90_days_45_54: 0,
-    //     last_90_days_55_64: 0,
-    //     last_90_days_65: 0,
-    //     prev_month_13_17: 0,
-    //     prev_month_18_24: 0,
-    //     prev_month_25_34: 0,
-    //     prev_month_35_44: 0,
-    //     prev_month_45_54: 0,
-    //     prev_month_55_64: 0,
-    //     prev_month_65: 0,
-    //     this_month_13_17: 0,
-    //     this_month_18_24: 0,
-    //     this_month_25_34: 0,
-    //     this_month_35_44: 0,
-    //     this_month_45_54: 0,
-    //     this_month_55_64: 0,
-    //     this_month_65: 0,
-    // });
     const [genderDemographics, setGenderDemographics] = useState({
         follower_demographics: {},
         engaged_audience_demographics: {},
@@ -188,10 +147,13 @@ export default function InfluencerProfile() {
         reached_audience_demographics: [],
     });
 
+
+
     useEffect(() => {
+        //17841439310660818
         const url =
             baseUrl +
-            "api/instagram/data/details?instagram_id=17841439310660818";
+            `api/instagram/data/details?instagram_id=${instagram_id}`;
         fetch(url, {
             method: "GET",
             headers: {
@@ -223,7 +185,7 @@ export default function InfluencerProfile() {
 
     useEffect(() => {
         const url =
-            baseUrl + "api/instagram/data/media?instagram_id=17841439310660818";
+            baseUrl + `api/instagram/data/media?instagram_id=${instagram_id}`;
         fetch(url, {
             method: "GET",
             headers: {
@@ -263,7 +225,7 @@ export default function InfluencerProfile() {
     useEffect(() => {
         const url =
             baseUrl +
-            "api/instagram/data/demographics/age?instagram_id=17841439310660818";
+            `api/instagram/data/demographics/age?instagram_id=${instagram_id}`;
         fetch(url, {
             method: "GET",
             headers: {
@@ -315,7 +277,7 @@ export default function InfluencerProfile() {
     useEffect(() => {
         const url =
             baseUrl +
-            "api/instagram/data/demographics/gender?instagram_id=17841439310660818";
+            `api/instagram/data/demographics/gender?instagram_id=${instagram_id}`;
         fetch(url, {
             method: "GET",
             headers: {
@@ -367,7 +329,7 @@ export default function InfluencerProfile() {
     useEffect(() => {
         const url =
             baseUrl +
-            "api/instagram/data/demographics/city?instagram_id=17841439310660818";
+            `api/instagram/data/demographics/city?instagram_id=${instagram_id}`;
         fetch(url, {
             method: "GET",
             headers: {
@@ -427,7 +389,7 @@ export default function InfluencerProfile() {
     useEffect(() => {
         const url =
             baseUrl +
-            "api/instagram/data/demographics/country?instagram_id=17841439310660818";
+            `api/instagram/data/demographics/country?instagram_id=${instagram_id}`;
         fetch(url, {
             method: "GET",
             headers: {

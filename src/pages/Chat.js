@@ -160,7 +160,7 @@ export default function Chat() {
                 {/* <div className="message-attach">
                     <span class="material-symbols-outlined">attach_file</span>
                 </div> */}
-                <FileUpload />
+                <FileUpload icon="attach_file"/>
             </div>
             <div className="files">
                 <div className="file">

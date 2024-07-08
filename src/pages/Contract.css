@@ -359,3 +359,78 @@
 
 
 
+.bold {
+    font-weight: bold;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.size-8 {
+    font-size: 8pt;
+}
+
+.size-9 {
+    font-size: 9pt;
+}
+
+.size-10 {
+    font-size: 10pt;
+}
+
+.size-11 {
+    font-size: 11pt;
+}
+
+.size-12 {
+    font-size: 12pt;
+}
+
+.size-14 {
+    font-size: 14pt;
+}
+
+.size-16 {
+    font-size: 16pt;
+}
+
+.size-18 {
+    font-size: 18pt;
+}
+
+.size-20 {
+    font-size: 20pt;
+}
+
+.size-22 {
+    font-size: 22pt;
+}
+
+.size-24 {
+    font-size: 24pt;
+}
+
+.size-26 {
+    font-size: 26pt;
+}
+
+.size-28 {
+    font-size: 28pt;
+}
+
+.size-36 {
+    font-size: 36pt;
+}
+
+.size-48 {
+    font-size: 48pt;
+}
+
+.size-72 {
+    font-size: 72pt;
+}

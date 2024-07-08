@@ -33,6 +33,15 @@ export default function Login() {
                 localStorage.setItem("refresh", data.refresh);
                 localStorage.setItem("username", username);
                 setLoggedIn(true);
+
+                fetch(baseUrl + `api/accountType?username=${username}`)
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    localStorage.setItem("accountType", data.accountType);
+                });
+                
                 navigate(
                     location?.state?.previousUrl
                         ? location.state.previousUrl

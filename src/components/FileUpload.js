@@ -1,7 +1,7 @@
 import "./FileUpload.css";
 import { useState } from "react";
 
-export default function FileUpload() {
+export default function FileUpload(props) {
     const [fileOverlayOpen, setFileOverlayOpen] = useState(false);
 
     return (
@@ -9,7 +9,7 @@ export default function FileUpload() {
             <div className="message-attach" onClick={() => {
                 setFileOverlayOpen(!fileOverlayOpen);
             }}>
-                <span class="material-symbols-outlined">attach_file</span>
+                <span class="material-symbols-outlined">{props.icon}</span>
             </div>
             {fileOverlayOpen == true ? (
                 <div className="file-upload-container">

@@ -24,6 +24,11 @@ export default function Discovery() {
     const [selectedCountryFlag, setSelectedCountryFlag] = useState("");
     const [selectedCountry, setSelectedCountry] = useState([]);
     const [filterResponse, setFilterResponse] = useState([]);
+    const [selectedNiches, setSelectedNiches] = useState([]);
+
+    useEffect(() => {
+        console.log("selected niches", selectedNiches);
+    }, [selectedNiches]);
 
     useEffect(() => {
         if (!loggedIn) {
@@ -226,9 +231,6 @@ export default function Discovery() {
                                 searchPlaceholder="Search countries"
                                 className="menu-flags-select"
                                 showSelectedLabel={true}
-                                onCountrySelect={(country) =>
-                                    console.log("djkfdjkfdjk")
-                                }
                             />
                             <div className="selected-locations">
                                 <span>Selected Locations</span>
@@ -273,7 +275,7 @@ export default function Discovery() {
                             </div>
                         </div>
                     </div>
-                    <div className="filter name">
+                    <div className="filter niches">
                         <div className="filter-title">
                             <span class="material-symbols-outlined">
                                 category
@@ -292,7 +294,44 @@ export default function Discovery() {
                                     filterResults();
                                 }}
                             /> */}
-                            <NicheSelect />
+                            <NicheSelect
+                                selectedNiches={selectedNiches}
+                                setSelectedNiches={setSelectedNiches}
+                            />
+                            <div className="selected-niches">
+                                <span>Selected Niches</span>
+                                <div className="container">
+                                    {selectedNiches.map((niche) => {
+                                        return (
+                                            <>
+                                                <div className="niche-item">
+                                                    <div className="name">
+                                                        {niche}
+                                                    </div>
+                                                    <div className="delete">
+                                                        <span
+                                                            class="material-symbols-outlined"
+                                                            onClick={() => {
+                                                                setSelectedNiches(
+                                                                    selectedNiches.filter(
+                                                                        (
+                                                                            item
+                                                                        ) =>
+                                                                            item !==
+                                                                            niche
+                                                                    )
+                                                                );
+                                                            }}
+                                                        >
+                                                            close
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        );
+                                    })}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -393,9 +432,15 @@ export default function Discovery() {
                                     onClick={(e) => {
                                         console.log(
                                             e.currentTarget.getAttribute(
-                                                "data-influencer-id"
+                                                "data-instagram-id"
                                             )
                                         );
+                                        navigate(
+                                            `/profile/${e.currentTarget.getAttribute(
+                                                "data-instagram-id"
+                                            )}`
+                                        );
+                                        
                                     }}
                                 >
                                     <div className="profile">
@@ -447,7 +492,7 @@ export default function Discovery() {
                             );
                         })}
                         {/* <img src="https://picsum.photos/200" /> */}
-                        
+
                         <div className="result">
                             <div className="profile">
                                 <img src="https://picsum.photos/202" />
