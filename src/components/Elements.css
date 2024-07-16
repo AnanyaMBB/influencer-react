@@ -1,0 +1,163 @@
+/* .elements-container {
+    position: absolute;
+    width: 15%;
+    min-width: 230px;
+    height: 67vh;
+    top: 15vh;
+    left: 64.5%;
+    border-radius: 10px;
+    border: 2px solid #1878f1;
+    background-color: #fff;
+
+    transition: visibility 0.5s, height 0.5s;
+} */
+
+.elements-container {
+    position:relative;
+    width: 15%;
+    min-width: 230px;
+    height: 67vh;
+
+    top: -19vh;
+    left: -78%;
+    border-radius: 10px;
+    border: 2px solid #1878f1;
+    border: 2px solid lightgray;
+    background-color: #fff;
+
+    transition: visibility 0.5s, height 0.5s;
+}
+.elements-container.minimized {
+    height: 7vh;
+}
+
+.elements-container .elements-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    padding-left: 15%;
+    padding-right: 5%;
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+
+    border-bottom: 2px solid #1878f1;
+    border-bottom: 1px solid lightgray; 
+}
+
+.elements-container .elements-header p {
+    width: 80%;
+    font-weight: bold;
+    text-align: center;
+}
+
+.elements-container .elements-header #arrow-down {
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+.elements-container .elements-header #arrow-down:hover {
+    background: none;
+    color: #1878f1;
+}
+
+.elements-container .elements-content { 
+    width: 100%;
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1vh;
+    padding-bottom: 0.5vh;
+}
+
+.elements-container .elements-content .element {
+    width: 90%;
+    /* height: 14vh; */
+    height: 11vh;
+    border: 1px solid gray;
+    border-radius: 10px;
+    cursor: pointer;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 3px;
+    padding-bottom: 5px;
+}
+
+
+.elements-container .elements-content .element:hover {
+    /* background-color: #b9cee9; */
+    background-color: #d2e4fc;
+}
+
+.elements-container .elements-content .element .element-title {
+    margin-bottom: 2vh;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.elements-container .elements-content .element .element-title span {
+    color: gray;
+}
+
+.elements-container .elements-content .element .element-title p{
+    color: gray;
+}
+
+.elements-container .elements-content .element .element-content .element-text {
+    background-color: #83b6f8;
+    padding: 5px;
+    border: 1px solid lightgray;
+    color: #fff;
+    font-weight: bold;
+}
+
+.elements-container .elements-content .element .element-content .element-text:hover {
+    color: #000;
+}
+
+.elements-container .elements-content .element .element-content .element-text.color1 {
+    background-color: #f29219;
+
+}
+
+.elements-container .elements-content .element .element-content .element-text.color2 {
+    background-color: #83b6f8;
+}
+
+.elements-container .elements-content .element .element-content .element-text.color3 {
+    background-color: #1878f1;
+}
+
+.elements-container .elements-content .element .element-content .element-text.color4 {
+    background-color: gray;
+}
+
+.elements-container .elements-content .element .element-content .element-text.color5 {
+    background-color: saddlebrown;
+}
+
+.elements-content.display-none-property {
+    /* display: none; */
+    visibility: hidden;
+}
+
+.elements-content.hidden {
+    display: none;
+}
+
+/* .elements-container .elements-content .content-post-date .element-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+} */

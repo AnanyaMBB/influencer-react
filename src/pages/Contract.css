@@ -92,6 +92,10 @@
     color: #fff;
 }
 
+.contract-container .menubar .contract-tools .elements span {
+    font-weight: bold;
+}
+
 .contract-container .content {
     grid-area: content;
     border-bottom: 1px solid lightgray;
@@ -100,11 +104,85 @@
     padding-top: 1vh;
     padding-bottom: 1vh;
     outline: none;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
 }
 
 .contract-container .sign {
     grid-area: sign;
     border-bottom: 1px solid lightgray;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 2%;
+}
+
+.contract-container .sign button:hover {
+    opacity: 0.8;
+}
+
+.contract-container .sign button.request {
+    width: 15%;
+    background-color: #f29219;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.contract-container .sign button.pending {
+    width: 15%;
+    background-color: #f29219;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+    font-weight: bold;
+    opacity: 0.5;
+}
+
+.contract-container .sign button.accepted {
+    width: 15%;
+    background-color: lightgreen;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.contract-container .sign button.again {
+    width: 15%;
+    background-color: red;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.contract-container .sign .requested-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.contract-container .sign button.requested.accept {
+    width: 10%;
+    background-color: lightgreen;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-right: 1%;
+}
+
+.contract-container .sign button.requested.decline {
+    width: 10%;
+    background-color: red;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+    font-weight: bold;
 }
 
 .contract-container .versions {
@@ -141,7 +219,7 @@
     border-radius: 5px;
     font-weight: bold;
     text-align: center;
-
+    margin-right: 1%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -433,4 +511,39 @@
 
 .size-72 {
     font-size: 72pt;
+}
+
+
+.element-text {
+    background-color: #83b6f8;
+    padding: 5px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    color: #fff;
+    margin-top: 100vh;
+}
+
+.element-text:hover {
+    /* color: #000; */
+}
+
+.element-text.color1 {
+    background-color: #f29219;
+
+}
+
+.element-text.color2 {
+    background-color: #83b6f8;
+}
+
+.element-text.color3 {
+    background-color: #1878f1;
+}
+
+.element-text.color4 {
+    background-color: gray;
+}
+
+.element-text.color5 {
+    background-color: saddlebrown;
 }

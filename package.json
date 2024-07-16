@@ -7,6 +7,7 @@
     "@emotion/styled": "^11.11.5",
     "@mui/lab": "^5.0.0-alpha.170",
     "@mui/material": "^5.15.20",
+    "@paypal/react-paypal-js": "^8.5.0",
     "@shadcn/ui": "^0.0.4",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -22,6 +23,7 @@
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "lodash.debounce": "^4.0.8",
+    "mammoth": "^1.8.0",
     "pdfmake": "^0.2.10",
     "react": "^18.3.1",
     "react-autosuggest": "^10.1.0",
@@ -35,6 +37,7 @@
     "react-simple-maps": "^3.0.0",
     "recharts": "^2.12.7",
     "topojson": "^3.0.2",
+    "util": "^0.12.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

@@ -4,6 +4,14 @@ import { useState } from "react";
 export default function FileUpload(props) {
     const [fileOverlayOpen, setFileOverlayOpen] = useState(false);
 
+    const handleFileChange = (event) => {
+        console.log("here");
+        const file = event.target.files[0];
+        if(file) {
+            props.onFileSelect(file);
+        }
+    };
+
     return (
         <>
             <div className="message-attach" onClick={() => {
@@ -59,6 +67,7 @@ export default function FileUpload(props) {
                                 id="dropzone-file"
                                 type="file"
                                 class="hidden"
+                                onChange={handleFileChange}
                             />
                         </label>
                     </div>

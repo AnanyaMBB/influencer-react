@@ -1,0 +1,166 @@
+.file-manager-container {
+    position: absolute;
+    top: 14vh;
+    left: 30%;
+    width: 40%;
+    height: 70vh;
+    border-radius: 10px;
+    background-color: #fff;
+    border: 1px solid lightgray;
+}
+
+.file-manager-container .file-manager-header {
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+    border-bottom: 1px solid lightgray;
+    padding-top: 0.5vh;
+    padding-bottom: 0.5vh;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.file-manager-container .file-manager-header p {
+    width:90%;
+}
+
+.file-manager-container .file-manager-header span {
+    width: 10%;
+    color: #1878f1;
+    cursor: pointer;
+    text-align: left;
+}
+
+.file-manager-container .file-manager-header span:hover {
+    opacity: 0.8;
+}
+
+.file-manager-container .file-manager-content .file-table {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+    border-bottom: 1px solid lightgray;
+}
+
+.file-manager-container .file-manager-content .file-table .title-row {
+    font-weight: bold;
+    /* color: #1878f1; */
+    /* font-size: 1em; */
+}
+
+.file-manager-container .file-manager-content .file-table .rows-container {
+    height: 50vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.file-manager-container .file-manager-content .file-table .row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 4vh;
+    cursor: pointer;
+    padding-left: 1%;
+}
+
+.file-manager-container .file-manager-content .file-table .rows-container .row .selected-btn {
+    background-color: lightgreen;
+    color: #000;
+    /* font-weight: bold; */
+}
+
+.file-manager-container .file-manager-content .file-table .rows-container .row .selected-btn:hover {
+    opacity: 1;
+}
+
+.file-manager-container .file-manager-content .file-table .row:not(.title-row) {
+    background-color: #d2e4fc;
+    margin-bottom: 0.5vh;
+    border-radius: 5px;
+}
+
+/* .file-manager-container .file-manager-content .file-table .row:nth-of-type(even) {
+    background-color: #d2e4fc;
+} */
+
+.file-manager-container .file-manager-content .file-table .row .column {
+    width: 26.67%;
+}
+
+.file-manager-container
+    .file-manager-content
+    .file-table
+    .row
+    .column.download {
+    color: #1878f1;
+    text-align: center;
+    width: 10%;
+}
+
+.file-manager-container
+    .file-manager-content
+    .file-table
+    .row
+    .column.download span:hover {
+        opacity: 0.8;
+    }
+
+.file-manager-container .file-manager-content .file-table .row .column button {
+    background-color: lightgreen;
+    background-color: #1878f1;
+    width: 90%;
+    border-radius: 5px;
+    /* font-weight: bold; */
+    color: #fff;
+    outline: none;
+    border: none;
+    height: 4vh;
+}
+
+.file-manager-container .file-manager-content .file-table .row .column button:hover {
+    opacity: 0.8;
+}
+
+
+.file-manager-container .file-manager-content .file-upload { 
+    padding-left: 5%;
+    padding-right: 5%;
+    height: 7vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.file-manager-container .file-manager-content .file-table .row .column.file-name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.file-manager-container .file-manager-content .file-upload .title {
+    margin-right: 5%;
+    font-weight: bold;
+}
+
+.file-manager-container .file-manager-content .file-upload .input-container input {
+    border: 2px solid #1878f1;
+    border-radius: 5px;
+}
+
+.file-manager-container .file-manager-content .file-upload .input-container input::-webkit-file-upload-button {
+    background-color: #1878f1;
+    color: #fff;
+    border-radius: 3px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+}

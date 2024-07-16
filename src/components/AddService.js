@@ -7,7 +7,8 @@ export default function AddService(props) {
     const [serviceName, setServiceName] = useState();
     const [serviceType, setServiceType] = useState();
     const [postLength, setPostLength] = useState();
-    const [price, setPrice] = useState();
+    const [hourlyPrice, setHourlyPrice] = useState();
+    const [viewPrice, setViewPrice] = useState();
 
     function CreateService(e) {
         e.preventDefault();
@@ -35,7 +36,8 @@ export default function AddService(props) {
                 "service_name": serviceName, 
                 "post_type": serviceType,
                 "post_length": postLength,
-                "price": price,
+                "hourly_price": hourlyPrice,
+                "view_price": viewPrice
             })
         })
         .then((response) => {
@@ -96,7 +98,7 @@ export default function AddService(props) {
                         </div>
                         <div className="form-item">
                             <label for="service-type">Service Type</label>
-                            <input
+                            {/* <input
                                 id="service-type"
                                 type="text"
                                 placeholder="Service Type"
@@ -104,7 +106,13 @@ export default function AddService(props) {
                                 onChange={(e) => {
                                     setServiceType(e.target.value);
                                 }}
-                            />
+                            /> */}
+                            <select>
+                                <option value="ugc">UGC</option>
+                                <option value="feed-post">Feed Post</option>
+                                <option value="reel-post">Reel Post</option>
+                                <option value="story-post">Story Post</option> 
+                            </select>
                         </div>
                         <div className="form-item">
                             <label for="post-length">Post Length</label>
@@ -120,15 +128,31 @@ export default function AddService(props) {
                         </div>
                         <div className="form-item">
                             <label for="price">
-                                {props.page == "ugc" ? "Price" : "Price/Hour"}
+                                {/* {props.page == "ugc" ? "Price" : "Price/Hour"} */}
+                                Hourly Price
                             </label>
                             <input
-                                id="price"
+                                id="hourly-price"
                                 type="text"
                                 placeholder="Price"
-                                value={price}
+                                value={hourlyPrice}
                                 onChange={(e) => {
-                                    setPrice(e.target.value);
+                                    setHourlyPrice(e.target.value);
+                                }}
+                            />
+                        </div>
+                        <div className="form-item">
+                            <label for="price">
+                                {/* {props.page == "ugc" ? "Price" : "Price/Hour"} */}
+                                Per View Price
+                            </label>
+                            <input
+                                id="view-price"
+                                type="text"
+                                placeholder="Price"
+                                value={viewPrice}
+                                onChange={(e) => {
+                                    setViewPrice(e.target.value);
                                 }}
                             />
                         </div>

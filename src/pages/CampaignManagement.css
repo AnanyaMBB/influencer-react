@@ -1,0 +1,392 @@
+.campaign-management-container {
+    padding-left: 5%;
+    padding-right: 5%;
+    margin-top: 3vh;
+}
+
+.campaign-management-container .campaigns {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.campaign-management-container .campaigns .campaign {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.campaign-management-container .campaigns .campaign.title {
+    font-weight: bold;
+    background-color: #fff;
+}
+
+.campaign-management-container .campaigns .scroll-container {
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.campaign-management-container .campaigns .campaign {
+    background-color: #d2e4fc;
+    margin-bottom: 1vh;
+    padding-top: 0.5vh;
+    padding-bottom: 0.5vh;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.campaign-management-container .campaigns .campaign:not(.title):hover {
+    background-color: #83b6f8;
+}
+
+.campaign-management-container .campaigns .campaign .column:first-child {
+    padding-left: 1%;
+}
+
+.campaign-management-container .campaigns .campaign .column:last-child {
+    padding-right: 1%;
+}
+
+.campaign-management-container .campaigns .campaign .column.contract,
+.campaign-management-container .campaigns .campaign .column.file {
+    text-decoration: underline;
+    color: #1878f1;
+}
+
+.campaign-management-container .campaigns .campaign .column {
+    width: 12.5%;
+}
+
+.campaign-management-container .campaigns .campaign .column.published  p{
+    background-color: lightgreen;
+    width: 50%;
+    border-radius: 5px;
+    text-align: center;
+    /* padding-left: 5px;
+    padding-right: 5px; */
+}
+
+.campaign-management-container .campaigns .campaign .column.waiting  p {
+    background-color: lightyellow;
+    width: 50%;
+    border-radius: 5px;
+    text-align: center;
+    /* padding-left: 5px;
+    padding-right: 5px; */
+}
+
+.campaign-management-container .campaigns .campaign .column.failed  p {
+    background-color: rgb(248, 87, 87);
+    width: 50%;
+    border-radius: 5px;
+    text-align: center;
+    /* padding-left: 5px;
+    padding-right: 5px; */
+}
+
+.campaign-management-container .campaigns .campaign .column.analytics-action {
+    text-decoration: underline;
+    color: #1878f1;
+    font-weight: bold;
+}
+
+/* Analytics styling */
+.campaign-analytics-containers .analytics {
+    width: 100%;
+    height: 88vh;
+    padding-left: 2%;
+    padding-right: 2%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+}
+.campaign-analytics-containers .analytics .analytics-engagement,
+.campaign-analytics-containers .analytics .analytics-demographics {    
+    scroll-snap-align: start;    
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    width: 100%;
+    height: 88vh;
+}
+
+.campaign-analytics-containers .analytics .analytics-engagement .title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.campaign-analytics-containers .analytics .analytics-engagement .title span {
+    text-decoration: underline;
+    color: #1878f1;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+.campaign-analytics-containers .analytics .analytics-engagement .title,
+.campaign-analytics-containers .analytics .analytics-demographics .title {
+    width: 100%;
+    height: 5vh;
+    line-height: 5vh;
+    margin-top: 1vh;
+    font-size: 1.2em;
+    border-bottom: 2px solid #f29219;
+}
+
+.campaign-analytics-containers .analytics .analytics-engagement .sub-header,
+.campaign-analytics-containers .analytics .analytics-demographics .sub-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+
+}
+
+.campaign-analytics-containers .analytics .analytics-engagement .sub-header .filter,
+.campaign-analytics-containers .analytics .analytics-demographics .sub-header .filter {
+    margin-top: 1vh;
+}
+
+
+.campaign-analytics-containers .analytics .analytics-engagement .navigation,
+.campaign-analytics-containers .analytics .analytics-demographics .navigation {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+
+    margin-bottom: 3vh;
+    width: 80%;
+}
+
+.campaign-analytics-containers .analytics .analytics-engagement .navigation .nav,
+.campaign-analytics-containers .analytics .analytics-demographics .navigation .nav {
+    width: 13%;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border-radius: 10px;
+    text-align: center;
+    margin-top: 1vh;
+    margin-right: 1%;
+    color: #1878F1;
+    border: 2px solid #1878F1;   
+    cursor: pointer; 
+}
+
+.campaign-analytics-containers .analytics .analytics-engagement .navigation .nav:hover,
+.campaign-analytics-containers .analytics .analytics-demographics .navigation .nav:hover {
+    background-color: #1878F1;
+    /* background-color: #83b6f8; */
+    color: #fff;
+}
+
+.campaign-analytics-containers .analytics .analytics-demographics .navigation .nav {
+    width: 14%;
+}
+
+.campaign-analytics-containers .analytics .navigation .nav.selected {
+    background-color: #1878F1;
+    color: #fff;
+}
+.campaign-analytics-containers .analytics .analytics-engagement .content {
+    width: 100%;
+    height: 80vh;
+    
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between; 
+    flex-wrap: wrap;
+}
+
+.campaign-analytics-containers .analytics .analytics-engagement .content .graph-container.hidden {
+    visibility: hidden;    
+}
+
+.campaign-analytics-containers .analytics .analytics-engagement .content .graph-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    border: 0.5px solid lightgray;    
+    width: 32.5%;
+    height: 23vh;
+    border-radius: 15px;
+
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+.campaign-analytics-containers .analytics .analytics-engagement .content .graph-container .title {
+    border: none;
+    font-size: 1em;
+    height: 3.5vh;
+    line-height: 3vh;
+    
+    border-bottom: 1px solid #1878F1;
+}
+
+.campaign-analytics-containers .analytics .analytics-engagement .content .graph-container .graph {
+    width: 100%;
+    height: 19vh;
+}
+
+.campaign-analytics-containers .analytics .analytics-engagement .content .website-clicks .graph {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.campaign-analytics-containers .analytics .analytics-engagement .content .website-clicks .graph .content {
+    width: 70%;
+    height: 19vh;
+}
+
+.campaign-analytics-containers .analytics .analytics-engagement .content .website-clicks .graph .changes {
+    width: 30%;
+    height: 19vh;
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.campaign-analytics-containers .analytics .analytics-engagement .content .website-clicks .graph .changes .quantity {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.campaign-analytics-containers .analytics .analytics-engagement .content .website-clicks .graph .changes .increase {
+    color: #22da22;
+}
+
+.campaign-analytics-containers .analytics .analytics-engagement .content .website-clicks .graph .changes .text {
+    color: gray;
+}
+
+.campaign-analytics-containers .analytics .analytics-engagement .content .sentiment .graph {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.campaign-analytics-containers .analytics .analytics-engagement .content .sentiment .graph .content {
+    width: 80%;
+    height: 17vh;
+    padding-top: 1vh;        
+}
+
+.campaign-analytics-containers .analytics .analytics-engagement .content .sentiment .graph .value {
+    width: 20%;
+    height: 17vh;
+    line-height: 17vh;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.campaign-analytics-containers .analytics .analytics-engagement .content .follow-unfollow .graph {
+    width: 80%;
+    height: 17vh;
+    padding-top: 1vh;        
+}
+
+.campaign-analytics-containers .analytics .analytics-demographics .content { 
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.campaign-analytics-containers .analytics .analytics-demographics .content .follower-demographics,
+.campaign-analytics-containers .analytics .analytics-demographics .content .engaged-demographics, 
+.campaign-analytics-containers .analytics .analytics-demographics .content .reached-demographics { 
+    width: 32%;
+    height: 70vh;
+    border-radius: 10px;
+    border: 1px solid lightgray;    
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+}
+
+.campaign-analytics-containers .analytics .analytics-demographics .content .follower-demographics .title,
+.campaign-analytics-containers .analytics .analytics-demographics .content .engaged-demographics .title,
+.campaign-analytics-containers .analytics .analytics-demographics .content .reached-demographics .title {
+    width: 100%;
+    height: 6vh;
+    line-height: 6vh;
+    margin-top: 0;
+    margin-bottom: 1vh;
+    border-bottom: 1px solid lightgray;
+    padding-left: 5%;
+    padding-right: 5%;
+
+    font-size: 0.9em;
+}
+
+.campaign-analytics-containers .analytics .analytics-demographics .content .follower-demographics .content,
+.campaign-analytics-containers .analytics .analytics-demographics .content .engaged-demographics .content,
+.campaign-analytics-containers .analytics .analytics-demographics .content .reached-demographics .content {
+    width: 100%;
+    height: 64vh;
+    padding-left: 5%;
+    padding-right: 5%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
+    border: none;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.campaign-analytics-containers .analytics .analytics-demographics .content .follower-demographics .content .row,
+.campaign-analytics-containers .analytics .analytics-demographics .content .engaged-demographics .content .row,
+.campaign-analytics-containers .analytics .analytics-demographics .content .reached-demographics .content .row {
+    width: 100%;
+    height: 5vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.campaign-analytics-containers .analytics .analytics-demographics .content .follower-demographics .content .row:nth-child(1),
+.campaign-analytics-containers .analytics .analytics-demographics .content .engaged-demographics .content .row:nth-child(1),
+.campaign-analytics-containers .analytics .analytics-demographics .content .reached-demographics .content .row:nth-child(1) {
+    font-weight: bold;
+}
+
+.campaign-analytics-containers .analytics .analytics-demographics .content .follower-demographics .content .row .column:nth-child(1),
+.campaign-analytics-containers .analytics .analytics-demographics .content .engaged-demographics .content .row .column:nth-child(1),
+.campaign-analytics-containers .analytics .analytics-demographics .content .reached-demographics .content .row .column:nth-child(1) {
+    width: 80%;
+    line-height: 5vh;
+}
+
+.campaign-analytics-containers .analytics .analytics-demographics .content .follower-demographics .content .row .column:nth-child(2),
+.campaign-analytics-containers .analytics .analytics-demographics .content .engaged-demographics .content .row .column:nth-child(2),
+.campaign-analytics-containers .analytics .analytics-demographics .content .reached-demographics .content .row .column:nth-child(2) {
+    width: 20%;
+    line-height: 5vh;
+    text-align: center;
+}
+
+.campaign-analytics-containers .analytics .analytics-demographics .content .follower-demographics .content .row:nth-child(1) .column:nth-child(2),
+.campaign-analytics-containers .analytics .analytics-demographics .content .engaged-demographics .content .row:nth-child(1) .column:nth-child(2),
+.campaign-analytics-containers .analytics .analytics-demographics .content .reached-demographics .content .row:nth-child(1) .column:nth-child(2) {
+    background-color: #1878F1;
+    color: #fff;
+    border-radius: 15px;
+}
+
+.campaign-analytics-containers .analytics .analytics-demographics .age .follower-demographics .content {
+    width: 100%;
+} 

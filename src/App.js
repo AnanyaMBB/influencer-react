@@ -9,6 +9,7 @@ import InfluencerAccountManagement from "./pages/InfluencerAccountManagement";
 import InfluencerProfile from "./pages/InfluencerProfile";
 import Contract from "./pages/Contract";
 import Chat from "./pages/Chat";
+import CampaignManagement from "./pages/CampaignManagement";
 import { useState, createContext, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Switch } from "react-router-dom";
 import { baseUrl } from "./shared";
@@ -89,8 +90,16 @@ function App() {
                         <Route path="/contract" element={<Contract />} />
                     </Route>
 
+                    <Route element={<Core title="Contract" />}>
+                        <Route path="/contract/:contract_id/:version_id" element={<Contract />} />
+                    </Route>
+
                     <Route element={<Core title="Chat" />}>
                         <Route path="/chat" element={<Chat />} />
+                    </Route>
+
+                    <Route element={<Core title="Campaign Management" />}>
+                        <Route path="/campaigns" element={<CampaignManagement />} />
                     </Route>
 
                     <Route

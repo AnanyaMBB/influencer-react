@@ -1,0 +1,41 @@
+.share-contract-container {
+    position: absolute;
+    width: 40%;
+    height: 50vh;
+    top: 20vh;
+    left: 30%;
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    background-color: #fff;
+}
+
+.share-contract-container .share-contract-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    padding-left: 15%;
+    padding-right: 5%;
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+}
+
+.share-contract-container .share-contract-header span {
+    border: none !important;
+}
+
+.share-contract-container .share-contract-header span:hover {
+    cursor: pointer;
+    color: #83b6f8;
+    color: #1878f1 !important;
+    background: #fff !important;
+    border: none !important;
+    /* background-color: #83b6f8;
+    color: #fff; */
+}
+
+.share-contract-container .share-contract-header p {
+    width: 80%;
+    text-align: center;
+    font-weight: bold;
+}
