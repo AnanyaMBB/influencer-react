@@ -17,6 +17,8 @@ export default function InfluencerAccountManagement() {
         "other-post": [],
     });
 
+    const [services, setServices] = useState([]);
+
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -61,46 +63,74 @@ export default function InfluencerAccountManagement() {
         // });
     }
 
-    function getServices() {
-        const ugcUrl = baseUrl + "api/instagram/ugc/get";
-        const feedPostUrl = baseUrl + "api/instagram/feed/get";
-        const reelPostUrl = baseUrl + "api/instagram/reel/get";
-        const storyPostUrl = baseUrl + "api/instagram/story/get";
-        const otherPostUrl = baseUrl + "api/instagram/other/get";
-        const urls = [
-            [ugcUrl, "ugc_services", "ugc"],
-            [feedPostUrl, "feed_post_services", "feed-post"],
-            [reelPostUrl, "reel_post_services", "reel-post"],
-            [storyPostUrl, "story_post_services", "story-post"],
-            [otherPostUrl, "other_post_services", "other-post"],
-        ];
+    // function getServices() {
+    //     const ugcUrl = baseUrl + "api/instagram/ugc/get";
+    //     const feedPostUrl = baseUrl + "api/instagram/feed/get";
+    //     const reelPostUrl = baseUrl + "api/instagram/reel/get";
+    //     const storyPostUrl = baseUrl + "api/instagram/story/get";
+    //     const otherPostUrl = baseUrl + "api/instagram/other/get";
+    //     const urls = [
+    //         [ugcUrl, "ugc_services", "ugc"],
+    //         [feedPostUrl, "feed_post_services", "feed-post"],
+    //         [reelPostUrl, "reel_post_services", "reel-post"],
+    //         [storyPostUrl, "story_post_services", "story-post"],
+    //         [otherPostUrl, "other_post_services", "other-post"],
+    //     ];
 
-        urls.forEach((url) => {
-            fetch(url[0], {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + localStorage.getItem("access"),
-                },
+    //     urls.forEach((url) => {
+    //         fetch(url[0], {
+    //             method: "GET",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //                 Authorization: "Bearer " + localStorage.getItem("access"),
+    //             },
+    //         })
+    //             .then((response) => {
+    //                 if (!response.ok) {
+    //                     throw new Error("Network response was not ok");
+    //                 }
+    //                 return response.json();
+    //             })
+    //             .then((data) => {
+    //                 data = data[url[1]];
+    //                 // setServicesData({...servicesData, [url[2]]: data});
+    //                 setServicesData((prevState) => ({
+    //                     ...prevState,
+    //                     [url[2]]: data,
+    //                 }));
+    //             })
+    //             .catch((error) => {
+    //                 console.error("Error:", error);
+    //             });
+    //     });
+    // }
+
+    function getInstagramServices() {
+        const url =
+            baseUrl +
+            `api/instagram/service/get?instagram_id=${localStorage.getItem(
+                "instagram_id"
+            )}`;
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + localStorage.getItem("access"),
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
             })
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error("Network response was not ok");
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    data = data[url[1]];
-                    // setServicesData({...servicesData, [url[2]]: data});
-                    setServicesData((prevState) => ({
-                        ...prevState,
-                        [url[2]]: data,
-                    }));
-                })
-                .catch((error) => {
-                    console.error("Error:", error);
-                });
-        });
+            .then((data) => {
+                console.log("Services data: ", data);
+                setServices(data);
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
     }
 
     return (
@@ -130,7 +160,8 @@ export default function InfluencerAccountManagement() {
                                               "instagram_id",
                                               account.instagram_id
                                           );
-                                          getServices();
+                                          //   getServices();
+                                          getInstagramServices();
                                       }}
                                   >
                                       <div className="icon">
@@ -159,7 +190,7 @@ export default function InfluencerAccountManagement() {
 
             <div className="services">
                 <div className="navigation">
-                    <div
+                    {/* <div
                         className={
                             page == "ugc" ? "ugc selected-navigation" : "ugc"
                         }
@@ -168,7 +199,7 @@ export default function InfluencerAccountManagement() {
                         }}
                     >
                         UGC
-                    </div>
+                    </div> */}
                     <div
                         className={
                             page == "feed-post"
@@ -205,7 +236,7 @@ export default function InfluencerAccountManagement() {
                     >
                         Story Post
                     </div>
-                    <div
+                    {/* <div
                         className={
                             page == "other-post"
                                 ? "other-post selected-navigation"
@@ -216,7 +247,7 @@ export default function InfluencerAccountManagement() {
                         }}
                     >
                         Other Post
-                    </div>
+                    </div> */}
                 </div>
                 {page == "ugc" ? (
                     <div className="table-container">
@@ -254,30 +285,94 @@ export default function InfluencerAccountManagement() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {servicesData && servicesData["ugc"] ? servicesData["ugc"].map((service) => {
-                                        return (
-                                            <>
-                                                <tr class="bg-white border-b">
-                                                    <td class="px-6 py-4">
-                                                        {service.service_name}
-                                                    </td>
-                                                    <td class="px-6 py-4">
-                                                        {service.service_description}
-                                                    </td>
-                                                    <td class="px-6 py-4">
-                                                        {service.post_type}
-                                                    </td>
-                                                    <td class="px-6 py-4">
-                                                        {service.post_length}
-                                                    </td>
-                                                    <td class="px-6 py-4">
-                                                        {service.price}
-                                                    </td>
-                                                    <td class="px-6 py-4"></td>
-                                                </tr>
-                                            </>
-                                        );
-                                    }) : null}
+                                    {servicesData && servicesData["ugc"]
+                                        ? servicesData["ugc"].map((service) => {
+                                              return (
+                                                  <>
+                                                      <tr class="bg-white border-b">
+                                                          <td class="px-6 py-4">
+                                                              {
+                                                                  service.service_name
+                                                              }
+                                                          </td>
+                                                          <td class="px-6 py-4">
+                                                              {
+                                                                  service.service_description
+                                                              }
+                                                          </td>
+                                                          <td class="px-6 py-4">
+                                                              {
+                                                                  service.post_type
+                                                              }
+                                                          </td>
+                                                          <td class="px-6 py-4">
+                                                              {
+                                                                  service.post_length
+                                                              }
+                                                          </td>
+                                                          <td class="px-6 py-4">
+                                                              {service.price}
+                                                          </td>
+                                                          <td class="px-6 py-4"></td>
+                                                      </tr>
+                                                  </>
+                                              );
+                                          })
+                                        : null}
+
+                                    {services
+                                        ? services.map((service) => {
+                                              if (
+                                                  service.service_type == "ugc"
+                                              ) {
+                                                  return (
+                                                      <>
+                                                          <tr class="bg-white border-b">
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.service_name
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.service_type
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.post_type
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.post_length
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.content_provider
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service
+                                                                          .pricing[0]
+                                                                          .price
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service
+                                                                          .pricing[1]
+                                                                          .price
+                                                                  }
+                                                              </td>
+                                                          </tr>
+                                                      </>
+                                                  );
+                                              }
+                                          })
+                                        : null}
                                 </tbody>
                             </table>
                         </div>
@@ -305,43 +400,79 @@ export default function InfluencerAccountManagement() {
                                             Service Name
                                         </th>
                                         <th scope="col" class="px-6 py-3">
+                                            Service Type
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
                                             Post Type
                                         </th>
                                         <th scope="col" class="px-6 py-3">
                                             Post Length
                                         </th>
                                         <th scope="col" class="px-6 py-3">
-                                            Price / hour
+                                            Content Provider
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Hourly Pricing
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            View Pricing
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {servicesData && servicesData["feed-post"] ? servicesData["feed-post"].map(
-                                        (service) => {
-                                            return (
-                                                <>
-                                                    <tr class="bg-white border-b">
-                                                        <td class="px-6 py-4">
-                                                            {service.service_name}
-                                                        </td>
-                                                        <td class="px-6 py-4">
-                                                            {service.service_description}
-                                                        </td>
-                                                        <td class="px-6 py-4">
-                                                            {service.post_type}
-                                                        </td>
-                                                        <td class="px-6 py-4">
-                                                            {service.post_length}
-                                                        </td>
-                                                        <td class="px-6 py-4">
-                                                            {service.post_price}
-                                                        </td>
-                                                        <td class="px-6 py-4"></td>
-                                                    </tr>
-                                                </>
-                                            );
-                                        }
-                                    ) : null}
+                                    {services
+                                        ? services.map((service) => {
+                                              if (
+                                                  service.service_type == "feed"
+                                              ) {
+                                                  return (
+                                                      <>
+                                                          <tr class="bg-white border-b">
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.service_name
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.service_type
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.post_type
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.post_length
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.content_provider
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service
+                                                                          .pricing[0]
+                                                                          .price
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service
+                                                                          .pricing[1]
+                                                                          .price
+                                                                  }
+                                                              </td>
+                                                          </tr>
+                                                      </>
+                                                  );
+                                              }
+                                          })
+                                        : null}
                                 </tbody>
                             </table>
                         </div>
@@ -364,9 +495,12 @@ export default function InfluencerAccountManagement() {
                         <div class="relative overflow-x-auto">
                             <table class="w-full text-sm text-left rtl:text-right">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                                    <tr>
+                                <tr>
                                         <th scope="col" class="px-6 py-3">
                                             Service Name
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Service Type
                                         </th>
                                         <th scope="col" class="px-6 py-3">
                                             Post Type
@@ -375,37 +509,70 @@ export default function InfluencerAccountManagement() {
                                             Post Length
                                         </th>
                                         <th scope="col" class="px-6 py-3">
-                                            Price / hour
+                                            Content Provider
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Hourly Pricing
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            View Pricing
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {servicesData && servicesData["reel-post"] ? servicesData["reel-post"].map(
-                                        (service) => {
-                                            return (
-                                                <>
-                                                    <tr class="bg-white border-b">
-                                                        <td class="px-6 py-4">
-                                                            {service.service_name}
-                                                        </td>
-                                                        <td class="px-6 py-4">
-                                                            {service.service_description}
-                                                        </td>
-                                                        <td class="px-6 py-4">
-                                                            {service.post_type}
-                                                        </td>
-                                                        <td class="px-6 py-4">
-                                                            {service.post_length}
-                                                        </td>
-                                                        <td class="px-6 py-4">
-                                                            {service.post_price}
-                                                        </td>
-                                                        <td class="px-6 py-4"></td>
-                                                    </tr>
-                                                </>
-                                            );
-                                        }
-                                    ) : null}
+                                    {services
+                                        ? services.map((service) => {
+                                              if (
+                                                  service.service_type == "reel"
+                                              ) {
+                                                  return (
+                                                      <>
+                                                          <tr class="bg-white border-b">
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.service_name
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.service_type
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.post_type
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.post_length
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.content_provider
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service
+                                                                          .pricing[0]
+                                                                          .price
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service
+                                                                          .pricing[1]
+                                                                          .price
+                                                                  }
+                                                              </td>
+                                                          </tr>
+                                                      </>
+                                                  );
+                                              }
+                                          })
+                                        : null}
                                 </tbody>
                             </table>
                         </div>
@@ -428,9 +595,12 @@ export default function InfluencerAccountManagement() {
                         <div class="relative overflow-x-auto">
                             <table class="w-full text-sm text-left rtl:text-right">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                                    <tr>
+                                <tr>
                                         <th scope="col" class="px-6 py-3">
                                             Service Name
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Service Type
                                         </th>
                                         <th scope="col" class="px-6 py-3">
                                             Post Type
@@ -439,37 +609,71 @@ export default function InfluencerAccountManagement() {
                                             Post Length
                                         </th>
                                         <th scope="col" class="px-6 py-3">
-                                            Price / hour
+                                            Content Provider
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Hourly Pricing
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            View Pricing
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {servicesData && servicesData["story-post"] ? servicesData["story-post"].map(
-                                        (service) => {
-                                            return (
-                                                <>
-                                                    <tr class="bg-white border-b">
-                                                        <td class="px-6 py-4">
-                                                            {service.service_name}
-                                                        </td>
-                                                        <td class="px-6 py-4">
-                                                            {service.service_description}
-                                                        </td>
-                                                        <td class="px-6 py-4">
-                                                            {service.post_type}
-                                                        </td>
-                                                        <td class="px-6 py-4">
-                                                            {service.post_length}
-                                                        </td>
-                                                        <td class="px-6 py-4">
-                                                            {service.post_price}
-                                                        </td>
-                                                        <td class="px-6 py-4"></td>
-                                                    </tr>
-                                                </>
-                                            );
-                                        }
-                                    ) : null}
+                                    {services
+                                        ? services.map((service) => {
+                                              if (
+                                                  service.service_type ==
+                                                  "story"
+                                              ) {
+                                                  return (
+                                                      <>
+                                                          <tr class="bg-white border-b">
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.service_name
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.service_type
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.post_type
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.post_length
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.content_provider
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service
+                                                                          .pricing[0]
+                                                                          .price
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service
+                                                                          .pricing[1]
+                                                                          .price
+                                                                  }
+                                                              </td>
+                                                          </tr>
+                                                      </>
+                                                  );
+                                              }
+                                          })
+                                        : null}
                                 </tbody>
                             </table>
                         </div>
@@ -508,30 +712,44 @@ export default function InfluencerAccountManagement() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {servicesData && servicesData["other-post"] ? servicesData["other-post"].map((service) => {
-                                        return (
-                                            <>
-                                                <tr class="bg-white border-b">
-                                                    <td class="px-6 py-4">
-                                                        {service.service_name}
-                                                    </td>
-                                                    <td class="px-6 py-4">
-                                                        {service.service_description}
-                                                    </td>
-                                                    <td class="px-6 py-4">
-                                                        {service.post_type}
-                                                    </td>
-                                                    <td class="px-6 py-4">
-                                                        {service.post_length}
-                                                    </td>
-                                                    <td class="px-6 py-4">
-                                                        {service.post_price}
-                                                    </td>
-                                                    <td class="px-6 py-4"></td>
-                                                </tr>
-                                            </>
-                                        );
-                                    }) : null}
+                                    {servicesData && servicesData["other-post"]
+                                        ? servicesData["other-post"].map(
+                                              (service) => {
+                                                  return (
+                                                      <>
+                                                          <tr class="bg-white border-b">
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.service_name
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.service_description
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.post_type
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.post_length
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.post_price
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4"></td>
+                                                          </tr>
+                                                      </>
+                                                  );
+                                              }
+                                          )
+                                        : null}
                                 </tbody>
                             </table>
                         </div>

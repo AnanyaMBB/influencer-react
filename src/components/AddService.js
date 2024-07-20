@@ -5,50 +5,82 @@ import { baseUrl } from "../shared";
 export default function AddService(props) {
     const [closed, setClosed] = useState(true);
     const [serviceName, setServiceName] = useState();
-    const [serviceType, setServiceType] = useState();
+    const [serviceType, setServiceType] = useState("feed");
+    const [postType, setPostType] = useState("Image");
     const [postLength, setPostLength] = useState();
     const [hourlyPrice, setHourlyPrice] = useState();
     const [viewPrice, setViewPrice] = useState();
+    const [contentProvider, setContentProvider] = useState("influencer");
 
-    function CreateService(e) {
+    // function CreateService(e) {
+    //     e.preventDefault();
+    //     let url = "";
+    //     if (props.page == "ugc") url = baseUrl + "api/instagram/ugc/add";
+    //     else if (props.page == "feed-post")
+    //         url = baseUrl + "api/instagram/feed/add";
+    //     else if (props.page == "reel-post")
+    //         url = baseUrl + "api/instagram/reel/add";
+    //     else if (props.page == "story-post")
+    //         url = baseUrl + "api/instagram/story/add";
+    //     else if (props.page == "other-post")
+    //         url = baseUrl + "api/instagram/other/add";
+
+    //     fetch(url, {
+    //         method: "POST",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             Authorization: "Bearer " + localStorage.getItem("access"),
+    //         },
+    //         body: JSON.stringify({
+    //             instagram_id: localStorage.getItem("instagram_id"),
+    //             service_name: serviceName,
+    //             post_type: serviceType,
+    //             post_length: postLength,
+    //             hourly_price: hourlyPrice,
+    //             view_price: viewPrice,
+    //         }),
+    //     })
+    //         .then((response) => {
+    //             if (!response.ok) {
+    //                 throw new Error("Error in adding service");
+    //             }
+    //         })
+    //         .catch((error) => {
+    //             console.error(error);
+    //         });
+    // }
+
+    function addInstagramService(e) {
         e.preventDefault();
-        let url = "";
-        if (props.page == "ugc") 
-            url = baseUrl + "api/instagram/ugc/add";
-        else if (props.page == "feed-post")
-            url = baseUrl + "api/instagram/feed/add";
-        else if (props.page == "reel-post")
-            url = baseUrl + "api/instagram/reel/add";
-        else if (props.page == "story-post")
-            url = baseUrl + "api/instagram/story/add";
-        else if (props.page == "other-post")
-            url = baseUrl + "api/instagram/other/add";
-
-            
+        const url = baseUrl + "api/instagram/service/add";
         fetch(url, {
-            method: "POST",
+            method: "POST", 
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem("access"),
-            },
+                "Authorization": "Bearer " + localStorage.getItem("access")
+            }, 
             body: JSON.stringify({
-                "instagram_id": localStorage.getItem("instagram_id"),
-                "service_name": serviceName, 
-                "post_type": serviceType,
-                "post_length": postLength,
-                "hourly_price": hourlyPrice,
-                "view_price": viewPrice
+                instagram_id: localStorage.getItem("instagram_id"),
+                service_name: serviceName,
+                service_type: serviceType,
+                post_type: postType,
+                post_length: postLength,
+                content_provider: contentProvider,
+                pricing: [
+                    {pricing_type: "hourly", price: hourlyPrice},
+                    {pricing_type: "view", price: viewPrice}
+                ],
             })
         })
         .then((response) => {
-            if(!response.ok) {
+            if (!response.ok) 
                 throw new Error("Error in adding service");
-            }
+            setClosed(true);
         })
+        .then()
         .catch((error) => {
-            console.error(error);
+            console.error("Error: ", error);
         });
-        
     }
 
     return (
@@ -83,7 +115,7 @@ export default function AddService(props) {
                     </div>
                 </div>
                 <div className="body" onSu>
-                    <form id="service-form" onSubmit={CreateService}>
+                    <form id="service-form" onSubmit={addInstagramService}>
                         <div className="form-item">
                             <label for="service-name">Service Name</label>
                             <input
@@ -107,24 +139,52 @@ export default function AddService(props) {
                                     setServiceType(e.target.value);
                                 }}
                             /> */}
-                            <select>
-                                <option value="ugc">UGC</option>
-                                <option value="feed-post">Feed Post</option>
-                                <option value="reel-post">Reel Post</option>
-                                <option value="story-post">Story Post</option> 
+                            <select
+                                onChange={(e) => {
+                                    setServiceType(e.target.value);
+                                }}
+                            >
+                                {/* <option value="ugc">UGC</option> */}
+                                <option value="feed">Feed Post</option>
+                                <option value="reel">Reel Post</option>
+                                <option value="story">Story Post</option>
                             </select>
                         </div>
                         <div className="form-item">
-                            <label for="post-length">Post Length</label>
-                            <input
-                                id="post-length"
-                                type="text"
-                                placeholder="Post Length"
-                                value={postLength}
+                            <label for="service-type">Post Type</label>
+                            <select
                                 onChange={(e) => {
-                                    setPostLength(e.target.value);
+                                    setPostType(e.target.value);
                                 }}
-                            />
+                            >
+                                <option value="image">Image</option>
+                                <option value="video">Video</option>
+                            </select>
+                        </div>
+                        {postType == "video" ? (
+                            <div className="form-item">
+                                <label for="post-length">Post Length</label>
+                                <input
+                                    id="post-length"
+                                    type="number"
+                                    placeholder="Post Length"
+                                    value={postLength}
+                                    onChange={(e) => {
+                                        setPostLength(e.target.value);
+                                    }}
+                                />
+                            </div>
+                        ) : null}
+                        <div className="form-item">
+                            <label for="service-type">Content Provider</label>
+                            <select
+                                onChange={(e) => {
+                                    setContentProvider(e.target.value);
+                                }}
+                            >
+                                <option value="influencer">Influencer</option>
+                                <option value="business">Business</option>
+                            </select>
                         </div>
                         <div className="form-item">
                             <label for="price">
@@ -133,7 +193,7 @@ export default function AddService(props) {
                             </label>
                             <input
                                 id="hourly-price"
-                                type="text"
+                                type="number"
                                 placeholder="Price"
                                 value={hourlyPrice}
                                 onChange={(e) => {
@@ -148,7 +208,7 @@ export default function AddService(props) {
                             </label>
                             <input
                                 id="view-price"
-                                type="text"
+                                type="number"
                                 placeholder="Price"
                                 value={viewPrice}
                                 onChange={(e) => {

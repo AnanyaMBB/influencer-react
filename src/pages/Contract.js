@@ -332,7 +332,6 @@ export default function Contract() {
             setSelectedContractID(contractID);
         }
 
-        
         const url =
             baseUrl + `api/contract/version/get?contract_id=${contractID}`;
 
@@ -708,6 +707,26 @@ export default function Contract() {
             });
     }
 
+    
+    const scrollableRef = useRef(null);
+
+    useEffect(() => {
+      const handleWheel = (event) => {
+        if (event.deltaY !== 0) {
+          event.preventDefault(); // Prevent vertical scroll
+          scrollableRef.current.scrollLeft += event.deltaY; // Scroll horizontally
+        }
+      };
+  
+      const scrollableDiv = scrollableRef.current;
+      scrollableDiv.addEventListener('wheel', handleWheel);
+  
+      // Cleanup the event listener on component unmount
+      return () => {
+        scrollableDiv.removeEventListener('wheel', handleWheel);
+      };
+    }, []);
+
     return (
         <div className="contract-container">
             <div className="menubar">
@@ -855,7 +874,7 @@ export default function Contract() {
                 ) : null}
             </div>
             <div className="versions">
-                <div className="version-list">
+                <div className="version-list" ref={scrollableRef}>
                     {contractVersions.map((version) => {
                         return (
                             <div
