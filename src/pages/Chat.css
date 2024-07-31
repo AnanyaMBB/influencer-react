@@ -329,6 +329,7 @@
 
 .chat-page-container .files .file {
     width: 20%;
+    min-width: 215px;
     border-radius: 10px;
     border: 1px solid lightgray;
     padding-top: 0.5vh;

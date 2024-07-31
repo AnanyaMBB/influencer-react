@@ -1,6 +1,6 @@
 import './ChatSearch.css';
 
-export default function ChatSearch() {
+export default function ChatSearch(props) {
 
     return (
         <>
@@ -12,8 +12,10 @@ export default function ChatSearch() {
                     <input
                         type="text"
                         placeholder="Describe your ideal influencer"
+                        value={props.searchQuery}
+                        onChange={(e) => props.setSearchQuery(e.target.value)}
                     />
-                    <button>
+                    <button type="button" onClick={props.filterResults}>
                         <span class="material-symbols-outlined">search</span>
                     </button>
                 </div>

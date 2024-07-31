@@ -159,12 +159,14 @@
 .profile-container .profile-contents .services-container .services .services-content .content {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    /* justify-content: space-between; */
+    justify-content: flex-start;
     flex-wrap: wrap;
 }
 
 .profile-container .profile-contents .services-container .services .services-content .service {
     width: 32%;
+    min-width: 330px;
     height: 50vh;
     border: 1px solid lightgray;
     border-radius: 15px;
@@ -179,6 +181,8 @@
     justify-content: space-evenly;
 
     cursor: pointer;
+
+    margin-right: 2%;
 }
 
 .profile-container .profile-contents .services-container .services .services-content .service .service-title {

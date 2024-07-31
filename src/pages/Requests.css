@@ -1,0 +1,100 @@
+.requests-container {
+    padding-left: 5%;
+    padding-right: 5%;
+    margin-top: 3vh;
+}
+
+.requests-container .requests {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.requests-container .requests .request {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.requests-container .requests .request.title {
+    font-weight: bold;
+    background-color: #fff;
+}
+
+.requests-container .requests .scroll-container {
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.requests-container .requests .request {
+    background-color: #d2e4fc;
+    margin-bottom: 1vh;
+    padding-top: 0.5vh;
+    padding-bottom: 0.5vh;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.requests-container .requests .request .column:first-child {
+    padding-left: 1%;
+}
+
+.requests-container .requests .request .column:last-child {
+    padding-right: 1%;
+}
+
+.requests-container .requests .request .column {
+    /* width: 12.85%; */
+    width: 11.25%;    
+    overflow: hidden;
+    /* white-space: nowrap;
+    text-overflow: ellipsis; */
+}
+
+.requests-container .requests .request .column.website,
+.requests-container .requests .request .column.service {
+    color: #1878f1;
+    cursor: pointer;
+}
+
+.requests-container .requests .request .column.action {
+    /* text-align: center; */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    min-width: 150px;
+}
+
+.requests-container .requests .request .column.action button {
+    width: 45%;
+    min-width: 73px;
+    padding: 5px;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+}   
+
+.requests-container .requests .request .column.action button:hover {
+    opacity: 0.8;
+}
+
+.requests-container .requests .request .column.action .accept {
+    background-color: limegreen;
+}
+
+.requests-container .requests .request .column.action .decline {
+    background-color: lightcoral;
+}
+
+.requests-container .requests .request .column .accepted { 
+    /* background-color: lightgreen;  */
+    background-color: limegreen;
+    opacity: 0.8;
+}
+
+.requests-container .requests .request .column .declined { 
+    background-color: lightcoral; 
+    opacity: 0.8;
+}

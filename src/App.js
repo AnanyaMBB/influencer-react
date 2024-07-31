@@ -10,6 +10,10 @@ import InfluencerProfile from "./pages/InfluencerProfile";
 import Contract from "./pages/Contract";
 import Chat from "./pages/Chat";
 import CampaignManagement from "./pages/CampaignManagement";
+import Requests from "./pages/Requests";
+import Earnings from "./pages/Earnings";
+import Research from "./pages/Research";
+import BusinessLanding from "./pages/BusinessLanding";
 import { useState, createContext, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Switch } from "react-router-dom";
 import { baseUrl } from "./shared";
@@ -65,6 +69,7 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/bregister" element={<BusinessRegister />} />
                     <Route path="/iregister" element={<InfluencerRegister />} />
+                    <Route path="/landing" element={<BusinessLanding />} />
                     <Route element={<Core title="Discovery" />}>
                         <Route path="/discovery" element={<Discovery />} />
                     </Route>
@@ -100,6 +105,18 @@ function App() {
 
                     <Route element={<Core title="Campaign Management" />}>
                         <Route path="/campaigns" element={<CampaignManagement />} />
+                    </Route>
+
+                    <Route element={<Core title="Requests" />}>
+                        <Route path="/requests" element={<Requests />} />
+                    </Route>
+
+                    <Route element={<Core title="Earnings" />}>
+                        <Route path="/earnings" element={<Earnings />} />   
+                    </Route>
+
+                    <Route element={<Core title="Research" />}>
+                        <Route path="/research" element={<Research />} />   
                     </Route>
 
                     <Route

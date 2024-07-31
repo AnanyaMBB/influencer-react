@@ -2,6 +2,11 @@ import "./Core.css";
 import { Outlet } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import logo from './logo-no-background.png'
+import logo1 from './logo-1-no-bg.png'
+import logo2 from './logo-2-no-bg.png'
+import beeLogo from './bee-logo.png'
+// import logo-no-background from "./logo-no-background.svg";
 export default function Core(props) {
     const [isCollapsed, setIsCollapsed] = useState(true);
     const navigate = useNavigate();
@@ -28,7 +33,10 @@ export default function Core(props) {
             ) : null}
             {localStorage.getItem("accountType") == "influencer" ? (
                 <aside>
-                    <div className="logo"></div>
+                    <div className="logo">
+                        {/* <img src={logo1} width="100"/> */}
+                        <img src={beeLogo} width="100"/>
+                    </div>
                     <nav>
                         <div className="nav-btn" onClick={() => {
                             navigate("/account")
@@ -84,7 +92,9 @@ export default function Core(props) {
                 </aside>
             ) : (
                 <aside>
-                    <div className="logo"></div>
+                    <div className="logo">
+                        <img src={beeLogo} width="100" height="300"/>
+                    </div>
                     <nav>
                         <div className="nav-btn" onClick={() => {
                             navigate("/discovery");
@@ -127,15 +137,15 @@ export default function Core(props) {
                             </div>
                             <div className="text">Chat</div>
                         </div>
-                        <div className="nav-btn" onClick={() => {
-                            navigate("/competitor-analysis");
+                        <div className="nav-btn selected" onClick={() => {
+                            navigate("/research");
                         }}>
                             <div className="icon">
                                 <span class="material-symbols-outlined">
                                     conditions
                                 </span>
                             </div>
-                            <div className="text">Compeititor</div>
+                            <div className="text">Research</div>
                         </div>
                     </nav>
                 </aside>

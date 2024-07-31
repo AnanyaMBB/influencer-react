@@ -150,6 +150,8 @@ export default function InfluencerProfile() {
         reached_audience_demographics: [],
     });
 
+    const [services, setServices] = useState([]);
+
     useEffect(() => {
         //17841439310660818
         const url =
@@ -441,6 +443,59 @@ export default function InfluencerProfile() {
             });
     }, []);
 
+    useEffect(() => {
+        const url =
+            baseUrl + `api/instagram/service/get?instagram_id=${instagram_id}`;
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + localStorage.getItem("access"),
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Error in fetching data");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log("SERVICES", data);
+                setServices(data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
+
+    function requestService(instagram_id, business_username, service_id, state) {
+        const url = baseUrl + `api/requests/send`;
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("access"),
+            },
+            body: JSON.stringify({
+                instagram_id: instagram_id, 
+                business_username: business_username,
+                service_id: service_id,
+                state: state,
+            })
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+        })
+        .then((data) => {
+            alert("Service has been requested");
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+    }
+
     return (
         <div className="profile-container">
             <div className="profile-header">
@@ -551,7 +606,7 @@ export default function InfluencerProfile() {
                                 <p>Services</p>
                             </div>
                             <div className="services-nav">
-                                <div
+                                {/* <div
                                     className={
                                         servicePage === "ugc-service"
                                             ? "nav ugc selected"
@@ -562,7 +617,7 @@ export default function InfluencerProfile() {
                                     }}
                                 >
                                     <p>UGC</p>
-                                </div>
+                                </div> */}
                                 <div
                                     className={
                                         servicePage === "feed-post-service"
@@ -599,7 +654,7 @@ export default function InfluencerProfile() {
                                 >
                                     <p>Story Post</p>
                                 </div>
-                                <div
+                                {/* <div
                                     className={
                                         servicePage === "other-service"
                                             ? "nav other-service selected"
@@ -610,7 +665,7 @@ export default function InfluencerProfile() {
                                     }}
                                 >
                                     <p>Other</p>
-                                </div>
+                                </div> */}
                             </div>
                             <div className="services-content">
                                 {servicePage === "ugc-service" ? (
@@ -654,154 +709,649 @@ export default function InfluencerProfile() {
                                 ) : null}
                                 {servicePage === "feed-post-service" ? (
                                     <div className="content feed-post-service">
-                                        <div className="service">
-                                            <div className="service-title">
-                                                <p>FEED POST</p>
-                                            </div>
-                                            {/* <div className="service-description">
-                                                <p>
-                                                    A 30 second video
-                                                    testimonial about your
-                                                    product or service.
-                                                </p>
-                                            </div> */}
+                                        {services != null
+                                            ? services.map((service) => {
+                                                  if (
+                                                      service.service_type ===
+                                                          "feed" ||
+                                                      service.service_type ===
+                                                          "FEED"
+                                                  ) {
+                                                      return (
+                                                          <div className="service">
+                                                              <div className="service-title">
+                                                                  <p>
+                                                                      {
+                                                                          service.service_name
+                                                                      }
+                                                                  </p>
+                                                              </div>
+                                                              <div className="post-type">
+                                                                  <span className="material-symbols-outlined">
+                                                                      format_list_bulleted
+                                                                  </span>
+                                                                  <p>
+                                                                      {
+                                                                          service.post_type
+                                                                      }
+                                                                  </p>
+                                                              </div>
+                                                              <div className="post-length">
+                                                                  <span className="material-symbols-outlined">
+                                                                      schedule
+                                                                  </span>
+                                                                  <p>
+                                                                      {
+                                                                          service.post_length
+                                                                      }{" "}
+                                                                      second
+                                                                  </p>
+                                                              </div>
+                                                              <div className="service-content-provider">
+                                                                  <p className="title">
+                                                                      Content
+                                                                      Provider
+                                                                  </p>
+                                                                  <div className="option-container">
+                                                                      <div className="option-1 option">
+                                                                          <label for="influencer-checkbox">
+                                                                              Influencer
+                                                                          </label>
+                                                                          <input
+                                                                              type="checkbox"
+                                                                              id="influencer-checkbox"
+                                                                              name="content-provider-option"
+                                                                              //   checked={
+                                                                              //       selectedContentProvider ===
+                                                                              //       "influencer"
+                                                                              //   }
+                                                                              checked={
+                                                                                  service.content_provider ===
+                                                                                  "influencer"
+                                                                              }
+                                                                              onChange={() =>
+                                                                                  setSelectedContentProvider(
+                                                                                      "influencer"
+                                                                                  )
+                                                                              }
+                                                                          />
+                                                                      </div>
+                                                                      <div className="option-2 option">
+                                                                          <label for="business-checkbox">
+                                                                              Business
+                                                                          </label>
+                                                                          <input
+                                                                              type="checkbox"
+                                                                              id="business-checkbox"
+                                                                              name="content-provider-option"
+                                                                              //   checked={
+                                                                              //       selectedContentProvider ===
+                                                                              //       "business"
+                                                                              //   }
+                                                                              checked={
+                                                                                  service.content_provider ===
+                                                                                  "business"
+                                                                              }
+                                                                              onChange={() =>
+                                                                                  setSelectedContentProvider(
+                                                                                      "business"
+                                                                                  )
+                                                                              }
+                                                                          />
+                                                                      </div>
+                                                                  </div>
+                                                              </div>
+                                                              <div className="pricing-type">
+                                                                  <p className="title">
+                                                                      Pricing
+                                                                      Type
+                                                                  </p>
+                                                                  <div className="option-container">
+                                                                      <div className="option-1 option">
+                                                                          <label for="hourly-pricing">
+                                                                              Per
+                                                                              Hour
+                                                                          </label>
+                                                                          <input
+                                                                              type="checkbox"
+                                                                              id="hourly-pricing"
+                                                                              name="pricing-type-checkbox"
+                                                                              checked={
+                                                                                  selectedPricingType ===
+                                                                                  "hourly"
+                                                                              }
+                                                                              onChange={() =>
+                                                                                  setSelectedPricingType(
+                                                                                      "hourly"
+                                                                                  )
+                                                                              }
+                                                                          />
+                                                                      </div>
 
-                                            <div className="post-type">
-                                                <span className="material-symbols-outlined">
-                                                    format_list_bulleted
-                                                </span>
-                                                <p>Video</p>
-                                            </div>
-                                            <div className="post-length">
-                                                <span className="material-symbols-outlined">
-                                                    schedule
-                                                </span>
-                                                <p>30 second</p>
-                                            </div>
-                                            <div className="service-content-provider">
-                                                <p className="title">
-                                                    Content Provider
-                                                </p>
-                                                <div className="option-container">
-                                                    <div className="option-1 option">
-                                                        <label for="influencer-checkbox">
-                                                            Influencer
-                                                        </label>
-                                                        <input
-                                                            type="checkbox"
-                                                            id="influencer-checkbox"
-                                                            name="content-provider-option"
-                                                            checked={
-                                                                selectedContentProvider ===
-                                                                "influencer"
-                                                            }
-                                                            onChange={() =>
-                                                                setSelectedContentProvider(
-                                                                    "influencer"
-                                                                )
-                                                            }
-                                                        />
-                                                    </div>
-                                                    <div className="option-2 option">
-                                                        <label for="business-checkbox">
-                                                            Business
-                                                        </label>
-                                                        <input
-                                                            type="checkbox"
-                                                            id="business-checkbox"
-                                                            name="content-provider-option"
-                                                            checked={
-                                                                selectedContentProvider ===
-                                                                "business"
-                                                            }
-                                                            onChange={() =>
-                                                                setSelectedContentProvider(
-                                                                    "business"
-                                                                )
-                                                            }
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="pricing-type">
-                                                <p className="title">
-                                                    Pricing Type
-                                                </p>
-                                                <div className="option-container">
-                                                    <div className="option-1 option">
-                                                        <label for="hourly-pricing">
-                                                            Per Hour
-                                                        </label>
-                                                        <input
-                                                            type="checkbox"
-                                                            id="hourly-pricing"
-                                                            name="pricing-type-checkbox"
-                                                            checked={
-                                                                selectedPricingType ===
-                                                                "hourly"
-                                                            }
-                                                            onChange={() =>
-                                                                setSelectedPricingType(
-                                                                    "hourly"
-                                                                )
-                                                            }
-                                                        />
-                                                    </div>
-
-                                                    <div className="option-2 option">
-                                                        <label for="view-pricing">
-                                                            Per View
-                                                        </label>
-                                                        <input
-                                                            type="checkbox"
-                                                            id="view-pricing"
-                                                            name="pricing-type-checkbox"
-                                                            checked={
-                                                                selectedPricingType ===
-                                                                "view"
-                                                            }
-                                                            onChange={() =>
-                                                                setSelectedPricingType(
-                                                                    "view"
-                                                                )
-                                                            }
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {selectedPricingType ===
-                                            "hourly" ? (
-                                                <div className="price">
-                                                    <span className="material-symbols-outlined">
-                                                        payments
-                                                    </span>
-                                                    <strong>$10</strong>
-                                                    <input type="number" placeholder="Enter live hours" />
-                                                </div>
-                                            ) : (
-                                                <div className="price">
-                                                    <span className="material-symbols-outlined">
-                                                        payments
-                                                    </span>
-                                                    <strong>$10</strong>
-                                                    <input type="number" placeholder="Enter max. views" />
-                                                </div>
-                                            )}
-                                            <div className="request-service">
-                                                <button type="button">Request Service</button>
-                                            </div>
-                                        </div>
+                                                                      <div className="option-2 option">
+                                                                          <label for="view-pricing">
+                                                                              Per
+                                                                              View
+                                                                          </label>
+                                                                          <input
+                                                                              type="checkbox"
+                                                                              id="view-pricing"
+                                                                              name="pricing-type-checkbox"
+                                                                              checked={
+                                                                                  selectedPricingType ===
+                                                                                  "view"
+                                                                              }
+                                                                              onChange={() =>
+                                                                                  setSelectedPricingType(
+                                                                                      "view"
+                                                                                  )
+                                                                              }
+                                                                              disabled
+                                                                          />
+                                                                      </div>
+                                                                  </div>
+                                                              </div>
+                                                              {selectedPricingType ===
+                                                              "hourly" ? (
+                                                                  <div className="price">
+                                                                      <span className="material-symbols-outlined">
+                                                                          payments
+                                                                      </span>
+                                                                      <strong>
+                                                                          $
+                                                                          {service.pricing.map(
+                                                                              (
+                                                                                  price
+                                                                              ) => {
+                                                                                  if (
+                                                                                      price.pricing_type ===
+                                                                                      "hourly"
+                                                                                  ) {
+                                                                                      return price.price;
+                                                                                  }
+                                                                              }
+                                                                          )}
+                                                                      </strong>
+                                                                      <input
+                                                                          type="number"
+                                                                          placeholder="Enter live hours"
+                                                                      />
+                                                                  </div>
+                                                              ) : (
+                                                                  <div className="price">
+                                                                      <span className="material-symbols-outlined">
+                                                                          payments
+                                                                      </span>
+                                                                      <strong>
+                                                                          $
+                                                                          {service.pricing.map(
+                                                                              (
+                                                                                  price
+                                                                              ) => {
+                                                                                  if (
+                                                                                      price.pricing_type ===
+                                                                                      "view"
+                                                                                  ) {
+                                                                                      return price.price;
+                                                                                  }
+                                                                              }
+                                                                          )}
+                                                                      </strong>
+                                                                      <input
+                                                                          type="number"
+                                                                          placeholder="Enter max. views"
+                                                                      />
+                                                                  </div>
+                                                              )}
+                                                              <div className="request-service">
+                                                                  <button
+                                                                      type="button"
+                                                                      onClick={() => {
+                                                                        requestService(instagram_id, localStorage.getItem("username"), service.id,"requested");
+                                                                      }}
+                                                                  >
+                                                                      Request
+                                                                      Service
+                                                                  </button>
+                                                              </div>
+                                                          </div>
+                                                      );
+                                                  }
+                                              })
+                                            : null}
                                     </div>
                                 ) : null}
                                 {servicePage === "reel-post-service" ? (
-                                    <div className="content reel-post-service"></div>
+                                    <div className="content reel-post-service">
+                                        {services != null
+                                            ? services.map((service) => {
+                                                  if (
+                                                      service.service_type ===
+                                                          "reel" ||
+                                                      service.service_type ===
+                                                          "REEL"
+                                                  ) {
+                                                      return (
+                                                          <div className="service">
+                                                              <div className="service-title">
+                                                                  <p>
+                                                                      {
+                                                                          service.service_name
+                                                                      }
+                                                                  </p>
+                                                              </div>
+                                                              <div className="post-type">
+                                                                  <span className="material-symbols-outlined">
+                                                                      format_list_bulleted
+                                                                  </span>
+                                                                  <p>
+                                                                      {
+                                                                          service.post_type
+                                                                      }
+                                                                  </p>
+                                                              </div>
+                                                              <div className="post-length">
+                                                                  <span className="material-symbols-outlined">
+                                                                      schedule
+                                                                  </span>
+                                                                  <p>
+                                                                      {
+                                                                          service.post_length
+                                                                      }{" "}
+                                                                      second
+                                                                  </p>
+                                                              </div>
+                                                              <div className="service-content-provider">
+                                                                  <p className="title">
+                                                                      Content
+                                                                      Provider
+                                                                  </p>
+                                                                  <div className="option-container">
+                                                                      <div className="option-1 option">
+                                                                          <label for="influencer-checkbox">
+                                                                              Influencer
+                                                                          </label>
+                                                                          <input
+                                                                              type="checkbox"
+                                                                              id="influencer-checkbox"
+                                                                              name="content-provider-option"
+                                                                              //   checked={
+                                                                              //       selectedContentProvider ===
+                                                                              //       "influencer"
+                                                                              //   }
+                                                                              checked={
+                                                                                  service.content_provider ===
+                                                                                  "influencer"
+                                                                              }
+                                                                              onChange={() =>
+                                                                                  setSelectedContentProvider(
+                                                                                      "influencer"
+                                                                                  )
+                                                                              }
+                                                                          />
+                                                                      </div>
+                                                                      <div className="option-2 option">
+                                                                          <label for="business-checkbox">
+                                                                              Business
+                                                                          </label>
+                                                                          <input
+                                                                              type="checkbox"
+                                                                              id="business-checkbox"
+                                                                              name="content-provider-option"
+                                                                              //   checked={
+                                                                              //       selectedContentProvider ===
+                                                                              //       "business"
+                                                                              //   }
+                                                                              checked={
+                                                                                  service.content_provider ===
+                                                                                  "business"
+                                                                              }
+                                                                              onChange={() =>
+                                                                                  setSelectedContentProvider(
+                                                                                      "business"
+                                                                                  )
+                                                                              }
+                                                                          />
+                                                                      </div>
+                                                                  </div>
+                                                              </div>
+                                                              <div className="pricing-type">
+                                                                  <p className="title">
+                                                                      Pricing
+                                                                      Type
+                                                                  </p>
+                                                                  <div className="option-container">
+                                                                      <div className="option-1 option">
+                                                                          <label for="hourly-pricing">
+                                                                              Per
+                                                                              Hour
+                                                                          </label>
+                                                                          <input
+                                                                              type="checkbox"
+                                                                              id="hourly-pricing"
+                                                                              name="pricing-type-checkbox"
+                                                                              checked={
+                                                                                  selectedPricingType ===
+                                                                                  "hourly"
+                                                                              }
+                                                                              onChange={() =>
+                                                                                  setSelectedPricingType(
+                                                                                      "hourly"
+                                                                                  )
+                                                                              }
+                                                                          />
+                                                                      </div>
+
+                                                                      <div className="option-2 option">
+                                                                          <label for="view-pricing">
+                                                                              Per
+                                                                              View
+                                                                          </label>
+                                                                          <input
+                                                                              type="checkbox"
+                                                                              id="view-pricing"
+                                                                              name="pricing-type-checkbox"
+                                                                              checked={
+                                                                                  selectedPricingType ===
+                                                                                  "view"
+                                                                              }
+                                                                              onChange={() =>
+                                                                                  setSelectedPricingType(
+                                                                                      "view"
+                                                                                  )
+                                                                              }
+                                                                              disabled
+                                                                          />
+                                                                      </div>
+                                                                  </div>
+                                                              </div>
+                                                              {selectedPricingType ===
+                                                              "hourly" ? (
+                                                                  <div className="price">
+                                                                      <span className="material-symbols-outlined">
+                                                                          payments
+                                                                      </span>
+                                                                      <strong>
+                                                                          $
+                                                                          {service.pricing.map(
+                                                                              (
+                                                                                  price
+                                                                              ) => {
+                                                                                  if (
+                                                                                      price.pricing_type ===
+                                                                                      "hourly"
+                                                                                  ) {
+                                                                                      return price.price;
+                                                                                  }
+                                                                              }
+                                                                          )}
+                                                                      </strong>
+                                                                      <input
+                                                                          type="number"
+                                                                          placeholder="Enter live hours"
+                                                                      />
+                                                                  </div>
+                                                              ) : (
+                                                                  <div className="price">
+                                                                      <span className="material-symbols-outlined">
+                                                                          payments
+                                                                      </span>
+                                                                      <strong>
+                                                                          $
+                                                                          {service.pricing.map(
+                                                                              (
+                                                                                  price
+                                                                              ) => {
+                                                                                  if (
+                                                                                      price.pricing_type ===
+                                                                                      "view"
+                                                                                  ) {
+                                                                                      return price.price;
+                                                                                  }
+                                                                              }
+                                                                          )}
+                                                                      </strong>
+                                                                      <input
+                                                                          type="number"
+                                                                          placeholder="Enter max. views"
+                                                                      />
+                                                                  </div>
+                                                              )}
+                                                              <div className="request-service">
+                                                                  <button
+                                                                      type="button"
+                                                                      onClick={() => {
+                                                                        requestService(instagram_id, localStorage.getItem("username"), service.id,"requested");
+                                                                      }}
+                                                                  >
+                                                                      Request
+                                                                      Service
+                                                                  </button>
+                                                              </div>
+                                                          </div>
+                                                      );
+                                                  }
+                                              })
+                                            : null}
+                                    </div>
                                 ) : null}
                                 {servicePage === "story-post-service" ? (
-                                    <div className="content story-post-service"></div>
+                                    <div className="content story-post-service">
+                                        {services != null
+                                            ? services.map((service) => {
+                                                  if (
+                                                      service.service_type ===
+                                                          "story" ||
+                                                      service.service_type ===
+                                                          "STORY"
+                                                  ) {
+                                                      return (
+                                                          <div className="service">
+                                                              <div className="service-title">
+                                                                  <p>
+                                                                      {
+                                                                          service.service_name
+                                                                      }
+                                                                  </p>
+                                                              </div>
+                                                              <div className="post-type">
+                                                                  <span className="material-symbols-outlined">
+                                                                      format_list_bulleted
+                                                                  </span>
+                                                                  <p>
+                                                                      {
+                                                                          service.post_type
+                                                                      }
+                                                                  </p>
+                                                              </div>
+                                                              <div className="post-length">
+                                                                  <span className="material-symbols-outlined">
+                                                                      schedule
+                                                                  </span>
+                                                                  <p>
+                                                                      {
+                                                                          service.post_length
+                                                                      }{" "}
+                                                                      second
+                                                                  </p>
+                                                              </div>
+                                                              <div className="service-content-provider">
+                                                                  <p className="title">
+                                                                      Content
+                                                                      Provider
+                                                                  </p>
+                                                                  <div className="option-container">
+                                                                      <div className="option-1 option">
+                                                                          <label for="influencer-checkbox">
+                                                                              Influencer
+                                                                          </label>
+                                                                          <input
+                                                                              type="checkbox"
+                                                                              id="influencer-checkbox"
+                                                                              name="content-provider-option"
+                                                                              //   checked={
+                                                                              //       selectedContentProvider ===
+                                                                              //       "influencer"
+                                                                              //   }
+                                                                              checked={
+                                                                                  service.content_provider ===
+                                                                                  "influencer"
+                                                                              }
+                                                                              onChange={() =>
+                                                                                  setSelectedContentProvider(
+                                                                                      "influencer"
+                                                                                  )
+                                                                              }
+                                                                          />
+                                                                      </div>
+                                                                      <div className="option-2 option">
+                                                                          <label for="business-checkbox">
+                                                                              Business
+                                                                          </label>
+                                                                          <input
+                                                                              type="checkbox"
+                                                                              id="business-checkbox"
+                                                                              name="content-provider-option"
+                                                                              //   checked={
+                                                                              //       selectedContentProvider ===
+                                                                              //       "business"
+                                                                              //   }
+                                                                              checked={
+                                                                                  service.content_provider ===
+                                                                                  "business"
+                                                                              }
+                                                                              onChange={() =>
+                                                                                  setSelectedContentProvider(
+                                                                                      "business"
+                                                                                  )
+                                                                              }
+                                                                          />
+                                                                      </div>
+                                                                  </div>
+                                                              </div>
+                                                              <div className="pricing-type">
+                                                                  <p className="title">
+                                                                      Pricing
+                                                                      Type
+                                                                  </p>
+                                                                  <div className="option-container">
+                                                                      <div className="option-1 option">
+                                                                          <label for="hourly-pricing">
+                                                                              Per
+                                                                              Hour
+                                                                          </label>
+                                                                          <input
+                                                                              type="checkbox"
+                                                                              id="hourly-pricing"
+                                                                              name="pricing-type-checkbox"
+                                                                              checked={
+                                                                                  selectedPricingType ===
+                                                                                  "hourly"
+                                                                              }
+                                                                              onChange={() =>
+                                                                                  setSelectedPricingType(
+                                                                                      "hourly"
+                                                                                  )
+                                                                              }
+                                                                          />
+                                                                      </div>
+
+                                                                      <div className="option-2 option">
+                                                                          <label for="view-pricing">
+                                                                              Per
+                                                                              View
+                                                                          </label>
+                                                                          <input
+                                                                              type="checkbox"
+                                                                              id="view-pricing"
+                                                                              name="pricing-type-checkbox"
+                                                                              checked={
+                                                                                  selectedPricingType ===
+                                                                                  "view"
+                                                                              }
+                                                                              onChange={() =>
+                                                                                  setSelectedPricingType(
+                                                                                      "view"
+                                                                                  )
+                                                                              }
+                                                                              disabled
+                                                                          />
+                                                                      </div>
+                                                                  </div>
+                                                              </div>
+                                                              {selectedPricingType ===
+                                                              "hourly" ? (
+                                                                  <div className="price">
+                                                                      <span className="material-symbols-outlined">
+                                                                          payments
+                                                                      </span>
+                                                                      <strong>
+                                                                          $
+                                                                          {service.pricing.map(
+                                                                              (
+                                                                                  price
+                                                                              ) => {
+                                                                                  if (
+                                                                                      price.pricing_type ===
+                                                                                      "hourly"
+                                                                                  ) {
+                                                                                      return price.price;
+                                                                                  }
+                                                                              }
+                                                                          )}
+                                                                      </strong>
+                                                                      <input
+                                                                          type="number"
+                                                                          placeholder="Enter live hours"
+                                                                      />
+                                                                  </div>
+                                                              ) : (
+                                                                  <div className="price">
+                                                                      <span className="material-symbols-outlined">
+                                                                          payments
+                                                                      </span>
+                                                                      <strong>
+                                                                          $
+                                                                          {service.pricing.map(
+                                                                              (
+                                                                                  price
+                                                                              ) => {
+                                                                                  if (
+                                                                                      price.pricing_type ===
+                                                                                      "view"
+                                                                                  ) {
+                                                                                      return price.price;
+                                                                                  }
+                                                                              }
+                                                                          )}
+                                                                      </strong>
+                                                                      <input
+                                                                          type="number"
+                                                                          placeholder="Enter max. views"
+                                                                      />
+                                                                  </div>
+                                                              )}
+                                                              <div className="request-service">
+                                                                  <button
+                                                                      type="button"
+                                                                      onClick={() => {
+                                                                        requestService(instagram_id, localStorage.getItem("username"), service.id,"requested");
+                                                                      }}
+                                                                  >
+                                                                      Request
+                                                                      Service
+                                                                  </button>
+                                                              </div>
+                                                          </div>
+                                                      );
+                                                  }
+                                              })
+                                            : null}
+                                    </div>
                                 ) : null}
-                                {servicePage === "other-service" ? (
+                                {/* {servicePage === "other-service" ? (
                                     <div className="content other-service"></div>
-                                ) : null}
+                                ) : null} */}
                             </div>
                         </div>
                     </div>
