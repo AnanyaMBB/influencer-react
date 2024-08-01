@@ -12,7 +12,7 @@ export default function Chat() {
     const [selectedChat, setSelectedChat] = useState("");
     const [selectedChatUser, setSelectedChatUser] = useState("");
     const [files, setFiles] = useState([]);
-
+    
     // let client;
     const [client, setClient] = useState();
     useEffect(() => {
