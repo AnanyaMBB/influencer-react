@@ -85,6 +85,8 @@
     padding-bottom: 1vh;
 
     background-color: #fff;
+
+    z-index: 1000;
 }
 
 .research-container .chat-search-container .title {
@@ -115,7 +117,8 @@
 }
 
 .research-container .action-container {
-    z-index: -1000;
+    /* z-index: -1000; */
+    /* z-index: -1; */
     width: 100%;
     /* height: 10vh; */
     height: auto;
@@ -138,6 +141,7 @@
 }
 
 .research-container .action-hide-btn {
+    z-index: 1500;
     position: relative;
     width: 25px;
     height: 25px;

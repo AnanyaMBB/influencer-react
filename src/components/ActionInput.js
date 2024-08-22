@@ -1,6 +1,6 @@
-import './ChatSearch.css';
+import './ActionInput.css';
 
-export default function ChatSearch(props) {
+export default function ActionInput(props) {
 
     return (
         <>

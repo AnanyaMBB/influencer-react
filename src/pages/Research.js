@@ -576,8 +576,8 @@ export default function Research() {
                         keyboard_double_arrow_down  
                     </span>
                 </div>
-                <div className="action-container action-display-none-property" ref={actionRef}>
-                    <ActionInput searchquery={actionQuery} setSearchQuery={setActionQuery} />
+                <div className="action-container" ref={actionRef}>
+                    <ActionInput searchQuery={actionQuery} setSearchQuery={setActionQuery} />
                 </div>
                 
                 <div className="results" ref={resultsRef}>
