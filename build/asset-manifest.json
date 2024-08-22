@@ -1,23 +1,24 @@
 {
   "files": {
-    "main.css": "/static/css/main.178c98b9.css",
-    "main.js": "/static/js/main.6fd73a5e.js",
+    "main.css": "/static/css/main.486eba1e.css",
+    "main.js": "/static/js/main.396a8f46.js",
     "static/js/213.f5a77bd5.chunk.js": "/static/js/213.f5a77bd5.chunk.js",
     "static/js/455.482fb2aa.chunk.js": "/static/js/455.482fb2aa.chunk.js",
     "static/media/dashboardImg.png": "/static/media/dashboardImg.3551011dcc1d8fd3160b.png",
     "static/media/bee-logo.png": "/static/media/bee-logo.3b76d281a209bd0f5aa7.png",
+    "static/media/bee-logo-4.png": "/static/media/bee-logo-4.184c6778270353b9331a.png",
     "static/media/logo-2-no-bg.png": "/static/media/logo-2-no-bg.c6cd3539f54b384025b7.png",
     "static/media/logo-1-no-bg.png": "/static/media/logo-1-no-bg.86e846018c6a01d58bd2.png",
     "static/media/logo-1-no-bg-2.png": "/static/media/logo-1-no-bg-2.fd7491d1acea1031d47c.png",
     "static/media/logo-no-background.png": "/static/media/logo-no-background.98642b945c57a1b34631.png",
     "index.html": "/index.html",
-    "main.178c98b9.css.map": "/static/css/main.178c98b9.css.map",
-    "main.6fd73a5e.js.map": "/static/js/main.6fd73a5e.js.map",
+    "main.486eba1e.css.map": "/static/css/main.486eba1e.css.map",
+    "main.396a8f46.js.map": "/static/js/main.396a8f46.js.map",
     "213.f5a77bd5.chunk.js.map": "/static/js/213.f5a77bd5.chunk.js.map",
     "455.482fb2aa.chunk.js.map": "/static/js/455.482fb2aa.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.178c98b9.css",
-    "static/js/main.6fd73a5e.js"
+    "static/css/main.486eba1e.css",
+    "static/js/main.396a8f46.js"
   ]
 }
