@@ -2,12 +2,20 @@ import "./InfluencerAccountManagement.css";
 import { useState, useEffect, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import AddService from "../components/AddService";
+import AddYoutubeService from "../components/AddYoutubeService";
 import { baseUrl } from "../shared";
+import { GoogleLogin } from "@react-oauth/google";
+import { googleLogout, useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
+import youtubeLogo from "./youtube-logo.png";
+import instagramLogo from "./instagram-logo.png";
+import { LoginContext } from "../App";
 
 export default function InfluencerAccountManagement() {
     const [page, setPage] = useState("ugc");
     const [show, setShow] = useState(false);
     const [instagramData, setInstagramData] = useState(null);
+    const [youtubeData, setYoutubeData] = useState(null);
 
     const [servicesData, setServicesData] = useState({
         ugc: [],
@@ -23,9 +31,20 @@ export default function InfluencerAccountManagement() {
     const handleShow = () => setShow(true);
 
     const navigate = useNavigate();
+    const [loggedIn, setLoggedIn] = useContext(LoginContext);
+    useEffect(() => {
+        if (!loggedIn) {
+            navigate("/login");
+        }
+    }, []);
+
 
     useEffect(() => {
-        const url = baseUrl + "api/influencer/instagram/get";
+        const url =
+            baseUrl +
+            `api/influencer/instagram/get?username=${localStorage.getItem(
+                "username"
+            )}`;
         fetch(url, {
             method: "GET",
             headers: {
@@ -40,6 +59,29 @@ export default function InfluencerAccountManagement() {
                 console.log("Instagram Information: ", data);
                 setInstagramData(data.accounts_info);
                 console.log("Instagram Data: ", instagramData);
+            });
+    }, []);
+
+    useEffect(() => {
+        const url =
+            baseUrl +
+            `api/influencer/youtube/get?username=${localStorage.getItem(
+                "username"
+            )}`;
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + localStorage.getItem("access"),
+            },
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                setYoutubeData(data.channel_info);
+                console.log("YouTube Data: ", youtubeData);
+                console.log("YouTube Data: ", data);
             });
     }, []);
 
@@ -62,48 +104,6 @@ export default function InfluencerAccountManagement() {
         //     console.error("Error:", error);
         // });
     }
-
-    // function getServices() {
-    //     const ugcUrl = baseUrl + "api/instagram/ugc/get";
-    //     const feedPostUrl = baseUrl + "api/instagram/feed/get";
-    //     const reelPostUrl = baseUrl + "api/instagram/reel/get";
-    //     const storyPostUrl = baseUrl + "api/instagram/story/get";
-    //     const otherPostUrl = baseUrl + "api/instagram/other/get";
-    //     const urls = [
-    //         [ugcUrl, "ugc_services", "ugc"],
-    //         [feedPostUrl, "feed_post_services", "feed-post"],
-    //         [reelPostUrl, "reel_post_services", "reel-post"],
-    //         [storyPostUrl, "story_post_services", "story-post"],
-    //         [otherPostUrl, "other_post_services", "other-post"],
-    //     ];
-
-    //     urls.forEach((url) => {
-    //         fetch(url[0], {
-    //             method: "GET",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //                 Authorization: "Bearer " + localStorage.getItem("access"),
-    //             },
-    //         })
-    //             .then((response) => {
-    //                 if (!response.ok) {
-    //                     throw new Error("Network response was not ok");
-    //                 }
-    //                 return response.json();
-    //             })
-    //             .then((data) => {
-    //                 data = data[url[1]];
-    //                 // setServicesData({...servicesData, [url[2]]: data});
-    //                 setServicesData((prevState) => ({
-    //                     ...prevState,
-    //                     [url[2]]: data,
-    //                 }));
-    //             })
-    //             .catch((error) => {
-    //                 console.error("Error:", error);
-    //             });
-    //     });
-    // }
 
     function getInstagramServices() {
         const url =
@@ -133,6 +133,57 @@ export default function InfluencerAccountManagement() {
             });
     }
 
+    function getYoutubeServices() {
+        const url =
+            baseUrl +
+            `api/youtube/service/get?channel_id=${localStorage.getItem(
+                "channel_id"
+            )}`;
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + localStorage.getItem("access"),
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log("Services data: ", data);
+                setServices(data);
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+    }
+
+    const [user, setUser] = useState([]);
+
+    const login = useGoogleLogin({
+        flow: "auth-code", // Request an authorization code
+        onSuccess: (codeResponse) => {
+            console.log("Code Response:", codeResponse);
+            // Send the authorization code to the backend
+            axios
+                .post("http://localhost:8000/api/youtube-analytics", {
+                    auth_code: codeResponse.code,
+                    username: localStorage.getItem("username"),
+                })
+                .then((res) => {
+                    console.log("YouTube Analytics Data: ", res.data);
+                })
+                .catch((err) => console.log(err));
+        },
+        onFailure: (error) => console.log("Login Failed", error),
+        scope: "https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/yt-analytics.readonly https://www.googleapis.com/auth/userinfo.profile openid https://www.googleapis.com/auth/userinfo.email",
+        access_type: "offline",
+        prompt: "consent",
+    });
+
     return (
         <div className="account-container">
             <div className="header">
@@ -140,16 +191,22 @@ export default function InfluencerAccountManagement() {
                     <p>Your Connected Accounts</p>
                 </div>
                 <div className="add-container">
+                    <button className="youtube-add-button" onClick={login}>
+                        <img src={youtubeLogo} />
+                        <span>Add Youtube</span>
+                    </button>
                     <button
-                        className="add-button"
+                        className="instagram-add-button"
                         onClick={linkInstagramAccount}
+                        disabled
                     >
-                        Add Account
+                        <img src={instagramLogo} />
+                        <span>Add Instagram</span>
                     </button>
                 </div>
             </div>
             <div className="connected-accounts">
-                {instagramData
+                {/* {instagramData
                     ? instagramData.map((account) => {
                           return (
                               <>
@@ -185,21 +242,49 @@ export default function InfluencerAccountManagement() {
                               </>
                           );
                       })
+                    : null} */}
+
+                {youtubeData
+                    ? youtubeData.map((account) => {
+                          return (
+                              <>
+                                  <div
+                                      className="account"
+                                      onClick={() => {
+                                          localStorage.setItem(
+                                              "channel_id",
+                                              account.channel_id
+                                          );
+                                          //   getServices();
+                                          getYoutubeServices();
+                                      }}
+                                  >
+                                      <div className="icon">
+                                          <img
+                                              src={account.thumbnail_url}
+                                              alt="profile"
+                                          />
+                                      </div>
+                                      <div className="text">
+                                          <div className="username">
+                                              <p>{account.title}</p>
+                                          </div>
+                                          <div className="followers">
+                                              <p>{account.subscriber_count}</p>
+                                          </div>
+                                          {/* <div className="channel-id">
+                                              {account.channel_id}
+                                          </div> */}
+                                      </div>
+                                  </div>
+                              </>
+                          );
+                      })
                     : null}
             </div>
 
             <div className="services">
-                <div className="navigation">
-                    {/* <div
-                        className={
-                            page == "ugc" ? "ugc selected-navigation" : "ugc"
-                        }
-                        onClick={() => {
-                            setPage("ugc");
-                        }}
-                    >
-                        UGC
-                    </div> */}
+                {/* <div className="navigation">
                     <div
                         className={
                             page == "feed-post"
@@ -236,19 +321,234 @@ export default function InfluencerAccountManagement() {
                     >
                         Story Post
                     </div>
-                    {/* <div
+                </div> */}
+
+                <div className="navigation">
+                    <div
                         className={
-                            page == "other-post"
-                                ? "other-post selected-navigation"
-                                : "other-post"
+                            page == "FULL"
+                                ? "full selected-navigation"
+                                : "full"
                         }
                         onClick={() => {
-                            setPage("other-post");
+                            setPage("FULL");
                         }}
                     >
-                        Other Post
-                    </div> */}
+                        FULL VIDEO
+                    </div>
+                    <div
+                        className={
+                            page == "SHORTS"
+                                ? "shorts selected-navigation"
+                                : "shorts"
+                        }
+                        onClick={() => {
+                            setPage("SHORTS");
+                        }}
+                    >
+                        SHORTS VIDEO
+                    </div>
                 </div>
+                {page == "FULL" ? (
+                    <div className="table-container">
+                        <div className="table-header">
+                            <div className="table-title">
+                                <p>Services</p>
+                            </div>
+                            <div className="add-service">
+                                {/* <AddService page={page} /> */}
+                                <AddYoutubeService />
+                                {/* <button className="add-service-button">
+                                    Add Service
+                                </button> */}
+                            </div>
+                        </div>
+                        <div class="relative overflow-x-auto">
+                            <table class="w-full text-sm text-left rtl:text-righ">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">
+                                            Service Name
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Service Type
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Post Type
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Post Length
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Content Provider
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Hourly Pricing
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            View Pricing
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {services
+                                        ? services.map((service) => {
+                                              if (
+                                                  service.service_type == "FULL"
+                                              ) {
+                                                  return (
+                                                      <>
+                                                          <tr class="bg-white border-b">
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.service_name
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.service_type
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.post_type
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.post_length
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.content_provider
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service
+                                                                          .pricing[0]
+                                                                          .price
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service
+                                                                          .pricing[1]
+                                                                          .price
+                                                                  }
+                                                              </td>
+                                                          </tr>
+                                                      </>
+                                                  );
+                                              }
+                                          })
+                                        : null}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                ) : null}
+                {page == "SHORTS" ? (
+                    <div className="table-container">
+                        <div className="table-header">
+                            <div className="table-title">
+                                <p>Services</p>
+                            </div>
+                            <div className="add-service">
+                                {/* <AddService page={page} /> */}
+                                <AddYoutubeService />
+                                {/* <button className="add-service-button">
+                                    Add Service
+                                </button> */}
+                            </div>
+                        </div>
+                        <div class="relative overflow-x-auto">
+                            <table class="w-full text-sm text-left rtl:text-righ">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">
+                                            Service Name
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Service Type
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Post Type
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Post Length
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Content Provider
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Hourly Pricing
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            View Pricing
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {services
+                                        ? services.map((service) => {
+                                              if (
+                                                  service.service_type == "SHORTS"
+                                              ) {
+                                                  return (
+                                                      <>
+                                                          <tr class="bg-white border-b">
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.service_name
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.service_type
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.post_type
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.post_length
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service.content_provider
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service
+                                                                          .pricing[0]
+                                                                          .price
+                                                                  }
+                                                              </td>
+                                                              <td class="px-6 py-4">
+                                                                  {
+                                                                      service
+                                                                          .pricing[1]
+                                                                          .price
+                                                                  }
+                                                              </td>
+                                                          </tr>
+                                                      </>
+                                                  );
+                                              }
+                                          })
+                                        : null}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                ) : null}
                 {page == "ugc" ? (
                     <div className="table-container">
                         <div className="table-header">
@@ -256,7 +556,8 @@ export default function InfluencerAccountManagement() {
                                 <p>Services</p>
                             </div>
                             <div className="add-service">
-                                <AddService page={page} />
+                                {/* <AddService page={page} /> */}
+                                <AddYoutubeService />
                                 {/* <button className="add-service-button">
                                     Add Service
                                 </button> */}
@@ -495,7 +796,7 @@ export default function InfluencerAccountManagement() {
                         <div class="relative overflow-x-auto">
                             <table class="w-full text-sm text-left rtl:text-right">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                                <tr>
+                                    <tr>
                                         <th scope="col" class="px-6 py-3">
                                             Service Name
                                         </th>
@@ -595,7 +896,7 @@ export default function InfluencerAccountManagement() {
                         <div class="relative overflow-x-auto">
                             <table class="w-full text-sm text-left rtl:text-right">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                                <tr>
+                                    <tr>
                                         <th scope="col" class="px-6 py-3">
                                             Service Name
                                         </th>

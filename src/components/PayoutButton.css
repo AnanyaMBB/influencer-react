@@ -1,0 +1,26 @@
+.payout-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.payout-container input {
+    width: 100%;
+    padding: 5px 10px;
+    border: 2px solid #1878F1;
+    outline-color: #1878F1;
+    border-radius: 5px;
+}
+
+.payout-container button {
+    width: 100%;
+    background-color: #1878F1;
+    padding: 10px 10px;
+    color: #fff;
+    margin-top: 1vh;
+    border-radius: 5px;
+}
+
+.payout-container button:hover {
+    opacity: 0.8;
+}

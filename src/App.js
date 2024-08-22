@@ -14,6 +14,7 @@ import Requests from "./pages/Requests";
 import Earnings from "./pages/Earnings";
 import Research from "./pages/Research";
 import BusinessLanding from "./pages/BusinessLanding";
+import Wallet from "./pages/Wallet";
 import { useState, createContext, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Switch } from "react-router-dom";
 import { baseUrl } from "./shared";
@@ -87,7 +88,7 @@ function App() {
                     </Route>
                     <Route element={<Core title="Profile" />}>
                         <Route
-                            path="/profile/:instagram_id"
+                            path="/profile/:account_type/:account_id"
                             element={<InfluencerProfile />}
                         />
                     </Route>
@@ -113,6 +114,10 @@ function App() {
 
                     <Route element={<Core title="Earnings" />}>
                         <Route path="/earnings" element={<Earnings />} />   
+                    </Route>
+
+                    <Route element={<Core title="Wallet" />}>
+                        <Route path="/wallet" element={<Wallet />} />   
                     </Route>
 
                     <Route element={<Core title="Research" />}>

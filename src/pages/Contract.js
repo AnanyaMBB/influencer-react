@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useRef, useEffect, useContext } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import "./Contract.css";
 import htmlToPdfmake from "html-to-pdfmake";
 import { saveAs } from "file-saver";
@@ -15,6 +15,8 @@ import ShareContract from "../components/ShareContract";
 import Elements from "../components/Elements";
 import mammoth from "mammoth";
 import FileManager from "../components/FileManager";
+
+import { LoginContext } from "../App";
 
 export default function Contract() {
     const [historyOpen, setHistoryOpen] = useState(false);
@@ -38,6 +40,14 @@ export default function Contract() {
     const [elementDetails, setElementDetails] = useState({});
 
     const { contract_id, version_id } = useParams();
+
+    const navigate = useNavigate();
+    const [loggedIn, setLoggedIn] = useContext(LoginContext);
+    useEffect(() => {
+        if (!loggedIn) {
+            navigate("/login");
+        }
+    }, []);
 
     // useEffect(() => {
     //     if (contract_id && version_id) {

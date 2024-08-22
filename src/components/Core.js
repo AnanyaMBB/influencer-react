@@ -6,6 +6,7 @@ import logo from './logo-no-background.png'
 import logo1 from './logo-1-no-bg.png'
 import logo2 from './logo-2-no-bg.png'
 import beeLogo from './bee-logo.png'
+import beeLogo4 from "../components/bee-logo-4.png";
 // import logo-no-background from "./logo-no-background.svg";
 export default function Core(props) {
     const [isCollapsed, setIsCollapsed] = useState(true);
@@ -35,7 +36,7 @@ export default function Core(props) {
                 <aside>
                     <div className="logo">
                         {/* <img src={logo1} width="100"/> */}
-                        <img src={beeLogo} width="100"/>
+                        <img src={beeLogo4} width="100"/>
                     </div>
                     <nav>
                         <div className="nav-btn" onClick={() => {
@@ -88,12 +89,22 @@ export default function Core(props) {
                             </div>
                             <div className="text">Earnings</div>
                         </div>
+                        <div className="nav-btn" onClick={() => {
+                            navigate("/research");
+                        }}>
+                            <div className="icon">
+                                <span class="material-symbols-outlined">
+                                    conditions
+                                </span>
+                            </div>
+                            <div className="text">Research</div>
+                        </div>
                     </nav>
                 </aside>
             ) : (
                 <aside>
                     <div className="logo">
-                        <img src={beeLogo} width="100" height="300"/>
+                        <img src={beeLogo4} width="100" height="300"/>
                     </div>
                     <nav>
                         <div className="nav-btn" onClick={() => {
@@ -137,7 +148,7 @@ export default function Core(props) {
                             </div>
                             <div className="text">Chat</div>
                         </div>
-                        <div className="nav-btn selected" onClick={() => {
+                        <div className="nav-btn" onClick={() => {
                             navigate("/research");
                         }}>
                             <div className="icon">
@@ -146,6 +157,16 @@ export default function Core(props) {
                                 </span>
                             </div>
                             <div className="text">Research</div>
+                        </div>
+                        <div className="nav-btn" onClick={() => {
+                            navigate("/wallet");
+                        }}>
+                            <div className="icon">
+                                <span class="material-symbols-outlined">
+                                    account_balance_wallet
+                                </span>
+                            </div>
+                            <div className="text">Wallet</div>
                         </div>
                     </nav>
                 </aside>

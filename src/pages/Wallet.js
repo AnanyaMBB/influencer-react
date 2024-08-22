@@ -1,10 +1,9 @@
-import "./Earnings.css";
+import "./Wallet.css";
 import { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import  { useNavigate } from "react-router-dom";
 import PayPalButton from "../components/PayPalButton";
 import { baseUrl } from "../shared";
-import PayoutButton from "../components/PayoutButton";
-
+// import PayoutButton from "../components/PayoutButton";
 import { LoginContext } from "../App";
 
 export default function Wallet() {
@@ -20,7 +19,7 @@ export default function Wallet() {
             navigate("/login");
         }
     }, []);
-    
+
     useEffect(() => {
         let url =
             baseUrl +
@@ -71,11 +70,11 @@ export default function Wallet() {
             });
     }, []);
     return (
-        <div className="earnings-container">
-            <div className="earnings-amount">
+        <div className="wallet-container">
+            <div className="wallet-amount">
                 <div className="amount">
                     <div className="title">
-                        <h2>Earnings Amount</h2>
+                        <h2>Wallet Amount</h2>
                     </div>
                     <div className="amount-value">${walletBalance}</div>
                     <div className="action">
@@ -84,18 +83,29 @@ export default function Wallet() {
                                 setShowPaypal(!showPaypal);
                             }}
                         >
-                            Payout
+                            Top up
                         </span>
                     </div>
                 </div>
                 {showPaypal ? (
                     <div className="paypal">
-                        <PayoutButton />
+                        <div className="amount-input">
+                            <input
+                                type="number"
+                                placeholder="Enter amount to top up"
+                                value={topUpAmount}
+                                onChange={(e) => {
+                                    setTopUpAmount(e.target.value);
+                                    console.log("Amount", topUpAmount); // Log to check the amount value
+                                }}
+                            />
+                        </div>
+                        <PayPalButton topUpAmount={topUpAmount} />
                     </div>
                 ) : null}
             </div>
-            <div className="earnings-history">
-                <h2>Transaction History</h2>
+            <div className="wallet-history">
+                <h2>Wallet History</h2>
                 <div className="history">
                     <div className="row title-row">
                         <div className="column transaction-type">

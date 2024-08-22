@@ -1,9 +1,10 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../App";
 import "./Research.css";
 import MoreFilters from "../components/MoreFilters";
 import ChatSearch from "../components/ChatSearch";
+import ActionInput from "../components/ActionInput";
 import { baseUrl } from "../shared";
 import ReactFlagsSelect from "react-flags-select";
 import NicheSelect from "../components/NicheSelect";
@@ -28,10 +29,15 @@ export default function Research() {
     const [selectedKeywords, setSelectedKeywords] = useState([]);
     const [selectedAudioIds, setSelectedAudioIds] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
+    const [actionQuery, setActionQuery] = useState("");
     const [videoSource, setVideoSource] = useState("");
 
+    const [platformCheckBox, setPlatformCheckBox] = useState("youtube");
+    const actionRef = useRef(null);
+    const resultRef = useRef(null);
+    const generatedContainerRef = useRef(null);
+    const resultsRef = useRef(null);
     
-
 
     useEffect(() => {
         if (!loggedIn) {
@@ -39,13 +45,36 @@ export default function Research() {
         }
     }, []);
 
+    useEffect(() => {
+        if (actionQuery != "" && actionQuery != null) {
+            if (generatedContainerRef.current != null && actionRef.current != null) {
+                resultsRef.current.querySelectorAll(".result").forEach((result) => {
+                    result.classList.add("height-60");
+                });
+                resultsRef.current.querySelectorAll(".generated-container").forEach((generatedContiner) => {
+                    generatedContiner.classList.remove("generated-display-none-property");
+                });
+            }
+        }
+        else {
+            if (generatedContainerRef.current != null && actionRef.current != null) {
+                resultsRef.current.querySelectorAll(".result").forEach((result) => {
+                    result.classList.remove("height-60");
+                });
+                resultsRef.current.querySelectorAll(".generated-container").forEach((generatedContiner) => {
+                    generatedContiner.classList.add("generated-display-none-property");
+                });
+            }
+        }
+    }, [filterResponse]);
+
     function filterResults(e) {
         e.preventDefault();
         const usernames = selectedUsernames.join(",");
         const keywords = selectedKeywords.join(",");
         const url =
             baseUrl +
-            `api/research/search?query=${searchQuery}&username=${usernames}&tokens=${keywords}&likes_count=${filterValues.likes_count}&comments_count=${filterValues.comments_count}`;
+            `api/research/search?query=${searchQuery}&username=${usernames}&tokens=${keywords}&likes_count=${filterValues.likes_count}&comments_count=${filterValues.comments_count}&platform=${platformCheckBox}&action=${actionQuery}`;
         fetch(url, {
             method: "GET",
             headers: {
@@ -61,7 +90,16 @@ export default function Research() {
             .then((data) => {
                 console.log("FIlTERED RESPONSE: ", data);
                 setFilterResponse(data);
-                // getVideoUrl(data);
+                setTimeout(() => {
+                    if (actionQuery != "" && actionQuery != null) {
+                        if (generatedContainerRef.current != null && actionRef.current != null) {
+                            console.log("HERE HERE HERE");
+                            actionRef.current.classList.add("height-60");
+                            console.log(actionRef.current.classList);
+                            generatedContainerRef.current.classList.remove("generated-display-none-property");
+                        }
+                    }
+                }, 100);
             })
             .catch((error) => {
                 console.log(error);
@@ -73,7 +111,7 @@ export default function Research() {
     //     // data.forEach((item) => {
     //     //     const formData = new FormData();
     //     //     fetch("https://www.instagram.com/reels/" + item.media_id + "/", {
-    //     //         method: "GET", 
+    //     //         method: "GET",
 
     //     //     })
     //     //     .then((response) => {
@@ -90,6 +128,42 @@ export default function Research() {
                     <p>Filters</p>
                 </div>
                 <div className="filters">
+                    <div className="filter platform">
+                        <div className="filter-title">
+                            <span class="material-symbols-outlined">
+                                app_shortcut
+                            </span>
+                            <p>Platform</p>
+                        </div>
+                        <div className="filter-content">
+                            <div className="checkbox-container">
+                                <div className="cb checkbox-1">
+                                    <div className="title">
+                                        <p>Youtube</p>
+                                    </div>
+                                    <div className="input-container">
+                                        <input type="checkbox" onChange={(e) => {
+                                            if (platformCheckBox === "instagram") {
+                                                setPlatformCheckBox("youtube");
+                                            }
+                                        }} checked={platformCheckBox === "youtube"} />
+                                    </div>
+                                </div>
+                                <div className="cb checkbox-1">
+                                    <div className="title">
+                                        <p>Instagram</p>
+                                    </div>
+                                    <div className="input-container">
+                                        <input type="checkbox" onChange={(e) => {
+                                            if (platformCheckBox === "youtube") {
+                                                setPlatformCheckBox("instagram");
+                                            }
+                                        }} checked={platformCheckBox === "instagram"} />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div className="filter username">
                         <div className="filter-title">
                             <span class="material-symbols-outlined">
@@ -490,23 +564,93 @@ export default function Research() {
                         searchQuery={searchQuery}
                         setSearchQuery={setSearchQuery}
                         filterResults={filterResults}
+                        placeholder="Search for instagram reels and youtube shorts"
                     />
                 </div>
-                <div className="results">
-                    {filterResponse.map((result) => {
+                <div className="action-hide-btn action-hide-btn-top" onClick={(e) => {
+                    actionRef.current.classList.toggle("action-display-none-property");
+                    e.target.closest(".action-hide-btn").classList.toggle("action-hide-btn-top");
+                    e.target.closest(".action-hide-btn").classList.toggle("action-rotate");
+                }}>
+                    <span class="material-symbols-outlined">
+                        keyboard_double_arrow_down  
+                    </span>
+                </div>
+                <div className="action-container action-display-none-property" ref={actionRef}>
+                    <ActionInput searchquery={actionQuery} setSearchQuery={setActionQuery} />
+                </div>
+                
+                <div className="results" ref={resultsRef}>
+                {/* <iframe width="300" height="300" src="https://www.youtube.com/embed/qbDakI96YMo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> */}
+                    {platformCheckBox === "youtube" ? 
+                    filterResponse.map((result) => {
+                        return (
+                            <div className="result" ref={resultRef}>
+                                <div className="result-video">
+                                    <iframe width="300" height="300" src={"https://www.youtube.com/embed/" + result.media_id} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                </div>
+                                <div className="analytics-container analytics-container-border">
+                                    <div className="analytics likes">
+                                        <div className="icon">
+                                            <span class="material-symbols-outlined">
+                                                thumb_up
+                                            </span>
+                                        </div>
+                                        <div className="value">
+                                            {result.likes_count}
+                                        </div>
+                                    </div>
+                                    <div className="analytics comments">
+                                        <div className="icon">
+                                            <span class="material-symbols-outlined">
+                                                chat
+                                            </span>
+                                        </div>
+                                        <div className="value">
+                                            {result.comments_count}
+                                        </div>
+                                    </div>
+                                    {/* <div className="analytics shares">
+                                        <div className="icon">
+                                            <span class="material-symbols-outlined">
+                                                share
+                                            </span>
+                                        </div>
+                                        <div className="value">10000</div>
+                                    </div> */}
+                                </div>
+
+                                <div className="generated-container generated-display-none-property" ref={generatedContainerRef}
+                                    dangerouslySetInnerHTML={{ __html: result.generated }}>
+                                </div>
+                                
+                                
+                            </div>
+                        );
+                    })
+                    : null}
+                    {platformCheckBox === "instagram" ? filterResponse.map((result) => {
                         return (
                             <div className="result">
                                 <div className="result-video">
-
                                     {/* <video width="100%" controls>
                                         <source src="" type="video/mp4" />
                                         Your browser does not support the video
                                         tag.
                                     </video> */}
-                                    <p onClick={() => {
-                                        // window.location.href = "https://www.instagram.com/reels/" + result.media_id + "/";
-                                        window.open("https://www.instagram.com/reels/" + result.media_id + "/", "_blank");
-                                    }}>Go to video on instagram</p>
+                                    <p
+                                        onClick={() => {
+                                            // window.location.href = "https://www.instagram.com/reels/" + result.media_id + "/";
+                                            window.open(
+                                                "https://www.instagram.com/reels/" +
+                                                    result.media_id +
+                                                    "/",
+                                                "_blank"
+                                            );
+                                        }}
+                                    >
+                                        Go to video on instagram
+                                    </p>
                                 </div>
                                 <div className="analytics-container">
                                     <div className="analytics likes">
@@ -515,7 +659,9 @@ export default function Research() {
                                                 thumb_up
                                             </span>
                                         </div>
-                                        <div className="value">{result.likes_count}</div>
+                                        <div className="value">
+                                            {result.likes_count}
+                                        </div>
                                     </div>
                                     <div className="analytics comments">
                                         <div className="icon">
@@ -523,7 +669,9 @@ export default function Research() {
                                                 chat
                                             </span>
                                         </div>
-                                        <div className="value">{result.comments_count}</div>
+                                        <div className="value">
+                                            {result.comments_count}
+                                        </div>
                                     </div>
                                     {/* <div className="analytics shares">
                                         <div className="icon">
@@ -536,7 +684,7 @@ export default function Research() {
                                 </div>
                             </div>
                         );
-                    })}
+                    }) : null}
                 </div>
             </div>
         </div>

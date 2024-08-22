@@ -574,8 +574,14 @@
     padding-left: 2%;
     height: 5vh;
     line-height: 5vh;
+    
 }
 
+.main-container .discovery-container .results .result  .username {
+    white-space: nowrap;         /* Prevents the text from wrapping to the next line */
+    overflow: hidden;            /* Hides the overflowed text */
+    text-overflow: ellipsis;  
+}
 
 .main-container .discovery-container .results .result .profile img{
     width: 40px;

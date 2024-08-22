@@ -23,16 +23,57 @@
 
 .account-container .header .add-container {
     padding-top: 1vh;
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
 }
 
-.account-container .header .add-container .add-button {
+.account-container .header .add-container button {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-right: 2%;
+    height: 5vh;
+    line-height: 2vh;
+    border: 2px solid #1878F1;
+    color: #1878F1;
+    padding-left: 15px;
+    padding-right: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.account-container .header .add-container .instagram-add-button {
+    margin-right: 0;
+}
+
+.account-container .header .add-container button:hover {
+    background-color: #1878F1;
+    color: #fff;
+}
+
+.account-container .header .add-container button img {
+    display: inline-block;
+    width: 30px;
+    height: 35px;
+    margin-right: 5px;
+}
+
+.account-container .header .add-container .instagram-add-button img {
+    width: 25px;
+    height: 25px;
+}
+
+.account-container .header .add-container .instagram-add-button {
     height: 5vh;
     line-height: 2vh;
     border: 2px solid #1878F1;
     color: #1878F1;
     padding-left: 20px;
     padding-right: 20px;
-    border-radius: 15px;
+    border-radius: 10px;
     cursor: pointer;
 }
 
@@ -57,6 +98,7 @@
     flex-direction: row;
     justify-content: flex-start;
     width: 17%;
+    min-width: 250px;
     height: 8vh;
     border-radius: 15px;
     border: 1px solid lightgray;
@@ -123,6 +165,7 @@
 
 .account-container .services .navigation div {
     width: 7%;
+    min-width: 200px;
     height: 5vh;
     line-height: 5vh;
     text-align: center;

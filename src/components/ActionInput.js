@@ -6,7 +6,7 @@ export default function ChatSearch(props) {
         <>
             <div className="component-container">
                 <div className="title">
-                    <p>Chat Search</p>
+                    <p>Action Input</p>
                 </div>
                 <div className="chat-search">
                     <input
@@ -14,10 +14,7 @@ export default function ChatSearch(props) {
                         placeholder={props.placeholder}
                         value={props.searchQuery}
                         onChange={(e) => props.setSearchQuery(e.target.value)}
-                    />
-                    <button type="button" onClick={props.filterResults}>
-                        <span class="material-symbols-outlined">search</span>
-                    </button>
+                    />                    
                 </div>
             </div>
         </>

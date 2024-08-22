@@ -1,5 +1,5 @@
 import "./CampaignManagement.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import LineGraph from "../components/LineGraph";
 import SentimentChart from "../components/SentimentChart";
@@ -10,6 +10,8 @@ import GenderChart from "../components/GenderChart";
 import { baseUrl } from "../shared";
 import FileManager from "../components/FileManager";
 import PayPalButton from "../components/PayPalButton";
+import { LoginContext } from "../App";
+
 
 export default function CampaignManagement() {
     const [page, setPage] = useState("campaigns");
@@ -158,6 +160,12 @@ export default function CampaignManagement() {
 
 
     const navigate = useNavigate();
+    const [loggedIn, setLoggedIn] = useContext(LoginContext);
+    useEffect(() => {
+        if (!loggedIn) {
+            navigate("/login");
+        }
+    }, []);
 
     useEffect(() => {
         const url =
@@ -301,7 +309,6 @@ export default function CampaignManagement() {
                                                 setPage("analytics");
                                             }}>Analytics</p>
                                         </div>
-                                        <PayPalButton />
                                         {/* <div className="column">
                                             <p>Impressions</p>
                                         </div>

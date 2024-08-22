@@ -36,23 +36,53 @@ export default function Discovery() {
         }
     }, []);
 
+    // function filterResults() {
+    //     const url =
+    //         baseUrl +
+    //         `api/instagram/filter?username=${filterValues.username}&name=${filterValues.name}&followers=${filterValues.followers}&price=${filterValues.price}&location=${filterValues.location}`;
+    //     fetch(url, {
+    //         method: "GET",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             "Authorization": "Bearer " + localStorage.getItem("access"),
+    //         },
+    //     })
+    //         .then((response) => {
+    //             if (!response.ok) {
+    //                 throw new Error("Error fetching data");
+    //             }
+    //             return response.json();
+    //         })
+    //         .then((data) => {
+    //             console.log(data);
+    //         })
+    //         .catch((error) => {
+    //             console.log(error);
+    //         });
+    // }
+
+    // Filter Youtube Results
     function filterResults() {
         const url =
             baseUrl +
-            `api/instagram/filter?username=${filterValues.username}&name=${filterValues.name}&followers=${filterValues.followers}&price=${filterValues.price}&location=${filterValues.location}`;
-        fetch(url)
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Error fetching data");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                console.log(data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+            `api/youtube/filter?username=${filterValues.username}&name=${filterValues.name}&followers=${filterValues.followers}&price=${filterValues.price}&location=${filterValues.location}`;
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("access"),
+            }
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Error fetching data");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log("YOUTUBE DATA", data);
+        })
+        .catch((error) => {console.log(error)});
     }
 
     function updateSelectedCountry(code) {
@@ -82,9 +112,53 @@ export default function Discovery() {
         }, 0);
     }
 
+    // useEffect(() => {
+    //     console.log("SELECTED COUNTRY", selectedCountry);
+
+    //     const countryCodes = selectedCountry.map((country) => country.code);
+    //     console.log("COUNTRY CODES", countryCodes);
+    //     const url = new URL(baseUrl + `api/instagram/filter`);
+    //     const params = {
+    //         username: filterValues.username,
+    //         name: filterValues.name,
+    //         followers: filterValues.followers,
+    //         price: filterValues.price,
+    //         location: countryCodes,
+    //     };
+
+    //     Object.keys(params).forEach((key) =>
+    //         url.searchParams.append(key, params[key])
+    //     );
+
+    //     console.log("URL", url);
+
+    //     fetch(url, {
+    //         method: "GET",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             Authorization: "Bearer " + localStorage.getItem("access"),
+    //         },
+    //     })
+    //         .then((response) => {
+    //             if (!response.ok) {
+    //                 throw new Error("Error fetching data");
+    //             }
+    //             return response.json();
+    //         })
+    //         .then((data) => {
+    //             console.log(data);
+    //             setFilterResponse(data);
+    //         })
+    //         .catch((error) => {
+    //             console.log(error);
+    //         });
+    // }, [selectedCountry, filterValues]);
+
+    //Youtube 
+
     useEffect(() => {
         const countryCodes = selectedCountry.map((country) => country.code);
-        const url = new URL(baseUrl + `api/instagram/filter`);
+        const url = new URL(baseUrl + `api/youtube/filter`);
         const params = {
             username: filterValues.username,
             name: filterValues.name,
@@ -97,11 +171,13 @@ export default function Discovery() {
             url.searchParams.append(key, params[key])
         );
 
+        console.log("URL", url);
+
         fetch(url, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: "Bearer " + localStorage.getItem("token"),
+                Authorization: "Bearer " + localStorage.getItem("access"),
             },
         })
             .then((response) => {
@@ -424,31 +500,30 @@ export default function Discovery() {
                     </div>
                     <div className="results">
                         {filterResponse.map((result) => {
+                            // YOUTUBE
                             return (
                                 <div
                                     className="result"
-                                    data-influencer-id={result.influencer}
-                                    data-instagram-id={result.instagram_id}
+                                    data-channel-id={result.youtube_channel_information.channel_id}
+                                    data-account-type="youtube"
                                     onClick={(e) => {
                                         console.log(
                                             e.currentTarget.getAttribute(
-                                                "data-instagram-id"
+                                                "data-channel-id"
                                             )
                                         );
                                         navigate(
-                                            `/profile/${e.currentTarget.getAttribute(
-                                                "data-instagram-id"
+                                            `/profile/${e.currentTarget.getAttribute("data-account-type")}/${e.currentTarget.getAttribute(
+                                                "data-channel-id"
                                             )}`
                                         );
-                                        
                                     }}
                                 >
                                     <div className="profile">
                                         <img
                                             src={
                                                 result
-                                                    .instagram_initial_information
-                                                    .profile_picture_url
+                                                    .youtube_channel_information.thumbnail_url
                                             }
                                         />
                                     </div>
@@ -456,8 +531,7 @@ export default function Discovery() {
                                         <p>
                                             {
                                                 result
-                                                    .instagram_initial_information
-                                                    .username
+                                                    .youtube_channel_information.custom_url
                                             }
                                         </p>
                                     </div>
@@ -465,8 +539,7 @@ export default function Discovery() {
                                         <p>
                                             {
                                                 result
-                                                    .instagram_initial_information
-                                                    .followers_count
+                                                    .youtube_channel_information.subscriber_count
                                             }
                                         </p>
                                     </div>
@@ -474,8 +547,7 @@ export default function Discovery() {
                                         <p>
                                             {
                                                 result
-                                                    .instagram_country_demographics
-                                                    .this_week_country
+                                                    ?.youtube_geographic_demographics
                                             }
                                         </p>
                                     </div>
@@ -486,14 +558,80 @@ export default function Discovery() {
                                         <p>{result.niche}</p>
                                     </div>
                                     <div className="price">
-                                        <p>{result.price}</p>
+                                        <p>{result.lowest_price}</p>
                                     </div>
                                 </div>
                             );
+                            // INSTAGRAM
+                            // return (
+                            //     <div
+                            //         className="result"
+                            //         data-influencer-id={result.influencer}
+                            //         data-instagram-id={result.instagram_id}
+                            //         onClick={(e) => {
+                            //             console.log(
+                            //                 e.currentTarget.getAttribute(
+                            //                     "data-instagram-id"
+                            //                 )
+                            //             );
+                            //             navigate(
+                            //                 `/profile/${e.currentTarget.getAttribute(
+                            //                     "data-instagram-id"
+                            //                 )}`
+                            //             );
+                            //         }}
+                            //     >
+                            //         <div className="profile">
+                            //             <img
+                            //                 src={
+                            //                     result
+                            //                         .instagram_initial_information
+                            //                         .profile_picture_url
+                            //                 }
+                            //             />
+                            //         </div>
+                            //         <div className="username">
+                            //             <p>
+                            //                 {
+                            //                     result
+                            //                         .instagram_initial_information
+                            //                         .username
+                            //                 }
+                            //             </p>
+                            //         </div>
+                            //         <div className="followers">
+                            //             <p>
+                            //                 {
+                            //                     result
+                            //                         .instagram_initial_information
+                            //                         .followers_count
+                            //                 }
+                            //             </p>
+                            //         </div>
+                            //         <div className="location">
+                            //             <p>
+                            //                 {
+                            //                     result
+                            //                         .instagram_country_demographics
+                            //                         .this_week_country
+                            //                 }
+                            //             </p>
+                            //         </div>
+                            //         <div className="engagement">
+                            //             <p>{result.engagement}</p>
+                            //         </div>
+                            //         <div className="niche">
+                            //             <p>{result.niche}</p>
+                            //         </div>
+                            //         <div className="price">
+                            //             <p>{result.price}</p>
+                            //         </div>
+                            //     </div>
+                            // );
                         })}
                         {/* <img src="https://picsum.photos/200" /> */}
 
-                        <div className="result">
+                        {/* <div className="result">
                             <div className="profile">
                                 <img src="https://picsum.photos/202" />
                             </div>
@@ -515,7 +653,7 @@ export default function Discovery() {
                             <div className="price">
                                 <p>10</p>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

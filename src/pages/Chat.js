@@ -1,8 +1,10 @@
 import "./Chat.css";
 import FileUpload from "../components/FileUpload";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { baseUrl } from "../shared";
+import { LoginContext } from "../App";
 
 export default function Chat() {
     const [message, setMessage] = useState();
@@ -13,6 +15,16 @@ export default function Chat() {
     const [selectedChatUser, setSelectedChatUser] = useState("");
     const [files, setFiles] = useState([]);
     
+
+    const navigate = useNavigate();
+    const [loggedIn, setLoggedIn] = useContext(LoginContext);
+    useEffect(() => {
+        if (!loggedIn) {
+            navigate("/login");
+        }
+    }, []);
+
+
     // let client;
     const [client, setClient] = useState();
     useEffect(() => {

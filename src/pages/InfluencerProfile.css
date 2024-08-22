@@ -136,6 +136,7 @@
 
 .profile-container .profile-contents .services-container .services .services-nav .nav {
     width: 10%;
+    min-width: 100px;
     padding-top: 0.5vh;
     padding-bottom: 0.5vh;
     border-radius: 10px;
@@ -360,6 +361,7 @@
 .profile-container .profile-contents .analytics .analytics-engagement .navigation .nav,
 .profile-container .profile-contents .analytics .analytics-demographics .navigation .nav {
     width: 13%;
+    min-width: 140px;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 3px;
@@ -398,6 +400,13 @@
     flex-wrap: wrap;
 }
 
+.profile-container .profile-contents .analytics .analytics-engagement .content.youtube-channel-metrics {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
 .profile-container .profile-contents .analytics .analytics-engagement .content .graph-container.hidden {
     visibility: hidden;    
 }
@@ -416,6 +425,21 @@
     padding-right: 1%;
 }
 
+.profile-container .profile-contents .analytics .analytics-engagement .content.content.youtube-channel-metrics .graph-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    border: 0.5px solid lightgray;    
+    width: 49%;
+    height: 35vh;
+    border-radius: 15px;
+
+    padding-left: 1%;
+    padding-right: 1%;
+
+}
+
 .profile-container .profile-contents .analytics .analytics-engagement .content .graph-container .title {
     border: none;
     font-size: 1em;
@@ -429,6 +453,7 @@
     width: 100%;
     height: 19vh;
 }
+
 
 .profile-container .profile-contents .analytics .analytics-engagement .content .website-clicks .graph {
     display: flex;

@@ -1,30 +1,89 @@
 import "./BusinessLanding.css";
+import React, { useEffect } from "react";
 import dashboardImg from "./dashboardImg.png";
 import logo from "../components/logo-1-no-bg-2.png";
 import beeLogo from "../components/bee-logo.png";
+import beeLogo4 from "../components/bee-logo-4.png";
+
 export default function BusinessLanding() {
+    useEffect(() => {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                console.log(entry);
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("visible-item");
+                    entry.target.classList.remove("hidden-item");
+                } else {
+                    entry.target.classList.add("hidden-item");
+                    entry.target.classList.remove("visible-item");
+                }
+            });
+        });
+
+        const featureObserver = new IntersectionObserver((entries) => {
+            console.log("FEATURE OBSERVER", entries);
+            entries.forEach((entry) => {
+                console.log("ENTRY", entry);
+                console.log("REMOVED", entry.target.classList[1]);
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("from-finished");
+                    entry.target.classList.remove(entry.target.classList[1]);
+                } else {
+                    entry.target.classList.remove("from-finished");
+                    entry.target.classList.add(entry.target.classList[1]);
+                }
+            });
+        });
+
+        const elementsToObserve = document.querySelectorAll(".feature");
+        const dashboardImgToObserve = document.querySelectorAll(
+            ".dashboard-image-container"
+        );
+        const cardsToObserve = document.querySelectorAll(".card");
+
+        elementsToObserve.forEach((element) => observer.observe(element));
+        dashboardImgToObserve.forEach((element) => observer.observe(element));
+        cardsToObserve.forEach((element) => observer.observe(element));
+
+        // Clean up the observer when the component unmounts
+        return () => {
+            elementsToObserve.forEach((element) => observer.unobserve(element));
+        };
+    }, []); // Empty dependency array ensures this runs only once after mount
+
     return (
         <div className="landing-page-container">
             <div className="main">
                 <div className="title-container">
                     <div className="logo">
-                        <img src={beeLogo} />
+                        <img src={beeLogo4} />
                     </div>
                     <div className="header">
                         <h1>
-                            Unlock Powerful Insights with Influencer Analytics
-                            and Content Discovery!
+                            Supercharge Your Brand with AI-Driven Content
+                            Discovery and Market Insights!
                         </h1>
                     </div>
                     <div className="sub-header">
                         <p>
-                            Find influencers, search transcribed content, and
-                            monitor your brand across social media—all in one
-                            platform.
+                            Explore millions of transcribed YouTube Shorts and
+                            Instagram Reels to find the perfect content for your
+                            brand. Whether you're researching your niche,
+                            monitoring competitor strategies, or discovering the
+                            latest trends, our platform provides the insights
+                            you need to lead in your industry.
                         </p>
                     </div>
                     <div className="call-to-action">
-                        <button type="button" onClick={() => {}}>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                window.open(
+                                    "https://calendly.com/buzzfindr/30min",
+                                    "_blank"
+                                );
+                            }}
+                        >
                             Book a Demo
                         </button>
                     </div>
@@ -32,77 +91,90 @@ export default function BusinessLanding() {
                 <div className="covering"></div>
             </div>
             <div className="features">
-                <div className="dashboard-image-container">
+                <div className="dashboard-image-container hidden-item">
                     <img src={dashboardImg} />
                 </div>
                 <div className="info-container">
                     <div className="left">
                         <div className="header">
                             <h2>
-                                Comprehensive Influencer Marketing Solutions
+                                AI-Powered Content Research for Strategic
+                                Marketing
                             </h2>
                         </div>
                         <div className="content">
                             <p>
-                                Our platform simplifies influencer marketing.
-                                Find and analyze influencers, manage contracts,
-                                and ensure secure payments. Monitor campaigns
-                                with detailed analytics and use our extensive
-                                content database for inspiration and competitor
-                                research. Enhance your brand's reputation with
-                                our upcoming brand monitoring feature. Achieve
-                                impactful results with our all-in-one solution.
+                                Effortlessly explore and analyze millions of
+                                social media videos to shape your brand’s
+                                content strategy. Discover trending topics in
+                                your niche, gain deep insights into competitor
+                                tactics, and uncover opportunities for
+                                engagement. Our advanced filters allow you to
+                                search by specific keywords, usernames,
+                                engagement metrics, and more. Stay ahead of the
+                                curve with real-time alerts for any mentions of
+                                your brand or competitors.
                             </p>
                         </div>
                     </div>
                     <div className="right">
                         <div className="column">
-                            <div className="feature">
+                            <div className="feature hidden-item from-left">
                                 <div className="title">
                                     <h2>Discover Influencers</h2>
                                 </div>
                                 <div className="content">
                                     <p>
-                                        Access detailed metrics and pricing for
-                                        YouTube and Instagram influencers.
+                                        Connect with YouTube and Instagram
+                                        influencers who are already engaging
+                                        with your niche, using key engagement
+                                        metrics like likes and comments.
                                     </p>
                                 </div>
                             </div>
-                            <div className="feature">
+                            <div className="feature hidden-item from-top">
                                 <div className="title">
-                                    <h2>Content Discovery</h2>
+                                    <h2>Reputation Management</h2>
                                 </div>
                                 <div className="content">
                                     <p>
-                                        Filter through a vast collection of
-                                        transcribed Instagram Reels and YouTube
-                                        Shorts by likes, comments, user, and
-                                        more.
+                                        Monitor brand mentions across YouTube
+                                        Shorts, Instagram Reels, and Reddit.
+                                        Respond quickly to feedback and protect
+                                        your brand's image.
                                     </p>
                                 </div>
                             </div>
                         </div>
                         <div className="column">
-                            <div className="feature">
+                            <div className="feature hidden-item from-bottom">
                                 <div className="title">
-                                    <h2>Brand Monitoring</h2>
+                                    <h2>Content Discovery</h2>
                                 </div>
                                 <div className="content">
                                     <p>
-                                        Track brand mentions and manage your
-                                        reputation across YouTube Shorts,
-                                        Instagram Reels, and Reddit.
+                                        Search millions of transcribed Reels and
+                                        Shorts by keywords, user handles, likes,
+                                        and comments. Uncover trends, competitor
+                                        content, and inspiration for your
+                                        campaigns.
                                     </p>
                                 </div>
                             </div>
-                            <div className="feature">
+                            <div className="feature feature-content-idea hidden-item from-right">
                                 <div className="title">
-                                    <h2>Campaign Analytics</h2>
+                                    <h2>
+                                        Content Idea
+                                    </h2>
+                                    <p>(Coming Soon)</p>
                                 </div>
                                 <div className="content">
                                     <p>
-                                        Monitor your campaign's performance with
-                                        real-time, detailed analytics.
+                                        Get tailored content ideas for your
+                                        brand based on selected videos and your
+                                        brand description. Elevate your
+                                        marketing strategy with data-driven
+                                        creativity.
                                     </p>
                                 </div>
                             </div>
@@ -111,7 +183,7 @@ export default function BusinessLanding() {
                 </div>
             </div>
             <div className="flow-chart">
-                <div className="card">
+                <div className="card first-card hidden-item">
                     <div className="icon">
                         <span class="material-symbols-outlined">
                             conditions
@@ -121,20 +193,18 @@ export default function BusinessLanding() {
                         <h2>Research</h2>
                     </div>
                     <div className="content">
-                        <p>Discover Your Competitive Edge</p>
+                        <p>Gain a Competitive Edge</p>
                         <p>
-                            Dive deep into your niche and analyze competitors to
-                            tailor your content strategy and influencer
-                            marketing. Utilize our advanced tools to gain
-                            insights and advantages that set you apart in your
-                            industry.
+                            Analyze millions of videos to uncover what works in
+                            your industry. Get actionable insights to refine
+                            your content strategy.
                         </p>
                     </div>
                 </div>
                 <div className="connector">
                     <div className="arrow"></div>
                 </div>
-                <div className="card">
+                <div className="card second-card hidden-item">
                     <div className="icon">
                         <span class="material-symbols-outlined">
                             person_search
@@ -144,80 +214,75 @@ export default function BusinessLanding() {
                         <h2>Discovery</h2>
                     </div>
                     <div className="content">
-                        <p>Find Your Perfect Influencer</p>
+                        <p>Discover Content that Resonates</p>
                         <p>
-                            Find ideal influencers with our detailed analytics
-                            and pricing info. Our platform helps you identify
-                            those who align with your strategy and can
-                            effectively promote your content.
+                            Search millions of videos to find content that
+                            aligns with your brand. Use advanced filters to
+                            target the right audience.
                         </p>
                     </div>
                 </div>
                 <div className="connector">
                     <div className="arrow"></div>
                 </div>
-                <div className="card">
+                <div className="card third-card hidden-item">
                     <div className="icon">
                         <span class="material-symbols-outlined">contract</span>
                     </div>
                     <div className="title">
-                        <h2>Contract</h2>
+                        <h2>Content Alerts</h2>
                     </div>
                     <div className="content">
-                        <p>Seamless Contract Management</p>
+                        <p>Stay Ahead with Real-Time Alerts</p>
                         <p>
-                            Effortlessly create and manage contracts with our
-                            template library. Send contracts digitally for
-                            smooth, efficient signing. Access all securely
-                            stored agreements anytime.
+                            Set up alerts to monitor brand mentions, trends, or
+                            competitor activities. Never miss an opportunity to
+                            engage or respond.
                         </p>
                     </div>
                 </div>
-                <div className="card">
+                <div className="connector middle-connector">
+                    <div className="arrow"></div>
+                </div>
+                <div className="card fourth-card hidden-item">
                     <div className="icon">
                         <span class="material-symbols-outlined">
                             account_balance_wallet
                         </span>
                     </div>
                     <div className="title">
-                        <h2>Secure Payment</h2>
+                        <h2>Competitor Tracking</h2>
                     </div>
                     <div className="content">
-                        <p>Trustworthy Transactions</p>
+                        <p>Spy on Competitors</p>
                         <p>
-                            Handle all your payments through our platform to
-                            avoid fraud. We act as an intermediary to ensure
-                            that both parties meet their obligations, providing
-                            a safe and secure environment for financial
-                            transactions.
+                            Track your competitors' content strategies. Learn
+                            from their successes and avoid their mistakes.
                         </p>
                     </div>
                 </div>
                 <div className="connector">
                     <div className="arrow"></div>
                 </div>
-                <div className="card">
+                <div className="card fifth-card hidden-item">
                     <div className="icon">
                         <span class="material-symbols-outlined">campaign</span>
                     </div>
                     <div className="title">
-                        <h2>Campaign Management</h2>
+                        <h2>Trend Analysis</h2>
                     </div>
                     <div className="content">
-                        <p>Monitor Your Campaigns</p>
+                        <p>Spot Emerging Trends</p>
                         <p>
-                            Track the performance of your campaigns with
-                            detailed analytics. Our platform allows you to
-                            manage content uploads, sync them with agreed data
-                            from the contract, and monitor results in real time
-                            to optimize your strategy.
+                            Identify trending topics and content formats to keep
+                            your brand relevant and ahead of the curve.
                         </p>
                     </div>
                 </div>
                 <div className="connector">
                     <div className="arrow"></div>
                 </div>
-                <div className="card">
+                <div className="card sixth-card hidden-item">
                     <div className="icon">
                         <span class="material-symbols-outlined">
                             storefront
@@ -227,12 +292,11 @@ export default function BusinessLanding() {
                         <h2>Brand Management</h2>
                     </div>
                     <div className="content">
-                        <p>Enhance Your Brand Presence</p>
+                        <p>Manage Your Brand's Reputation</p>
                         <p>
-                            Use our transcribed Instagram reels and YouTube
-                            shorts to inspire content, research competitors, and
-                            monitor your brand. Quickly find mentions and manage
-                            negative comments with advanced search filters.
+                            Track brand mentions and manage your reputation with
+                            advanced filters. Quickly address negative comments
+                            or leverage positive trends.
                         </p>
                     </div>
                 </div>
