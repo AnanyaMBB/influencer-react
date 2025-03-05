@@ -1,24 +1,39 @@
 {
   "files": {
-    "main.css": "/static/css/main.0eed37f4.css",
-    "main.js": "/static/js/main.85b718c5.js",
-    "static/js/213.f5a77bd5.chunk.js": "/static/js/213.f5a77bd5.chunk.js",
-    "static/js/455.482fb2aa.chunk.js": "/static/js/455.482fb2aa.chunk.js",
+    "main.css": "/static/css/main.31dd417b.css",
+    "main.js": "/static/js/main.a26e9477.js",
+    "static/js/351.04dd42e8.chunk.js": "/static/js/351.04dd42e8.chunk.js",
+    "static/js/213.2c80e84e.chunk.js": "/static/js/213.2c80e84e.chunk.js",
+    "static/js/455.e57f2c21.chunk.js": "/static/js/455.e57f2c21.chunk.js",
+    "static/media/scheduling-img.png": "/static/media/scheduling-img.417439182120829dffa6.png",
+    "static/media/primeicons.svg": "/static/media/primeicons.6ed59f962963a4a73af2.svg",
+    "static/media/tiktok-logo.png": "/static/media/tiktok-logo.9999a2dd49a9a321f0e6.png",
     "static/media/dashboardImg.png": "/static/media/dashboardImg.3551011dcc1d8fd3160b.png",
+    "static/media/primeicons.eot": "/static/media/primeicons.ff0c4cd79b2ffca2de54.eot",
+    "static/media/primeicons.woff": "/static/media/primeicons.8931fda1930c3bd21e96.woff",
+    "static/media/primeicons.ttf": "/static/media/primeicons.a5c2a53d1ff7a9ff5933.ttf",
     "static/media/bee-logo.png": "/static/media/bee-logo.3b76d281a209bd0f5aa7.png",
+    "static/media/dashboard-discovery.png": "/static/media/dashboard-discovery.831d969b8864dda556dc.png",
+    "static/media/discovery-img.png": "/static/media/discovery-img.8888dd829b00d02d2212.png",
+    "static/media/analytics-img.png": "/static/media/analytics-img.56d666d56f5bc4637f21.png",
     "static/media/bee-logo-4.png": "/static/media/bee-logo-4.184c6778270353b9331a.png",
+    "static/media/contract-img.png": "/static/media/contract-img.0c53123d45a6b7ffe151.png",
+    "static/media/chat-img.png": "/static/media/chat-img.23cb8af27be988fd64e6.png",
+    "static/media/logo-1-no-bg.png": "/static/media/logo-1-no-bg.1bc6ca4bbebe00dbeb0e.png",
     "static/media/logo-2-no-bg.png": "/static/media/logo-2-no-bg.c6cd3539f54b384025b7.png",
-    "static/media/logo-1-no-bg.png": "/static/media/logo-1-no-bg.86e846018c6a01d58bd2.png",
+    "static/media/primeicons.woff2": "/static/media/primeicons.024b32cc7bf399b1a847.woff2",
+    "static/media/buzz_findr_text_bg_removed.png": "/static/media/buzz_findr_text_bg_removed.16c422738974ae3569c8.png",
     "static/media/logo-1-no-bg-2.png": "/static/media/logo-1-no-bg-2.fd7491d1acea1031d47c.png",
     "static/media/logo-no-background.png": "/static/media/logo-no-background.98642b945c57a1b34631.png",
     "index.html": "/index.html",
-    "main.0eed37f4.css.map": "/static/css/main.0eed37f4.css.map",
-    "main.85b718c5.js.map": "/static/js/main.85b718c5.js.map",
-    "213.f5a77bd5.chunk.js.map": "/static/js/213.f5a77bd5.chunk.js.map",
-    "455.482fb2aa.chunk.js.map": "/static/js/455.482fb2aa.chunk.js.map"
+    "main.31dd417b.css.map": "/static/css/main.31dd417b.css.map",
+    "main.a26e9477.js.map": "/static/js/main.a26e9477.js.map",
+    "351.04dd42e8.chunk.js.map": "/static/js/351.04dd42e8.chunk.js.map",
+    "213.2c80e84e.chunk.js.map": "/static/js/213.2c80e84e.chunk.js.map",
+    "455.e57f2c21.chunk.js.map": "/static/js/455.e57f2c21.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.0eed37f4.css",
-    "static/js/main.85b718c5.js"
+    "static/css/main.31dd417b.css",
+    "static/js/main.a26e9477.js"
   ]
 }
