@@ -1,27 +1,15 @@
-// /** @type {import('tailwindcss').Config} */
-// module.exports = {
-//   content: [
-//     "./src/**/*.{js,jsx,ts,tsx}",
-//   ],
-//   theme: {
-//     extend: {},
-//   },
-//   plugins: [],
-// }
-
-
 module.exports = {
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
+    "./src/**/*.{js,jsx,ts,tsx}", // Includes your project's files for Tailwind to scan
   ],
   theme: {
     extend: {
       colors: {
-        primary: '#your-primary-color',
-        'blue-dark': '#your-blue-dark-color',
+        primary: '#1D4ED8', // Replace with your primary color
+        'blue-dark': '#1E3A8A', // Replace with your blue-dark color
       },
       fontFamily: {
-        'inter': ['Inter', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'], // Replace with your desired fonts
       },
       boxShadow: {
         'testimonial-btn': '0px 15px 30px rgba(0, 0, 0, 0.1)',
@@ -29,5 +17,5 @@ module.exports = {
     },
   },
   plugins: [],
-  darkMode: 'class', // or 'media' if you prefer
-}
+  darkMode: 'class', // 'class' for manual control, 'media' for system preference
+};

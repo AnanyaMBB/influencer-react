@@ -14,11 +14,18 @@ import Requests from "./pages/Requests";
 import Earnings from "./pages/Earnings";
 import Research from "./pages/Research";
 import BusinessLanding from "./pages/BusinessLanding";
+import Landing from "./pages/Landing";
+import Landing001 from "./pages/Landing001";
 import Wallet from "./pages/Wallet";
+import InfluencerCampaign from "./pages/InfluencerCampaign";
 import { useState, createContext, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Switch } from "react-router-dom";
 import { baseUrl } from "./shared";
 import InstagramAuthCallBack from "./components/InstagramAuthCallBack";
+import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
+import Campaign from "./pages/Campaign";
+import TikTokRedirect from "./pages/TikTokRedirect";
+import PaymentTest from "./pages/PaymentTest";
 
 export const LoginContext = createContext();
 export const LONG_ACCESS_TOKEN = createContext();
@@ -64,76 +71,89 @@ function App() {
     }
 
     return (
-        <LoginContext.Provider value={[loggedIn, changeLoggedIn]}>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/bregister" element={<BusinessRegister />} />
-                    <Route path="/iregister" element={<InfluencerRegister />} />
-                    <Route path="/landing" element={<BusinessLanding />} />
-                    <Route element={<Core title="Discovery" />}>
-                        <Route path="/discovery" element={<Discovery />} />
-                    </Route>
-                    <Route element={<Core title="Account Management" />}>
+        <PrimeReactProvider>
+            <LoginContext.Provider value={[loggedIn, changeLoggedIn]}>
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="/payment-test" element={<PaymentTest />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/bregister" element={<BusinessRegister />} />
+                        <Route path="/iregister" element={<InfluencerRegister />} />
+                        <Route path="/landing" element={<Landing001 />} />
+                        <Route element={<Core title="Discovery" />}>
+                            <Route path="/discovery" element={<Discovery />} />
+                        </Route>
+                        <Route element={<Core title="Account Management" />}>
+                            <Route
+                                path="/account"
+                                element={<InfluencerAccountManagement />}
+                            />
+                        </Route>
+                        <Route element={<Core title="Profile" />}>
+                            <Route
+                                path="/profile"
+                                element={<InfluencerProfile />}
+                            />
+                        </Route>
+                        <Route element={<Core title="Profile" />}>
+                            <Route
+                                path="/profile/:account_type/:account_id"
+                                element={<InfluencerProfile />}
+                            />
+                        </Route>
+                        <Route element={<Core title="Contract" />}>
+                            <Route path="/contract" element={<Contract />} />
+                        </Route>
+
+                        <Route element={<Core title="Contract" />}>
+                            <Route path="/contract/:contract_id/:version_id" element={<Contract />} />
+                        </Route>
+
+                        <Route element={<Core title="Chat" />}>
+                            <Route path="/chat" element={<Chat />} />
+                        </Route>
+
+                        <Route element={<Core title="Campaign Management" />}>
+                            <Route path="/campaigns" element={<CampaignManagement />} />
+                        </Route>
+
+                        <Route element={<Core title="Campaign" />}>
+                            <Route path="/campaigns/:campaign_id" element={<Campaign />} />
+                        </Route>
+
+                        <Route element={<Core title="Campaign" />}>
+                            <Route path="/influencer_campaign/:campaign_id/:account_id/:business_user" element={<InfluencerCampaign />} />
+                        </Route>
+
+                        {/* <Route element={<Core title="Requests" />}>
+                            <Route path="/requests" element={<Requests />} />
+                        </Route> */}
+
+                        <Route element={<Core title="Earnings" />}>
+                            <Route path="/earnings" element={<Earnings />} />   
+                        </Route>
+
+                        <Route element={<Core title="Wallet" />}>
+                            <Route path="/wallet" element={<Wallet />} />   
+                        </Route>
+
+                        <Route element={<Core title="Research" />}>
+                            <Route path="/research" element={<Research />} />   
+                        </Route>
+
                         <Route
-                            path="/account"
-                            element={<InfluencerAccountManagement />}
+                            path="/authenticate/instagram"
+                            element={<InstagramAuthCallBack />}
                         />
-                    </Route>
-                    <Route element={<Core title="Profile" />}>
-                        <Route
-                            path="/profile"
-                            element={<InfluencerProfile />}
-                        />
-                    </Route>
-                    <Route element={<Core title="Profile" />}>
-                        <Route
-                            path="/profile/:account_type/:account_id"
-                            element={<InfluencerProfile />}
-                        />
-                    </Route>
-                    <Route element={<Core title="Contract" />}>
-                        <Route path="/contract" element={<Contract />} />
-                    </Route>
 
-                    <Route element={<Core title="Contract" />}>
-                        <Route path="/contract/:contract_id/:version_id" element={<Contract />} />
-                    </Route>
+                        <Route path="/tiktok-redirect" element={<TikTokRedirect />}/>
 
-                    <Route element={<Core title="Chat" />}>
-                        <Route path="/chat" element={<Chat />} />
-                    </Route>
-
-                    <Route element={<Core title="Campaign Management" />}>
-                        <Route path="/campaigns" element={<CampaignManagement />} />
-                    </Route>
-
-                    <Route element={<Core title="Requests" />}>
-                        <Route path="/requests" element={<Requests />} />
-                    </Route>
-
-                    <Route element={<Core title="Earnings" />}>
-                        <Route path="/earnings" element={<Earnings />} />   
-                    </Route>
-
-                    <Route element={<Core title="Wallet" />}>
-                        <Route path="/wallet" element={<Wallet />} />   
-                    </Route>
-
-                    <Route element={<Core title="Research" />}>
-                        <Route path="/research" element={<Research />} />   
-                    </Route>
-
-                    <Route
-                        path="/authenticate/instagram"
-                        element={<InstagramAuthCallBack />}
-                    />
-
-                    <Route path="/404" element={<NotFound />} />
-                    <Route path="*" element={<NotFound />} />
-                </Routes>
-            </BrowserRouter>
-        </LoginContext.Provider>
+                        <Route path="/404" element={<NotFound />} />
+                        <Route path="*" element={<NotFound />} />
+                    </Routes>
+                </BrowserRouter>
+            </LoginContext.Provider>
+        </PrimeReactProvider>
     );
 }
 

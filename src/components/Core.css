@@ -40,8 +40,8 @@
 }
 
 .core-container aside .logo img {
-    width: 90px;
-    height: 90px;
+    width: 150px;
+    height: 150px;
 }
 
 .core-container aside nav {
@@ -92,7 +92,8 @@
 .sidebar-toggle-left {
     position: absolute;
     /* top: 10vh; */
-    top: 7.5vh;
+    /* top: 7.5vh; */
+    top: 2vh;
     left: 13.3%;
     width: 30px;
     height: 30px;
@@ -108,7 +109,8 @@
 .sidebar-toggle-right {
     position: absolute;
     /* top: 10vh; */
-    top: 7.5vh;
+    /* top: 7.5vh; */
+    top: 2vh;   
     left: -0.5%;
     width: 30px;
     height: 30px;

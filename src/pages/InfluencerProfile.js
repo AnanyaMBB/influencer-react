@@ -1,5 +1,5 @@
 import "./InfluencerProfile.css";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import LineGraph from "../components/LineGraph";
 import SentimentChart from "../components/SentimentChart";
@@ -9,276 +9,35 @@ import AgeGroupChart from "../components/AgeGroupChart";
 import GenderChart from "../components/GenderChart";
 import { baseUrl } from "../shared";
 import { LoginContext } from "../App";
+import { Chart } from 'primereact/chart';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import InfluencerChart from "../components/InfluencerChart";
+import { UpdateModeEnum } from "chart.js";
+import { InputText } from "primereact/inputtext";
+
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import { FilterMatchMode } from "primereact/api";
+import { time } from "framer-motion";
+import { set } from "date-fns";
+import { treemapBinary } from "d3";
 
 export default function InfluencerProfile() {
     const [page, setPage] = useState("services");
     const [servicePage, setServicePage] = useState("feed-post-service");
     const [engagementPage, setEngagementPage] = useState("account-metrics");
     const [demographicsPage, setDemographicsPage] = useState("country");
-    const { account_type } = useParams();
-    const { account_id } = useParams();
+    // const { account_type } = useParams("instagram");
+    // const { account_id } = useParams();
+    const { account_type, account_id} = useParams();
     const [selectedContentProvider, setSelectedContentProvider] =
         useState("influencer");
+    const [feedPrice, setFeedPrice] = useState([]);
+    const [feedDuration, setFeedDuration] = useState(0);
+    const [feedTotalPrice, setFeedTotalPrice] = useState(0);
+    const [numPosts, setNumPosts] = useState(0);
 
     const [selectedPricingType, setSelectedPricingType] = useState("hourly");
-
-    const [accountMetrics, setAccountMetrics] = useState({
-        impressions: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        reach: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        likes: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        views: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        shares: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        comments: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        website_clicks: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        sentiment_analysis: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        follow_unfollow: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-    });
-
-    const [postMetrics, setPostMetrics] = useState({
-        impressions: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        reach: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        like_count: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        views: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        shares: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        comments_count: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        saved: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        video_views: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-    });
-
-    const [reelMetrics, setReelMetrics] = useState({
-        ig_reels_avg_watch_time: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        plays: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        ig_reels_video_view_total_time: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-    });
-
-    const [ageDemographics, setAgeDemographics] = useState({
-        follower_demographics: {},
-        engaged_audience_demographics: {},
-        reached_audience_demographics: {},
-    });
-    const [genderDemographics, setGenderDemographics] = useState({
-        follower_demographics: {},
-        engaged_audience_demographics: {},
-        reached_audience_demographics: {},
-    });
-    const [cityDemographics, setCityDemographics] = useState({
-        follower_demographics: [],
-        engaged_audience_demographics: [],
-        reached_audience_demographics: [],
-    });
-    const [countryDemographics, setCountryDemographics] = useState({
-        follower_demographics: [],
-        engaged_audience_demographics: [],
-        reached_audience_demographics: [],
-    });
-
-    // Youtube Data
-    const [youtubeChannelInformation, setYoutubeChannelInformation] = useState({
-        subscriber_count: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        video_count: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        view_count: {
-            label: "",
-            labels: [],
-            data: [],
-        }
-    });
-
-    const [youtubeChannelAnalytics, setYoutubeChannelAnalytics] = useState({
-        average_view_duration: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        comments: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        dislikes: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        estimated_minutes_watched: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        likes: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        shares: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        total_interactions: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        views: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-    });
-    const [youtubeAgeDemographics, setYoutubeAgeDemographics] = useState([]);
-    const [youtubeGenderDemographics, setYoutubeGenderDemographics] = useState({
-        male: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        female: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        unknown: {
-            label: "",
-            labels: [],
-            data: [],
-        }
-    });
-    const [youtubeVideoAnalytics, setYoutubeVideoAnalytics] = useState({
-        views: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        estimated_minutes_watched: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        average_view_duration: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        likes: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        dislikes: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        comments: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        shares: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        impressions: {
-            label: "",
-            labels: [],
-            data: [],
-        },
-        reach: {
-            label: "",
-            labels: [],
-            data: [],
-        }
-    });
-
 
     const [services, setServices] = useState([]);
 
@@ -290,507 +49,721 @@ export default function InfluencerProfile() {
         }
     }, []);
 
-    function getInstagramDetails() {
-        const url =
-            baseUrl + `api/instagram/data/details?instagram_id=${account_id}`;
-        fetch(url, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + localStorage.getItem("access"),
-            },
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Error in fetching data");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                console.log("INSTAGRAM DETAILS", data);
-                data.instagram_details.forEach((item) => {
-                    Object.keys(accountMetrics).forEach((key) => {
-                        accountMetrics[key].label = key;
-                        accountMetrics[key].labels.push(
-                            item.date.split("T")[0]
-                        );
-                        accountMetrics[key].data.push(item[`${key}`]);
-                    });
-                });
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }
+    const [phylloAccountSummary, setPhylloAccountSummary] = useState({});
+    const [phylloContentData, setPhylloContentData] = useState([]); 
+    const [phylloContentDataDaily, setPhylloContentDataDaily] = useState([]);
+    const [phylloAudienceDemographics, setPhylloAudienceDemographics] = useState([]);
 
-    function getInstagramMediaData() {
-        const url =
-            baseUrl + `api/instagram/data/media?instagram_id=${account_id}`;
-        fetch(url, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + localStorage.getItem("access"),
-            },
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Error in fetching data");
+    const chartData = {
+            labels: phylloContentDataDaily.published_at,
+            datasets: [
+                {
+                    label: 'Impressions',
+                    data: phylloContentDataDaily.impression_organic_count,
+                    fill: true, // Enables gradient below the line
+                    backgroundColor: (context) => {
+                        const ctx = context.chart.ctx;
+                        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                        gradient.addColorStop(0, 'rgba(24, 120, 241, 0.4)'); // Top gradient color
+                        gradient.addColorStop(1, 'rgba(24, 120, 241, 0)');   // Bottom gradient color
+                        return gradient;
+                    },
+                    borderColor: '#1878F1', // Line color
+                    borderWidth: 3, // Line thickness
+                    tension: 0.4, // Makes the line smooth
+                    pointRadius: 5, // Circle radius
+                    pointBackgroundColor: '#1878F1', // Circle color
+                    pointHoverRadius: 7, // Hover size
                 }
-                return response.json();
-            })
-            .then((data) => {
-                data.instagram_media_data.forEach((item) => {
-                    Object.keys(postMetrics).forEach((key) => {
-                        postMetrics[key].label = key;
-                        postMetrics[key].labels.push(item.media_id);
-                        postMetrics[key].data.push(item[`${key}`]);
-                    });
-                    Object.keys(reelMetrics).forEach((key) => {
-                        reelMetrics[key].label = key;
-                        reelMetrics[key].labels.push(item.media_id);
-                        if (item[`${key}`] == null) {
-                            reelMetrics[key].data.push(0);
-                        } else {
-                            reelMetrics[key].data.push(item[`${key}`]);
+            ],
+        };
+    
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false, // Hides the legend
+                },
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false, // Removes the grid lines
+                    },
+                    ticks: {
+                        font: {
+                            size: 14,
+                        },
+                        color: '#333', // X-axis text color
+                    },
+                },
+                y: {
+                    grid: {
+                        display: false, // Removes the grid lines
+                    },
+                    ticks: {
+                        font: {
+                            size: 14,
+                        },
+                        color: '#333', // Y-axis text color
+                    },
+                },
+            },
+        };
+
+        
+    
+        const [engagementMetricsNavButton, setEngagementMetricsNavButton] = useState(0);
+        const [audienceDemographicsNavButton, setAudienceDemographicsNavButton] = useState(0);
+        const engagementAccountNavRef = useRef(null);
+        const engagementPostNavRef = useRef(null);
+        const audienceLocationNavRef = useRef(null);
+        const audienceGenderAgeNavRef = useRef(null);
+    
+        const chartCountryData = {
+            labels: phylloAudienceDemographics?.country?.map((item) => {return item.country_code}),
+            datasets: [
+                {
+                    label: '% of Data',
+                    data: phylloAudienceDemographics?.country?.map((item) => {return item.percentage}),
+                    backgroundColor: '#1878F1', // Bar color
+                    borderRadius: 5, // Rounded edges
+                    barThickness: 15 // Thickness of bars
+                }
+            ]
+        };
+    
+        const chartCountryOptions = {
+            indexAxis: 'y', // Horizontal bar chart
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    display: false // Hide the x-axis completely
+                },
+                y: {    
+                    ticks: {
+                        font: {
+                            size: 14, // Increase label font size
                         }
-                    });
-                });
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }
-
-    function getInstagramAgeDemographics() {
-        const url =
-            baseUrl +
-            `api/instagram/data/demographics/age?instagram_id=${account_id}`;
-        fetch(url, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + localStorage.getItem("access"),
-            },
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Error in fetching data");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                data.instagram_age_demographics.forEach((item) => {
-                    delete item.id;
-                    delete item.date;
-                    delete item.influencer_instagram_information;
-
-                    let newDemographics = {};
-                    if (item.type_identifier == 0) {
-                        delete item.type_identifier;
-                        newDemographics = {
-                            follower_demographics: { ...item },
-                        };
-                    } else if (item.type_identifier == 1) {
-                        delete item.type_identifier;
-                        newDemographics = {
-                            engaged_audience_demographics: { ...item },
-                        };
-                    } else if (item.type_identifier == 2) {
-                        delete item.type_identifier;
-                        newDemographics = {
-                            reached_audience_demographics: { ...item },
-                        };
+                    },
+                    grid: {
+                        display: false // Hide gridlines
+                    },
+                    border: {
+                        display: false // Remove y-axis line
                     }
-
-                    setAgeDemographics((prevState) => ({
-                        ...prevState,
-                        ...newDemographics,
-                    }));
-                });
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }
-
-    function getInstagramGenderDemographics() {
-        const url =
-            baseUrl +
-            `api/instagram/data/demographics/gender?instagram_id=${account_id}`;
-        fetch(url, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + localStorage.getItem("access"),
-            },
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Error in fetching data");
                 }
-                return response.json();
-            })
-            .then((data) => {
-                data.instagram_gender_demographics.forEach((item) => {
-                    delete item.id;
-                    delete item.date;
-                    delete item.influencer_instagram_information;
-
-                    let newDemographics = {};
-                    if (item.type_identifier == 0) {
-                        delete item.type_identifier;
-                        newDemographics = {
-                            follower_demographics: { ...item },
-                        };
-                    } else if (item.type_identifier == 1) {
-                        delete item.type_identifier;
-                        newDemographics = {
-                            engaged_audience_demographics: { ...item },
-                        };
-                    } else if (item.type_identifier == 2) {
-                        delete item.type_identifier;
-                        newDemographics = {
-                            reached_audience_demographics: { ...item },
-                        };
+            },
+            plugins: {
+                legend: {
+                    display: false // Hide the legend
+                },
+                tooltip: {
+                    enabled: false // Disable tooltips
+                },
+                datalabels: {
+                    anchor: 'end', // Position the label at the end of the bar
+                    align: 'end', // Align the label to the right of the bar
+                    formatter: (value) => `${value}%`, // Append '%' to the value
+                    color: '#000', // Label color
+                    font: {
+                        size: 14 // Label font size
                     }
-
-                    setGenderDemographics((prevState) => ({
-                        ...prevState,
-                        ...newDemographics,
-                    }));
-                });
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }
-
-    function getInstagramCityDemographics() {
-        const url =
-            baseUrl +
-            `api/instagram/data/demographics/city?instagram_id=${account_id}`;
-        fetch(url, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + localStorage.getItem("access"),
-            },
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Error in fetching data");
                 }
-                return response.json();
-            })
-            .then((data) => {
-                let newDemographics = {
-                    follower_demographics: [],
-                    engaged_audience_demographics: [],
-                    reached_audience_demographics: [],
-                };
-
-                data.instagram_city_demographics.forEach((item) => {
-                    if (item.type_identifier == 0) {
-                        let newItem = { ...item };
-                        delete newItem.id;
-                        delete newItem.date;
-                        delete newItem.influencer_instagram_information;
-                        delete newItem.type_identifier;
-                        newDemographics.follower_demographics.push(newItem);
-                    } else if (item.type_identifier == 1) {
-                        let newItem = { ...item };
-                        delete newItem.id;
-                        delete newItem.date;
-                        delete newItem.influencer_instagram_information;
-                        delete newItem.type_identifier;
-                        newDemographics.engaged_audience_demographics.push(
-                            newItem
-                        );
-                    } else if (item.type_identifier == 2) {
-                        let newItem = { ...item };
-                        delete newItem.id;
-                        delete newItem.date;
-                        delete newItem.influencer_instagram_information;
-                        delete newItem.type_identifier;
-                        newDemographics.reached_audience_demographics.push(
-                            newItem
-                        );
+            },
+            elements: {
+                bar: {
+                    borderSkipped: 'start', // Removes the border on the left side
+                    barPercentage: 0.8, // Adjust bar width
+                    categoryPercentage: 0.9 // Adjust spacing between bars
+                }
+            }
+        };
+    
+    
+        const chartCityData = {
+            labels: phylloAudienceDemographics?.city?.map((item) => {return item.city}),
+            datasets: [
+                {
+                    label: '% of Data',
+                    data: phylloAudienceDemographics?.city?.map((item) => {return item.percentage}),
+                    backgroundColor: '#1878F1', // Bar color
+                    borderRadius: 5, // Rounded edges
+                    barThickness: 15 // Thickness of bars
+                }
+            ]
+        };
+    
+        const chartCityOptions = {
+            indexAxis: 'y', // Horizontal bar chart
+            responsive: true,
+            scales: {
+                x: {
+                    display: false // Hide the x-axis completely
+                },
+                y: {
+                    ticks: {
+                        font: {
+                            size: 14, // Increase label font size
+                        }
+                    },
+                    grid: {
+                        display: false // Hide gridlines
+                    },
+                    border: {
+                        display: false // Remove y-axis line
                     }
-                });
-
-                setCityDemographics(newDemographics);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }
-
-    function getInstagramCountryDemographics() {
-        const url =
-            baseUrl +
-            `api/instagram/data/demographics/country?instagram_id=${account_id}`;
-        fetch(url, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + localStorage.getItem("access"),
-            },
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Error in fetching data");
                 }
-                return response.json();
-            })
-            .then((data) => {
-                let newDemographics = {
-                    follower_demographics: [],
-                    engaged_audience_demographics: [],
-                    reached_audience_demographics: [],
-                };
-
-                data.instagram_country_demographics.forEach((item) => {
-                    delete item.id;
-                    delete item.date;
-                    delete item.influencer_instagram_information;
-
-                    if (item.type_identifier == 0) {
-                        delete item.type_identifier;
-                        newDemographics.follower_demographics.push({
-                            ...item,
-                        });
-                    } else if (item.type_identifier == 1) {
-                        delete item.type_identifier;
-                        newDemographics.engaged_audience_demographics.push({
-                            ...item,
-                        });
-                    } else if (item.type_identifier == 2) {
-                        delete item.type_identifier;
-                        newDemographics.reached_audience_demographics.push({
-                            ...item,
-                        });
+            },
+            plugins: {
+                legend: {
+                    display: false // Hide the legend
+                },
+                tooltip: {
+                    enabled: false // Disable tooltips
+                },
+                datalabels: {
+                    anchor: 'end', // Position the label at the end of the bar
+                    align: 'end', // Align the label to the right of the bar
+                    formatter: (value) => `${value}%`, // Append '%' to the value
+                    color: '#000', // Label color
+                    font: {
+                        size: 14 // Label font size
                     }
-                });
+                }
+            },
+            elements: {
+                bar: {
+                    borderSkipped: 'start', // Removes the border on the left side
+                }
+            }
+        };
+    
+        const chartGenderData = {
+            labels: ['Male', 'Female', 'Others'],
+            datasets: [
+                {
+                    data: [phylloAudienceDemographics?.gender?.male, phylloAudienceDemographics?.gender?.female, phylloAudienceDemographics?.gender?.other],
+                    backgroundColor: ['#1878F1', '#F29219', '#E0E0E0'], // Updated colors
+                    hoverBackgroundColor: ['#1878F1', '#F29219', '#E0E0E0'],
+                    borderWidth: 5, // Adds spacing between the segments
+                    borderColor: '#ffffff', // Ensures the border creates a white gap
+                    cutout: '90%', // Hollow effect
+                    borderRadius: 10, // Rounds the edges of the chart segments
+                },
+            ],
+        };
+        
+        const chartGenderOptions = {
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'right',
+                    labels: {
+                        color: '#495057',
+                        usePointStyle: true,
+                        font: {
+                            size: 14, // Larger font size for better readability
+                            weight: 'bold',
+                        },
+                        generateLabels: (chart) => {
+                            const datasets = chart.data.datasets[0];
+                            return chart.data.labels.map((label, index) => {
+                                const value = datasets.data[index];
+                                return {
+                                    text: `${label} (${value}%)`, // Adds values next to labels
+                                    fillStyle: datasets.backgroundColor[index],
+                                    hidden: false,
+                                    lineCap: 'round',
+                                    lineDash: [],
+                                    lineDashOffset: 0,
+                                    lineJoin: 'round',
+                                    strokeStyle: datasets.borderColor,
+                                    pointStyle: 'circle',
+                                };
+                            });
+                        },
+                    },
+                },
+                tooltip: {
+                    enabled: true,
+                    callbacks: {
+                        label: (tooltipItem) => {
+                            const value = tooltipItem.raw;
+                            return `${value}%`;
+                        },
+                    },
+                },
+            },
+            layout: {
+                padding: {
+                    right: 20, // Brings legend closer to the chart
+                },
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+        };
+    
+        const chartAgeData = {
+            labels: ['13-17', '18-24', '25-32', '33-39', '40-49', '50-59', '60+'],
+            datasets: [
+                {
+                    label: '% of Data',
+                    data: [phylloAudienceDemographics?.age?.["13-17"] ?? 0,
+                            phylloAudienceDemographics?.age?.["18-24"] ?? 0,
+                            phylloAudienceDemographics?.age?.["25-32"] ?? 0,
+                            phylloAudienceDemographics?.age?.["33-39"] ?? 0,
+                            phylloAudienceDemographics?.age?.["40-49"] ?? 0,
+                            phylloAudienceDemographics?.age?.["50-59"] ?? 0,
+                            phylloAudienceDemographics?.age?.["60+"] ?? 0],
+                    backgroundColor: '#1878F1', // Bar color
+                    borderRadius: 5, // Rounded edges
+                    barThickness: 15 // Thickness of bars
+                }
+            ]
+        };
+    
+        const chartAgeOptions = {
+            indexAxis: 'y', // Horizontal bar chart
+            responsive: true,
+            scales: {
+                x: {
+                    display: false // Hide the x-axis completely
+                },
+                y: {
+                    ticks: {
+                        font: {
+                            size: 14, // Increase label font size
+                        }
+                    },
+                    grid: {
+                        display: false // Hide gridlines
+                    },
+                    border: {
+                        display: false // Remove y-axis line
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false // Hide the legend
+                },
+                tooltip: {
+                    enabled: false // Disable tooltips
+                },
+                datalabels: {
+                    anchor: 'end', // Position the label at the end of the bar
+                    align: 'end', // Align the label to the right of the bar
+                    formatter: (value) => `${value}%`, // Append '%' to the value
+                    color: '#000', // Label color
+                    font: {
+                        size: 14 // Label font size
+                    }
+                }
+            },
+            elements: {
+                bar: {
+                    borderSkipped: 'start', // Removes the border on the left side
+                }
+            }
+        };
 
-                setCountryDemographics((prevState) => ({
-                    ...prevState,
-                    ...newDemographics,
-                }));
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }
+        const reelPostPricingRef = useRef(null);
+        const storyPostPricingRef = useRef(null);
+        const livePostPricingRef = useRef(null);
+        const reelViewPricingRef = useRef(null);
+        const storyViewPricingRef = useRef(null);
+        const liveViewPricingRef = useRef(null);
+        const reelLikePricingRef = useRef(null);
+        const storyLikePricingRef = useRef(null);
+        const liveLikePricingRef = useRef(null);
 
-    function getInstagramServices() {
-        const url =
-            baseUrl + `api/instagram/service/get?instagram_id=${account_id}`;
+        const reelBusinessContentProviderRef = useRef(null);
+        const reelInfluencerContentProviderRef = useRef(null);
+        const storyBusinessContentProviderRef = useRef(null);
+        const storyInfluencerContentProviderRef = useRef(null);
+        const liveBusinessContentProviderRef = useRef(null);
+        const liveInfluencerContentProviderRef = useRef(null);
+
+        const [feedPricingMethod, setFeedPricingMethod] = useState("post");
+        const [storyPricingMethod, setStoryPricingMethod] = useState("post");
+        const [livePricingMethod, setLivePricingMethod] = useState("post");
+
+        const [feedContentProvider, setFeedContentProvider] = useState("business"); 
+        const [storyContentProvider, setStoryContentProvider] = useState("business");
+        const [liveContentProvider, setLiveContentProvider] = useState("business");
+
+        function influencerAnalyticsScrollHandler(event) {
+            
+        }
+
+        function feedPricingMethodHandler(method) {
+            return () => {
+                if (method === "hourly") {
+                    reelPostPricingRef.current.classList.add("content-selected");
+                    reelViewPricingRef.current.classList.remove("content-selected");
+                    reelLikePricingRef.current.classList.remove("content-selected");
+                    setFeedPricingMethod("hourly");
+                } else if (method === "view") {
+                    reelPostPricingRef.current.classList.remove("content-selected");
+                    reelViewPricingRef.current.classList.add("content-selected");
+                    reelLikePricingRef.current.classList.remove("content-selected");
+                    setFeedPricingMethod("view");
+                } else if (method === "like") {
+                    reelPostPricingRef.current.classList.remove("content-selected");
+                    reelViewPricingRef.current.classList.remove("content-selected");
+                    reelLikePricingRef.current.classList.add("content-selected");
+                    setFeedPricingMethod("like");
+                }
+            }
+        }
+
+        function storyPricingMethodHandler(method) {
+            return () => {
+                if (method === "post") {
+                    storyPostPricingRef.current.classList.add("content-selected");
+                    storyViewPricingRef.current.classList.remove("content-selected");
+                    storyLikePricingRef.current.classList.remove("content-selected");
+                    setStoryPricingMethod("post");
+                } else if (method === "view") {
+                    storyPostPricingRef.current.classList.remove("content-selected");
+                    storyViewPricingRef.current.classList.add("content-selected");
+                    storyLikePricingRef.current.classList.remove("content-selected");
+                    setStoryPricingMethod("view");
+                } else if (method === "like") {
+                    storyPostPricingRef.current.classList.remove("content-selected");
+                    storyViewPricingRef.current.classList.remove("content-selected");
+                    storyLikePricingRef.current.classList.add("content-selected");
+                    setStoryPricingMethod("like");
+                }
+            }
+        }
+
+        function livePricingMethodHandler(method) {
+            return () => {
+                if (method === "post") {
+                    livePostPricingRef.current.classList.add("content-selected");
+                    liveViewPricingRef.current.classList.remove("content-selected");
+                    liveLikePricingRef.current.classList.remove("content-selected");
+                    setLivePricingMethod("post");
+                } else if (method === "view") {
+                    livePostPricingRef.current.classList.remove("content-selected");
+                    liveViewPricingRef.current.classList.add("content-selected");
+                    liveLikePricingRef.current.classList.remove("content-selected");
+                    setLivePricingMethod("view");
+                } else if (method === "like") {
+                    livePostPricingRef.current.classList.remove("content-selected");
+                    liveViewPricingRef.current.classList.remove("content-selected");
+                    liveLikePricingRef.current.classList.add("content-selected");
+                    setLivePricingMethod("like");
+                }
+            }
+        }
+
+        function feedContentProviderHandler(provider) {
+            return () => {
+                if (provider === "business") {
+                    reelBusinessContentProviderRef.current.classList.add("content-selected");
+                    reelInfluencerContentProviderRef.current.classList.remove("content-selected");
+                    setFeedContentProvider("business");
+                } else if (provider === "influencer") {
+                    reelBusinessContentProviderRef.current.classList.remove("content-selected");
+                    reelInfluencerContentProviderRef.current.classList.add("content-selected");
+                    setFeedContentProvider("influencer");
+                }
+            }
+        }
+
+        function storyContentProviderHandler(provider) {
+            return () => {
+                if (provider === "business") {
+                    storyBusinessContentProviderRef.current.classList.add("content-selected");
+                    storyInfluencerContentProviderRef.current.classList.remove("content-selected");
+                    setStoryContentProvider("business");
+                } else if (provider === "influencer") {
+                    storyBusinessContentProviderRef.current.classList.remove("content-selected");
+                    storyInfluencerContentProviderRef.current.classList.add("content-selected");
+                    setStoryContentProvider("influencer");
+                }
+            }
+        }
+
+        function liveContentProviderHandler(provider) {
+            return () => {
+                if (provider === "business") {
+                    liveBusinessContentProviderRef.current.classList.add("content-selected");
+                    liveInfluencerContentProviderRef.current.classList.remove("content-selected");
+                    setLiveContentProvider("business");
+                } else if (provider === "influencer") {
+                    liveBusinessContentProviderRef.current.classList.remove("content-selected");
+                    liveInfluencerContentProviderRef.current.classList.add("content-selected");
+                    setLiveContentProvider("influencer");
+                }
+            }
+        }
+
+
+        
+
+    useEffect(() => {
+        let url = baseUrl + `api/phyllo/account/filter?account_id=${account_id}`;
         fetch(url, {
             method: "GET",
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "application/json", 
                 Authorization: "Bearer " + localStorage.getItem("access"),
             },
         })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Error in fetching data");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setServices(data);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }
+        .then((summaryResponse) => {
+            if (!summaryResponse.ok) {
+                throw new Error("Failed to fetch account summary");
+            }
+            return summaryResponse.json()
+        })
+        .then((summaryData) => {
+            setPhylloAccountSummary(summaryData);
+            console.log("Account Summary ", summaryData);
+            
+        })
+        .catch((error) => {});
 
-    function getYoutubeChannelInformation() {
-        const url = baseUrl + `api/influencer/youtube/get?channel_id=${account_id}`;
+        let contentDataUrl = baseUrl + `api/phyllo/content_data?account_id=${account_id}`;
+        fetch(contentDataUrl, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json", 
+                Authorization: "Bearer " + localStorage.getItem("access"),
+            },
+        })
+        .then((contentResponse) => {
+            if (!contentResponse.ok) {
+                throw new Error("Failed to fetch account summary");
+            }
+            return contentResponse.json()
+        })
+        .then((contentData) => {
+            setPhylloContentData(contentData);
+            console.log("Content Data ", contentData);
+            
+        })
+        .catch((error) => {});
+        
+        let contentDataDailyUrl = baseUrl + `api/phyllo/content_data/daily?account_id=${account_id}`;
+        fetch(contentDataDailyUrl, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json", 
+                Authorization: "Bearer " + localStorage.getItem("access"),
+            },
+        })
+        .then((contentDataDailyResponse) => {
+            if (!contentDataDailyResponse.ok) {
+                throw new Error("Failed to fetch account summary");
+            }
+            return contentDataDailyResponse.json()
+        })
+        .then((contentDataDailyData) => {
+            setPhylloContentDataDaily(contentDataDailyData);
+            console.log("Content Data Daily ", contentDataDailyData);
+            
+        })
+        .catch((error) => {});
+
+        let audienceDemographicsUrl = baseUrl + `api/phyllo/audience_demographics?account_id=${account_id}`;
+        fetch(audienceDemographicsUrl, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json", 
+                Authorization: "Bearer " + localStorage.getItem("access"),
+            },
+        })
+        .then((audienceDemographicsResponse) => {
+            if (!audienceDemographicsResponse.ok) {
+                throw new Error("Failed to fetch account summary");
+            }
+            return audienceDemographicsResponse.json()
+        })
+        .then((audienceDemographicsData) => {
+            setPhylloAudienceDemographics(audienceDemographicsData);
+            console.log("Audience Demographics: ", audienceDemographicsData);
+        })
+        .catch((error) => {});
+    }, []);
+
+    const [selectedCampaigns, setSelectedCampaigns] = useState([]);
+    const [globalFilter, setGlobalFilter] = useState("");
+    // const campaigns = [
+    //     { id: 1, code: "P1001", campaign: "Product A", date: "2024-02-01" },
+    //     { id: 2, code: "P1002", campaign: "Product B", date: "2024-01-15" },
+    //     { id: 3, code: "P1003", campaign: "Product C", date: "2024-03-10" },
+    //     { id: 4, code: "P1004", campaign: "Product D", date: "2024-02-20" },
+    //     { id: 5, code: "P1005", campaign: "Product E", date: "2024-01-25" },
+    //     { id: 6, code: "P1006", campaign: "Product F", date: "2024-11-24" },
+    //     { id: 7, code: "P1007", campaign: "Product G", date: "2024-08-01" },
+    //     { id: 8, code: "P1008", campaign: "Product H", date: "2024-12-15" },
+    //     { id: 9, code: "P1009", campaign: "Product I", date: "2024-09-10" },
+    //     { id: 10, code: "P1010", campaign: "Product J", date: "2024-07-20" },
+    //     { id: 11, code: "P1011", campaign: "Product K", date: "2024-06-25" },
+
+    // ];
+
+    const [campaigns, setCampaigns] = useState([]);
+    // Filter function
+    const filteredCampaigns = campaigns.filter((campaign) =>
+        Object.values(campaign).some((value) =>
+            value.toString().toLowerCase().includes(globalFilter.toLowerCase())
+        )
+    );
+
+    const [showAddCampaignOverlay, setShowAddCampaignOverlay] = useState(false);
+    const [pricingMethod, setPricingMethod] = useState("");
+    const [contentProvider, setContentProvider] = useState("business");
+    const [serviceType, setServiceType] = useState("");
+
+    const [feedAmount, setFeedAmount] = useState();
+    const [storyAmount, setStoryAmount] = useState();
+    const [liveAmount, setLiveAmount] = useState();
+
+    const [amount, setAmount] = useState();
+
+    function addToCampaignHandler(postType) {
+        const url = baseUrl + `api/campaign/get?username=${localStorage.getItem("username")}`;
+    
         fetch(url, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem("access")
+                Authorization: "Bearer " + localStorage.getItem("access")
             }
         })
         .then((response) => {
             if (!response.ok) {
-                throw new Error("Error in fetching data");
+                throw new Error("Failed to get campaigns");
             }
             return response.json();
         })
         .then((data) => {
-            Object.keys(youtubeChannelInformation).forEach((key) => {
-                youtubeChannelInformation[key].label = "";
-                youtubeChannelInformation[key].labels = [];
-                youtubeChannelInformation[key].data = [];
-            });
-            data.channel_info.forEach((item) => {
-                console.log(item);
-                Object.keys(youtubeChannelInformation).forEach((key) => {
-                    youtubeChannelInformation[key].label = key;
-                    youtubeChannelInformation[key].labels.push(item.date.split("T")[0]);
-                    youtubeChannelInformation[key].data.push(item[`${key}`]);
+            data.forEach((item) => {
+                setCampaigns((prevState) => {
+                    return [
+                        ...prevState,
+                        {
+                            id: item.id,
+                            campaign: item.campaign_name,
+                            date: item ? item.timestamp ? item.timestamp.split("T")[0] : null : null
+                        }
+                    ]
                 });
-            }); 
+            });
         })
-        .catch((error) => {});
+        .catch((error) => {
+            console.error(error);
+        });
+    
+        let pricingMethod = "";
+        let contentProvider = "";
+    
+        if (postType === "feed") {
+
+            setPricingMethod(feedPricingMethod);
+            setContentProvider(feedContentProvider);
+            setServiceType("feed");
+            setAmount(feedAmount);
+            // pricingMethod = feedPricingMethod;
+            // contentProvider = feedContentProvider;
+        } else if (postType === "story") {
+            setPricingMethod(storyPricingMethod);
+            setContentProvider(storyContentProvider);
+            setServiceType("story");
+            setAmount(storyAmount);
+            // pricingMethod = storyPricingMethod;
+            // contentProvider = storyContentProvider;
+        } else if (postType === "live") {
+            setPricingMethod(livePricingMethod);
+            setContentProvider(liveContentProvider);
+            setServiceType("live");
+            setAmount(liveAmount);
+            // pricingMethod = livePricingMethod;
+            // contentProvider = liveContentProvider;
+        }
+    
+        setShowAddCampaignOverlay(true);
+    }
+    
+
+    
+    function addCampaignCancelHandler() {
+        setShowAddCampaignOverlay(false);   
+        setCampaigns([]);
     }
 
-    console.log("YOUTUBE CHANNEL INFORMATION", youtubeChannelInformation);  
-    function getYoutubeAnalytics() {
-        const url = baseUrl + `api/youtube-analytics/get?channel_id=${account_id}`;
+    useEffect(() => {
+        const url = baseUrl + `api/influencer/service/get?account_id=${account_id}`;
         fetch(url, {
             method: "GET", 
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + localStorage.getItem("access"),
-            },
+            }
         })
         .then((response) => {
             if (!response.ok) {
-                throw new Error("Error in fetching data");
+                throw new Error("Failed to fetch services");
             }
             return response.json();
         })
         .then((data) => {
-            console.log("YOUTUBE ANALYTICS", data);
-            Object.keys(youtubeChannelAnalytics).forEach((key) => {
-                youtubeChannelAnalytics[key].label = "";
-                youtubeChannelAnalytics[key].labels = [];
-                youtubeChannelAnalytics[key].data = [];
-            });
-            Object.keys(youtubeVideoAnalytics).forEach((key) => {
-                youtubeVideoAnalytics[key].label = "";
-                youtubeVideoAnalytics[key].labels = [];
-                youtubeVideoAnalytics[key].data = [];
-            });
-
-            data.channel_analytics.forEach((item) => {
-                Object.keys(youtubeChannelAnalytics).forEach((key) => {
-                    youtubeChannelAnalytics[key].label = key;
-                    youtubeChannelAnalytics[key].labels.push(item.date.split("T")[0]);
-                    youtubeChannelAnalytics[key].data.push(item[`${key}`]);
-                });
-            });
-            data.video_analytics.forEach((item) => {
-                Object.keys(youtubeVideoAnalytics).forEach((key) => {
-                    youtubeVideoAnalytics[key].label = key;
-                    youtubeVideoAnalytics[key].labels.push(item.video_id);
-                    youtubeVideoAnalytics[key].data.push(item[`${key}`]);
-                });
-            });
+            setFeedPrice(data);
+            if (feedContentProvider == "business") {
+                setFeedTotalPrice((data.filter((entry) => {
+                    return entry.content_provider === "business";
+                })[0]?.price || 0) * feedDuration * numPosts);
+            } else if (feedContentProvider == "influencer") {
+                setFeedTotalPrice((data.filter((entry) => {
+                    return entry.content_provider === "influencer";
+                })[0]?.price || 0) * feedDuration * numPosts);
+            }
         })
         .catch((error) => {});
-    }   
-
-    console.log("YOUTUBE VIDEO ANALYTICS", youtubeVideoAnalytics);
-
-    // YOUTUBE DATA GRABBER FUNCTIONS
-    function getYoutubeServices() {
-        const url =
-            baseUrl + `api/youtube/service/get?channel_id=${account_id}`;
-        fetch(url, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + localStorage.getItem("access"),
-            },
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Error in fetching data");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                console.log("SERVICES", data);
-                setServices(data);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }
-
-    useEffect(() => {
-        //17841439310660818
-        if (account_type === "instagram") {
-            getInstagramDetails();
-            getInstagramMediaData();
-            getInstagramAgeDemographics();
-            getInstagramGenderDemographics();
-            getInstagramCityDemographics();
-            getInstagramCountryDemographics();
-            getInstagramServices();
-        } else if (account_type === "youtube") {
-            getYoutubeServices();
-            getYoutubeChannelInformation();
-            getYoutubeAnalytics();
-        }
     }, []);
 
-    function requestService(
-        account_id,
-        business_username,
-        service_id,
-        state
-    ) {
-        if (account_type === "instagram") {
-            const url = baseUrl + `api/requests/send`;
-            fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + localStorage.getItem("access"),
-                },
-                body: JSON.stringify({
-                    instagram_id: account_id,
-                    business_username: business_username,
-                    service_id: service_id,
-                    state: state,
-                }),
-            })
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error("Network response was not ok");
-                    }
-                })
-                .then((data) => {
-                    alert("Service has been requested");
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-        } else if (account_type === "youtube") {
-            const url = baseUrl + `api/youtube/requests/send`;
-            fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + localStorage.getItem("access"),
-                },
-                body: JSON.stringify({
-                    channel_id: account_id,
-                    business_username: business_username,
-                    service_id: service_id,
-                    state: state,
-                }),
-            })
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error("Network response was not ok");
-                    }
-                })
-                .then((data) => {
-                    alert("Service has been requested");
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
+    useEffect(() => {
+        if (feedContentProvider == "business") {
+            setFeedTotalPrice((feedPrice.filter((entry) => {
+                return entry.content_provider === "business";
+            })[0]?.price || 0) * feedDuration * numPosts);
+        } else if (feedContentProvider == "influencer") {
+            setFeedTotalPrice((feedPrice.filter((entry) => {
+                return entry.content_provider === "influencer";
+            })[0]?.price || 0) * feedDuration * numPosts);
         }
+    }, [feedContentProvider, feedDuration, numPosts]);
+    
+
+    function addCampaignAddHandler() {
+        console.log("service type: ", serviceType);
+        console.log("pricing method: ", pricingMethod);
+        selectedCampaigns.forEach((campaign) => {
+            const url = baseUrl + `api/campaign/influencer/add?campaign_id=${campaign.id}&account_id=${account_id}&service_type=feed&pricing_method=daily&content_provider=${feedContentProvider}&amount=${feedDuration}&num_posts=${numPosts}`;
+            fetch(url, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + localStorage.getItem("access"),
+                },
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Failed to add campaign");
+                }
+                return response.json()
+            })
+            .catch((error) => {});
+            
+        });
+        
     }
 
     return (
@@ -824,2480 +797,577 @@ export default function InfluencerProfile() {
             <div className="profile-contents">
                 {page === "services" ? (
                     <div className="services-container">
-                        <div className="profile-info">
-                            <div className="profile-image">
-                                <img
-                                    src="https://via.placeholder.com/100"
-                                    alt="Profile"
-                                />
-                            </div>
-                            <div className="profile-name">
-                                <p>John Doe</p>
-                            </div>
-                            <div className="profile-bio">
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipiscing elit. Sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua.
-                                </p>
-                            </div>
-                            <div className="profile-followers">
-                                <p>Followers: 100k</p>
-                            </div>
-                            <div className="profile-engagement">
-                                <p>Engagement: 75%</p>
-                            </div>
-                            <div className="avgs">
-                                <div className="avg-likes">
-                                    <div className="icon">
-                                        <span className="material-symbols-outlined">
-                                            thumb_up
-                                        </span>
+                        {showAddCampaignOverlay ? 
+                            <div className="add-campaign-overlay not-visible">
+                                <div className="add-campaign-overlay-header">
+                                    <h2>Select Campaigns</h2>
+                                </div>
+                                <div className="campaigns">
+                                    <div className="campaign-search">
+                                        <input type="text" placeholder="Search Campaigns" onChange={(e) => setGlobalFilter(e.target.value)} value={globalFilter}/>
                                     </div>
-                                    <div className="value-text">
-                                        <div className="value">
-                                            <p>100</p>
+                                    <div className="campaign-content">                                   
+                                        <DataTable
+                                            value={filteredCampaigns}
+                                            selection={selectedCampaigns}
+                                            onSelectionChange={(e) => setSelectedCampaigns(e.value)}
+                                            dataKey="id"
+                                            tableStyle={{ minWidth: "4rem" }}
+                                        >
+                                            <Column selectionMode="multiple" />
+                                            <Column field="campaign" header="Campaign" />
+                                            <Column field="date" header="Date" />
+                                        </DataTable>
+
+                                    </div>
+                                </div>
+                                <div className="campaign-selection-action">
+                                    <button className="select-campaign-cancel-button" onClick={addCampaignCancelHandler}>Cancel</button>
+                                    <button className="select-campaign-add-button" onClick={addCampaignAddHandler}>Add to Campaign</button>
+                                </div>
+                            </div>
+                        : null}
+                        
+                        <div className="service reels-service">
+                            <div className="service-header">
+                                <h2>Feed</h2>
+                            </div>
+                            <div className="service-content">
+                                <div className="content content-provider">
+                                    <div className="content-header">
+                                        <span>Content Provider</span>
+                                    </div>
+                                    <div className="content-providers content-content">
+                                        <div className="provider content-selected" onClick={feedContentProviderHandler("business")} ref={reelBusinessContentProviderRef}>
+                                            <span>Business</span>
                                         </div>
-                                        <div className="text">
-                                            <p>Avg.</p>
-                                            <p>Likes</p>
+                                        <div className="provider" onClick={feedContentProviderHandler("influencer")} ref={reelInfluencerContentProviderRef}>
+                                            <span>Influencer</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="avg-comments">
-                                    <div className="icon">
-                                        <span className="material-symbols-outlined">
-                                            comment
-                                        </span>
-                                    </div>
-                                    <div className="value-text">
-                                        <div className="value">
-                                            <p>100</p>
-                                        </div>
-                                        <div className="text">
-                                            <p>Avg</p>
-                                            <p>Comments</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="avg-shares">
-                                    <div className="icon">
-                                        <span className="material-symbols-outlined">
-                                            share
-                                        </span>
-                                    </div>
-                                    <div className="value-text">
-                                        <div className="value">
-                                            <p>100</p>
-                                        </div>
-                                        <div className="text">
-                                            <p>Avg.</p>
-                                            <p>Shares</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="services">
-                            <div className="services-title">
-                                <p>Services</p>
-                            </div>
-                            <div className="services-nav">
-                                {account_type == "instagram" ? (
-                                    <>
-                                        <div
-                                            className={
-                                                servicePage ===
-                                                "feed-post-service"
-                                                    ? "nav feed-post selected"
-                                                    : "nav feed-post"
-                                            }
-                                            onClick={() => {
-                                                setServicePage(
-                                                    "feed-post-service"
-                                                );
-                                            }}
-                                        >
-                                            <p>Feed Post</p>
-                                        </div>
-                                        <div
-                                            className={
-                                                servicePage ===
-                                                "reel-post-service"
-                                                    ? "nav reel-post selected"
-                                                    : "nav reel-post"
-                                            }
-                                            onClick={() => {
-                                                setServicePage(
-                                                    "reel-post-service"
-                                                );
-                                            }}
-                                        >
-                                            <p>Reel Post</p>
-                                        </div>
-                                        <div
-                                            className={
-                                                servicePage ===
-                                                "story-post-service"
-                                                    ? "nav story-post selected"
-                                                    : "nav story-post"
-                                            }
-                                            onClick={() => {
-                                                setServicePage(
-                                                    "story-post-service"
-                                                );
-                                            }}
-                                        >
-                                            <p>Story Post</p>
-                                        </div>
-                                    </>
-                                ) : account_type === "youtube" ? (
-                                    <>
-                                        <div
-                                            className={
-                                                servicePage ===
-                                                "youtube-full-post-service"
-                                                    ? "nav youtube-full-post selected"
-                                                    : "nav youtube-full-post"
-                                            }
-                                            onClick={() => {
-                                                setServicePage(
-                                                    "youtube-full-post-service"
-                                                );
-                                            }}
-                                        >
-                                            <p>FULL POST</p>
-                                        </div>
-                                        <div
-                                            className={
-                                                servicePage ===
-                                                "youtube-short-post-service"
-                                                    ? "nav youtube-short-post selected"
-                                                    : "nav youtube-short-post"
-                                            }
-                                            onClick={() => {
-                                                setServicePage(
-                                                    "youtube-short-post-service"
-                                                );
-                                            }}
-                                        >
-                                            <p>SHORT POST</p>
-                                        </div>
-                                    </>
-                                ) : null}
-                            </div>
-                            <div className="services-content">
-                                {servicePage === "ugc-service" ? (
-                                    <div className="content ugc-service">
-                                        <div className="service">
-                                            <div className="service-title">
-                                                <p>UGC</p>
-                                            </div>
-                                            <div className="service-description">
-                                                <p>
-                                                    A 30 second video
-                                                    testimonial about your
-                                                    product or service.
-                                                </p>
-                                            </div>
-                                            <div className="post-type">
-                                                <span className="material-symbols-outlined">
-                                                    format_list_bulleted
-                                                </span>
-                                                <p>Video</p>
-                                            </div>
-                                            <div className="post-length">
-                                                <span className="material-symbols-outlined">
-                                                    schedule
-                                                </span>
-                                                <p>30 second</p>
-                                            </div>
-                                            <div className="price">
-                                                <span className="material-symbols-outlined">
-                                                    payments
-                                                </span>
-                                                <strong>$10</strong>
-                                            </div>
-                                        </div>
-                                        <div className="service"></div>
-                                        <div className="service"></div>
-                                        <div className="service"></div>
-                                        <div className="service"></div>
-                                        <div className="service"></div>
-                                    </div>
-                                ) : null}
-                                {servicePage === "youtube-full-post-service" ? (
-                                    <div className="content youtube-full-post-service">
-                                        {services != null
-                                            ? services.map((service) => {
-                                                  if (
-                                                      service.service_type ===
-                                                          "FULL" ||
-                                                      service.service_type ===
-                                                          "full"
-                                                  ) {
-                                                      return (
-                                                          <div className="service">
-                                                              <div className="service-title">
-                                                                  <p>
-                                                                      {
-                                                                          service.service_name
-                                                                      }
-                                                                  </p>
-                                                              </div>
-                                                              <div className="post-type">
-                                                                  <span className="material-symbols-outlined">
-                                                                      format_list_bulleted
-                                                                  </span>
-                                                                  <p>
-                                                                      {
-                                                                          service.post_type
-                                                                      }
-                                                                  </p>
-                                                              </div>
-                                                              {/* <div className="post-length">
-                                                        <span className="material-symbols-outlined">
-                                                            schedule
-                                                        </span>
-                                                        <p>
-                                                            {
-                                                                service.post_length
-                                                            }{" "}
-                                                            second
-                                                        </p>
-                                                    </div> */}
-                                                              <div className="service-content-provider">
-                                                                  <p className="title">
-                                                                      Content
-                                                                      Provider
-                                                                  </p>
-                                                                  <div className="option-container">
-                                                                      <div className="option-1 option">
-                                                                          <label for="influencer-checkbox">
-                                                                              Influencer
-                                                                          </label>
-                                                                          <input
-                                                                              type="checkbox"
-                                                                              id="influencer-checkbox"
-                                                                              name="content-provider-option"
-                                                                              //   checked={
-                                                                              //       selectedContentProvider ===
-                                                                              //       "influencer"
-                                                                              //   }
-                                                                              checked={
-                                                                                  service.content_provider ===
-                                                                                  "influencer"
-                                                                              }
-                                                                              onChange={() =>
-                                                                                  setSelectedContentProvider(
-                                                                                      "influencer"
-                                                                                  )
-                                                                              }
-                                                                          />
-                                                                      </div>
-                                                                      <div className="option-2 option">
-                                                                          <label for="business-checkbox">
-                                                                              Business
-                                                                          </label>
-                                                                          <input
-                                                                              type="checkbox"
-                                                                              id="business-checkbox"
-                                                                              name="content-provider-option"
-                                                                              //   checked={
-                                                                              //       selectedContentProvider ===
-                                                                              //       "business"
-                                                                              //   }
-                                                                              checked={
-                                                                                  service.content_provider ===
-                                                                                  "business"
-                                                                              }
-                                                                              onChange={() =>
-                                                                                  setSelectedContentProvider(
-                                                                                      "business"
-                                                                                  )
-                                                                              }
-                                                                          />
-                                                                      </div>
-                                                                  </div>
-                                                              </div>
-                                                              <div className="pricing-type">
-                                                                  <p className="title">
-                                                                      Pricing
-                                                                      Type
-                                                                  </p>
-                                                                  <div className="option-container">
-                                                                      <div className="option-1 option">
-                                                                          <label for="hourly-pricing">
-                                                                              Per
-                                                                              Hour
-                                                                          </label>
-                                                                          <input
-                                                                              type="checkbox"
-                                                                              id="hourly-pricing"
-                                                                              name="pricing-type-checkbox"
-                                                                              checked={
-                                                                                  selectedPricingType ===
-                                                                                  "hourly"
-                                                                              }
-                                                                              onChange={() =>
-                                                                                  setSelectedPricingType(
-                                                                                      "hourly"
-                                                                                  )
-                                                                              }
-                                                                          />
-                                                                      </div>
+                                <div className="content price">
 
-                                                                      <div className="option-2 option">
-                                                                          <label for="view-pricing">
-                                                                              Per
-                                                                              View
-                                                                          </label>
-                                                                          <input
-                                                                              type="checkbox"
-                                                                              id="view-pricing"
-                                                                              name="pricing-type-checkbox"
-                                                                              checked={
-                                                                                  selectedPricingType ===
-                                                                                  "view"
-                                                                              }
-                                                                              onChange={() =>
-                                                                                  setSelectedPricingType(
-                                                                                      "view"
-                                                                                  )
-                                                                              }
-                                                                              disabled
-                                                                          />
-                                                                      </div>
-                                                                  </div>
-                                                              </div>
-                                                              {selectedPricingType ===
-                                                              "hourly" ? (
-                                                                  <div className="price">
-                                                                      <span className="material-symbols-outlined">
-                                                                          payments
-                                                                      </span>
-                                                                      <strong>
-                                                                          $
-                                                                          {service.pricing.map(
-                                                                              (
-                                                                                  price
-                                                                              ) => {
-                                                                                  if (
-                                                                                      price.pricing_type ===
-                                                                                      "hourly"
-                                                                                  ) {
-                                                                                      return price.price;
-                                                                                  }
-                                                                              }
-                                                                          )}
-                                                                      </strong>
-                                                                      <input
-                                                                          type="number"
-                                                                          placeholder="Enter live hours"
-                                                                      />
-                                                                  </div>
-                                                              ) : (
-                                                                  <div className="price">
-                                                                      <span className="material-symbols-outlined">
-                                                                          payments
-                                                                      </span>
-                                                                      <strong>
-                                                                          $
-                                                                          {service.pricing.map(
-                                                                              (
-                                                                                  price
-                                                                              ) => {
-                                                                                  if (
-                                                                                      price.pricing_type ===
-                                                                                      "view"
-                                                                                  ) {
-                                                                                      return price.price;
-                                                                                  }
-                                                                              }
-                                                                          )}
-                                                                      </strong>
-                                                                      <input
-                                                                          type="number"
-                                                                          placeholder="Enter max. views"
-                                                                      />
-                                                                  </div>
-                                                              )}
-                                                              <div className="request-service">
-                                                                  <button
-                                                                      type="button"
-                                                                      onClick={() => {
-                                                                          requestService(
-                                                                              account_id,
-                                                                              localStorage.getItem(
-                                                                                  "username"
-                                                                              ),
-                                                                              service.id,
-                                                                              "requested"
-                                                                          );
-                                                                      }}
-                                                                  >
-                                                                      Request
-                                                                      Service
-                                                                  </button>
-                                                              </div>
-                                                          </div>
-                                                      );
-                                                  }
-                                              })
-                                            : null}
-                                    </div>
-                                ) : null}
-                                {servicePage ===
-                                "youtube-short-post-service" ? (
-                                    <div className="content youtube-short-post-service">
-                                        {services != null
-                                            ? services.map((service) => {
-                                                  if (
-                                                      service.service_type ===
-                                                          "SHORTS" ||
-                                                      service.service_type ===
-                                                          "shorts"
-                                                  ) {
-                                                      return (
-                                                          <div className="service">
-                                                              <div className="service-title">
-                                                                  <p>
-                                                                      {
-                                                                          service.service_name
-                                                                      }
-                                                                  </p>
-                                                              </div>
-                                                              <div className="post-type">
-                                                                  <span className="material-symbols-outlined">
-                                                                      format_list_bulleted
-                                                                  </span>
-                                                                  <p>
-                                                                      {
-                                                                          service.post_type
-                                                                      }
-                                                                  </p>
-                                                              </div>
-                                                              {/* <div className="post-length">
-                                                        <span className="material-symbols-outlined">
-                                                            schedule
-                                                        </span>
-                                                        <p>
-                                                            {
-                                                                service.post_length
-                                                            }{" "}
-                                                            second
-                                                        </p>
-                                                    </div> */}
-                                                              <div className="service-content-provider">
-                                                                  <p className="title">
-                                                                      Content
-                                                                      Provider
-                                                                  </p>
-                                                                  <div className="option-container">
-                                                                      <div className="option-1 option">
-                                                                          <label for="influencer-checkbox">
-                                                                              Influencer
-                                                                          </label>
-                                                                          <input
-                                                                              type="checkbox"
-                                                                              id="influencer-checkbox"
-                                                                              name="content-provider-option"
-                                                                              //   checked={
-                                                                              //       selectedContentProvider ===
-                                                                              //       "influencer"
-                                                                              //   }
-                                                                              checked={
-                                                                                  service.content_provider ===
-                                                                                  "influencer"
-                                                                              }
-                                                                              onChange={() =>
-                                                                                  setSelectedContentProvider(
-                                                                                      "influencer"
-                                                                                  )
-                                                                              }
-                                                                          />
-                                                                      </div>
-                                                                      <div className="option-2 option">
-                                                                          <label for="business-checkbox">
-                                                                              Business
-                                                                          </label>
-                                                                          <input
-                                                                              type="checkbox"
-                                                                              id="business-checkbox"
-                                                                              name="content-provider-option"
-                                                                              //   checked={
-                                                                              //       selectedContentProvider ===
-                                                                              //       "business"
-                                                                              //   }
-                                                                              checked={
-                                                                                  service.content_provider ===
-                                                                                  "business"
-                                                                              }
-                                                                              onChange={() =>
-                                                                                  setSelectedContentProvider(
-                                                                                      "business"
-                                                                                  )
-                                                                              }
-                                                                          />
-                                                                      </div>
-                                                                  </div>
-                                                              </div>
-                                                              <div className="pricing-type">
-                                                                  <p className="title">
-                                                                      Pricing
-                                                                      Type
-                                                                  </p>
-                                                                  <div className="option-container">
-                                                                      <div className="option-1 option">
-                                                                          <label for="hourly-pricing">
-                                                                              Per
-                                                                              Hour
-                                                                          </label>
-                                                                          <input
-                                                                              type="checkbox"
-                                                                              id="hourly-pricing"
-                                                                              name="pricing-type-checkbox"
-                                                                              checked={
-                                                                                  selectedPricingType ===
-                                                                                  "hourly"
-                                                                              }
-                                                                              onChange={() =>
-                                                                                  setSelectedPricingType(
-                                                                                      "hourly"
-                                                                                  )
-                                                                              }
-                                                                          />
-                                                                      </div>
+                                    <span>Price per day:</span>
+                                    {feedContentProvider == "business" && <span>$<span id="rate">{feedPrice?.filter((entry) => {
+                                        return entry.content_provider === "business";
+                                    })[0]?.price || "N/A"}</span></span>}
 
-                                                                      <div className="option-2 option">
-                                                                          <label for="view-pricing">
-                                                                              Per
-                                                                              View
-                                                                          </label>
-                                                                          <input
-                                                                              type="checkbox"
-                                                                              id="view-pricing"
-                                                                              name="pricing-type-checkbox"
-                                                                              checked={
-                                                                                  selectedPricingType ===
-                                                                                  "view"
-                                                                              }
-                                                                              onChange={() =>
-                                                                                  setSelectedPricingType(
-                                                                                      "view"
-                                                                                  )
-                                                                              }
-                                                                              disabled
-                                                                          />
-                                                                      </div>
-                                                                  </div>
-                                                              </div>
-                                                              {selectedPricingType ===
-                                                              "hourly" ? (
-                                                                  <div className="price">
-                                                                      <span className="material-symbols-outlined">
-                                                                          payments
-                                                                      </span>
-                                                                      <strong>
-                                                                          $
-                                                                          {service.pricing.map(
-                                                                              (
-                                                                                  price
-                                                                              ) => {
-                                                                                  if (
-                                                                                      price.pricing_type ===
-                                                                                      "hourly"
-                                                                                  ) {
-                                                                                      return price.price;
-                                                                                  }
-                                                                              }
-                                                                          )}
-                                                                      </strong>
-                                                                      <input
-                                                                          type="number"
-                                                                          placeholder="Enter live hours"
-                                                                      />
-                                                                  </div>
-                                                              ) : (
-                                                                  <div className="price">
-                                                                      <span className="material-symbols-outlined">
-                                                                          payments
-                                                                      </span>
-                                                                      <strong>
-                                                                          $
-                                                                          {service.pricing.map(
-                                                                              (
-                                                                                  price
-                                                                              ) => {
-                                                                                  if (
-                                                                                      price.pricing_type ===
-                                                                                      "view"
-                                                                                  ) {
-                                                                                      return price.price;
-                                                                                  }
-                                                                              }
-                                                                          )}
-                                                                      </strong>
-                                                                      <input
-                                                                          type="number"
-                                                                          placeholder="Enter max. views"
-                                                                      />
-                                                                  </div>
-                                                              )}
-                                                              <div className="request-service">
-                                                                  <button
-                                                                      type="button"
-                                                                      onClick={() => {
-                                                                          requestService(
-                                                                              account_id,
-                                                                              localStorage.getItem(
-                                                                                  "username"
-                                                                              ),
-                                                                              service.id,
-                                                                              "requested"
-                                                                          );
-                                                                      }}
-                                                                  >
-                                                                      Request
-                                                                      Service
-                                                                  </button>
-                                                              </div>
-                                                          </div>
-                                                      );
-                                                  }
-                                              })
-                                            : null}
-                                    </div>
-                                ) : null}
-                                {servicePage === "feed-post-service" ? (
-                                    <div className="content feed-post-service">
-                                        {services != null
-                                            ? services.map((service) => {
-                                                  if (
-                                                      service.service_type ===
-                                                          "feed" ||
-                                                      service.service_type ===
-                                                          "FEED"
-                                                  ) {
-                                                      return (
-                                                          <div className="service">
-                                                              <div className="service-title">
-                                                                  <p>
-                                                                      {
-                                                                          service.service_name
-                                                                      }
-                                                                  </p>
-                                                              </div>
-                                                              <div className="post-type">
-                                                                  <span className="material-symbols-outlined">
-                                                                      format_list_bulleted
-                                                                  </span>
-                                                                  <p>
-                                                                      {
-                                                                          service.post_type
-                                                                      }
-                                                                  </p>
-                                                              </div>
-                                                              <div className="post-length">
-                                                                  <span className="material-symbols-outlined">
-                                                                      schedule
-                                                                  </span>
-                                                                  <p>
-                                                                      {
-                                                                          service.post_length
-                                                                      }{" "}
-                                                                      second
-                                                                  </p>
-                                                              </div>
-                                                              <div className="service-content-provider">
-                                                                  <p className="title">
-                                                                      Content
-                                                                      Provider
-                                                                  </p>
-                                                                  <div className="option-container">
-                                                                      <div className="option-1 option">
-                                                                          <label for="influencer-checkbox">
-                                                                              Influencer
-                                                                          </label>
-                                                                          <input
-                                                                              type="checkbox"
-                                                                              id="influencer-checkbox"
-                                                                              name="content-provider-option"
-                                                                              //   checked={
-                                                                              //       selectedContentProvider ===
-                                                                              //       "influencer"
-                                                                              //   }
-                                                                              checked={
-                                                                                  service.content_provider ===
-                                                                                  "influencer"
-                                                                              }
-                                                                              onChange={() =>
-                                                                                  setSelectedContentProvider(
-                                                                                      "influencer"
-                                                                                  )
-                                                                              }
-                                                                          />
-                                                                      </div>
-                                                                      <div className="option-2 option">
-                                                                          <label for="business-checkbox">
-                                                                              Business
-                                                                          </label>
-                                                                          <input
-                                                                              type="checkbox"
-                                                                              id="business-checkbox"
-                                                                              name="content-provider-option"
-                                                                              //   checked={
-                                                                              //       selectedContentProvider ===
-                                                                              //       "business"
-                                                                              //   }
-                                                                              checked={
-                                                                                  service.content_provider ===
-                                                                                  "business"
-                                                                              }
-                                                                              onChange={() =>
-                                                                                  setSelectedContentProvider(
-                                                                                      "business"
-                                                                                  )
-                                                                              }
-                                                                          />
-                                                                      </div>
-                                                                  </div>
-                                                              </div>
-                                                              <div className="pricing-type">
-                                                                  <p className="title">
-                                                                      Pricing
-                                                                      Type
-                                                                  </p>
-                                                                  <div className="option-container">
-                                                                      <div className="option-1 option">
-                                                                          <label for="hourly-pricing">
-                                                                              Per
-                                                                              Hour
-                                                                          </label>
-                                                                          <input
-                                                                              type="checkbox"
-                                                                              id="hourly-pricing"
-                                                                              name="pricing-type-checkbox"
-                                                                              checked={
-                                                                                  selectedPricingType ===
-                                                                                  "hourly"
-                                                                              }
-                                                                              onChange={() =>
-                                                                                  setSelectedPricingType(
-                                                                                      "hourly"
-                                                                                  )
-                                                                              }
-                                                                          />
-                                                                      </div>
-
-                                                                      <div className="option-2 option">
-                                                                          <label for="view-pricing">
-                                                                              Per
-                                                                              View
-                                                                          </label>
-                                                                          <input
-                                                                              type="checkbox"
-                                                                              id="view-pricing"
-                                                                              name="pricing-type-checkbox"
-                                                                              checked={
-                                                                                  selectedPricingType ===
-                                                                                  "view"
-                                                                              }
-                                                                              onChange={() =>
-                                                                                  setSelectedPricingType(
-                                                                                      "view"
-                                                                                  )
-                                                                              }
-                                                                              disabled
-                                                                          />
-                                                                      </div>
-                                                                  </div>
-                                                              </div>
-                                                              {selectedPricingType ===
-                                                              "hourly" ? (
-                                                                  <div className="price">
-                                                                      <span className="material-symbols-outlined">
-                                                                          payments
-                                                                      </span>
-                                                                      <strong>
-                                                                          $
-                                                                          {service.pricing.map(
-                                                                              (
-                                                                                  price
-                                                                              ) => {
-                                                                                  if (
-                                                                                      price.pricing_type ===
-                                                                                      "hourly"
-                                                                                  ) {
-                                                                                      return price.price;
-                                                                                  }
-                                                                              }
-                                                                          )}
-                                                                      </strong>
-                                                                      <input
-                                                                          type="number"
-                                                                          placeholder="Enter live hours"
-                                                                      />
-                                                                  </div>
-                                                              ) : (
-                                                                  <div className="price">
-                                                                      <span className="material-symbols-outlined">
-                                                                          payments
-                                                                      </span>
-                                                                      <strong>
-                                                                          $
-                                                                          {service.pricing.map(
-                                                                              (
-                                                                                  price
-                                                                              ) => {
-                                                                                  if (
-                                                                                      price.pricing_type ===
-                                                                                      "view"
-                                                                                  ) {
-                                                                                      return price.price;
-                                                                                  }
-                                                                              }
-                                                                          )}
-                                                                      </strong>
-                                                                      <input
-                                                                          type="number"
-                                                                          placeholder="Enter max. views"
-                                                                      />
-                                                                  </div>
-                                                              )}
-                                                              <div className="request-service">
-                                                                  <button
-                                                                      type="button"
-                                                                      onClick={() => {
-                                                                          requestService(
-                                                                              account_id,
-                                                                              localStorage.getItem(
-                                                                                  "username"
-                                                                              ),
-                                                                              service.id,
-                                                                              "requested"
-                                                                          );
-                                                                      }}
-                                                                  >
-                                                                      Request
-                                                                      Service
-                                                                  </button>
-                                                              </div>
-                                                          </div>
-                                                      );
-                                                  }
-                                              })
-                                            : null}
-                                    </div>
-                                ) : null}
-                                {servicePage === "reel-post-service" ? (
-                                    <div className="content reel-post-service">
-                                        {services != null
-                                            ? services.map((service) => {
-                                                  if (
-                                                      service.service_type ===
-                                                          "reel" ||
-                                                      service.service_type ===
-                                                          "REEL"
-                                                  ) {
-                                                      return (
-                                                          <div className="service">
-                                                              <div className="service-title">
-                                                                  <p>
-                                                                      {
-                                                                          service.service_name
-                                                                      }
-                                                                  </p>
-                                                              </div>
-                                                              <div className="post-type">
-                                                                  <span className="material-symbols-outlined">
-                                                                      format_list_bulleted
-                                                                  </span>
-                                                                  <p>
-                                                                      {
-                                                                          service.post_type
-                                                                      }
-                                                                  </p>
-                                                              </div>
-                                                              <div className="post-length">
-                                                                  <span className="material-symbols-outlined">
-                                                                      schedule
-                                                                  </span>
-                                                                  <p>
-                                                                      {
-                                                                          service.post_length
-                                                                      }{" "}
-                                                                      second
-                                                                  </p>
-                                                              </div>
-                                                              <div className="service-content-provider">
-                                                                  <p className="title">
-                                                                      Content
-                                                                      Provider
-                                                                  </p>
-                                                                  <div className="option-container">
-                                                                      <div className="option-1 option">
-                                                                          <label for="influencer-checkbox">
-                                                                              Influencer
-                                                                          </label>
-                                                                          <input
-                                                                              type="checkbox"
-                                                                              id="influencer-checkbox"
-                                                                              name="content-provider-option"
-                                                                              //   checked={
-                                                                              //       selectedContentProvider ===
-                                                                              //       "influencer"
-                                                                              //   }
-                                                                              checked={
-                                                                                  service.content_provider ===
-                                                                                  "influencer"
-                                                                              }
-                                                                              onChange={() =>
-                                                                                  setSelectedContentProvider(
-                                                                                      "influencer"
-                                                                                  )
-                                                                              }
-                                                                          />
-                                                                      </div>
-                                                                      <div className="option-2 option">
-                                                                          <label for="business-checkbox">
-                                                                              Business
-                                                                          </label>
-                                                                          <input
-                                                                              type="checkbox"
-                                                                              id="business-checkbox"
-                                                                              name="content-provider-option"
-                                                                              //   checked={
-                                                                              //       selectedContentProvider ===
-                                                                              //       "business"
-                                                                              //   }
-                                                                              checked={
-                                                                                  service.content_provider ===
-                                                                                  "business"
-                                                                              }
-                                                                              onChange={() =>
-                                                                                  setSelectedContentProvider(
-                                                                                      "business"
-                                                                                  )
-                                                                              }
-                                                                          />
-                                                                      </div>
-                                                                  </div>
-                                                              </div>
-                                                              <div className="pricing-type">
-                                                                  <p className="title">
-                                                                      Pricing
-                                                                      Type
-                                                                  </p>
-                                                                  <div className="option-container">
-                                                                      <div className="option-1 option">
-                                                                          <label for="hourly-pricing">
-                                                                              Per
-                                                                              Hour
-                                                                          </label>
-                                                                          <input
-                                                                              type="checkbox"
-                                                                              id="hourly-pricing"
-                                                                              name="pricing-type-checkbox"
-                                                                              checked={
-                                                                                  selectedPricingType ===
-                                                                                  "hourly"
-                                                                              }
-                                                                              onChange={() =>
-                                                                                  setSelectedPricingType(
-                                                                                      "hourly"
-                                                                                  )
-                                                                              }
-                                                                          />
-                                                                      </div>
-
-                                                                      <div className="option-2 option">
-                                                                          <label for="view-pricing">
-                                                                              Per
-                                                                              View
-                                                                          </label>
-                                                                          <input
-                                                                              type="checkbox"
-                                                                              id="view-pricing"
-                                                                              name="pricing-type-checkbox"
-                                                                              checked={
-                                                                                  selectedPricingType ===
-                                                                                  "view"
-                                                                              }
-                                                                              onChange={() =>
-                                                                                  setSelectedPricingType(
-                                                                                      "view"
-                                                                                  )
-                                                                              }
-                                                                              disabled
-                                                                          />
-                                                                      </div>
-                                                                  </div>
-                                                              </div>
-                                                              {selectedPricingType ===
-                                                              "hourly" ? (
-                                                                  <div className="price">
-                                                                      <span className="material-symbols-outlined">
-                                                                          payments
-                                                                      </span>
-                                                                      <strong>
-                                                                          $
-                                                                          {service.pricing.map(
-                                                                              (
-                                                                                  price
-                                                                              ) => {
-                                                                                  if (
-                                                                                      price.pricing_type ===
-                                                                                      "hourly"
-                                                                                  ) {
-                                                                                      return price.price;
-                                                                                  }
-                                                                              }
-                                                                          )}
-                                                                      </strong>
-                                                                      <input
-                                                                          type="number"
-                                                                          placeholder="Enter live hours"
-                                                                      />
-                                                                  </div>
-                                                              ) : (
-                                                                  <div className="price">
-                                                                      <span className="material-symbols-outlined">
-                                                                          payments
-                                                                      </span>
-                                                                      <strong>
-                                                                          $
-                                                                          {service.pricing.map(
-                                                                              (
-                                                                                  price
-                                                                              ) => {
-                                                                                  if (
-                                                                                      price.pricing_type ===
-                                                                                      "view"
-                                                                                  ) {
-                                                                                      return price.price;
-                                                                                  }
-                                                                              }
-                                                                          )}
-                                                                      </strong>
-                                                                      <input
-                                                                          type="number"
-                                                                          placeholder="Enter max. views"
-                                                                      />
-                                                                  </div>
-                                                              )}
-                                                              <div className="request-service">
-                                                                  <button
-                                                                      type="button"
-                                                                      onClick={() => {
-                                                                          requestService(
-                                                                              account_id,
-                                                                              localStorage.getItem(
-                                                                                  "username"
-                                                                              ),
-                                                                              service.id,
-                                                                              "requested"
-                                                                          );
-                                                                      }}
-                                                                  >
-                                                                      Request
-                                                                      Service
-                                                                  </button>
-                                                              </div>
-                                                          </div>
-                                                      );
-                                                  }
-                                              })
-                                            : null}
-                                    </div>
-                                ) : null}
-                                {servicePage === "story-post-service" ? (
-                                    <div className="content story-post-service">
-                                        {services != null
-                                            ? services.map((service) => {
-                                                  if (
-                                                      service.service_type ===
-                                                          "story" ||
-                                                      service.service_type ===
-                                                          "STORY"
-                                                  ) {
-                                                      return (
-                                                          <div className="service">
-                                                              <div className="service-title">
-                                                                  <p>
-                                                                      {
-                                                                          service.service_name
-                                                                      }
-                                                                  </p>
-                                                              </div>
-                                                              <div className="post-type">
-                                                                  <span className="material-symbols-outlined">
-                                                                      format_list_bulleted
-                                                                  </span>
-                                                                  <p>
-                                                                      {
-                                                                          service.post_type
-                                                                      }
-                                                                  </p>
-                                                              </div>
-                                                              <div className="post-length">
-                                                                  <span className="material-symbols-outlined">
-                                                                      schedule
-                                                                  </span>
-                                                                  <p>
-                                                                      {
-                                                                          service.post_length
-                                                                      }{" "}
-                                                                      second
-                                                                  </p>
-                                                              </div>
-                                                              <div className="service-content-provider">
-                                                                  <p className="title">
-                                                                      Content
-                                                                      Provider
-                                                                  </p>
-                                                                  <div className="option-container">
-                                                                      <div className="option-1 option">
-                                                                          <label for="influencer-checkbox">
-                                                                              Influencer
-                                                                          </label>
-                                                                          <input
-                                                                              type="checkbox"
-                                                                              id="influencer-checkbox"
-                                                                              name="content-provider-option"
-                                                                              //   checked={
-                                                                              //       selectedContentProvider ===
-                                                                              //       "influencer"
-                                                                              //   }
-                                                                              checked={
-                                                                                  service.content_provider ===
-                                                                                  "influencer"
-                                                                              }
-                                                                              onChange={() =>
-                                                                                  setSelectedContentProvider(
-                                                                                      "influencer"
-                                                                                  )
-                                                                              }
-                                                                          />
-                                                                      </div>
-                                                                      <div className="option-2 option">
-                                                                          <label for="business-checkbox">
-                                                                              Business
-                                                                          </label>
-                                                                          <input
-                                                                              type="checkbox"
-                                                                              id="business-checkbox"
-                                                                              name="content-provider-option"
-                                                                              //   checked={
-                                                                              //       selectedContentProvider ===
-                                                                              //       "business"
-                                                                              //   }
-                                                                              checked={
-                                                                                  service.content_provider ===
-                                                                                  "business"
-                                                                              }
-                                                                              onChange={() =>
-                                                                                  setSelectedContentProvider(
-                                                                                      "business"
-                                                                                  )
-                                                                              }
-                                                                          />
-                                                                      </div>
-                                                                  </div>
-                                                              </div>
-                                                              <div className="pricing-type">
-                                                                  <p className="title">
-                                                                      Pricing
-                                                                      Type
-                                                                  </p>
-                                                                  <div className="option-container">
-                                                                      <div className="option-1 option">
-                                                                          <label for="hourly-pricing">
-                                                                              Per
-                                                                              Hour
-                                                                          </label>
-                                                                          <input
-                                                                              type="checkbox"
-                                                                              id="hourly-pricing"
-                                                                              name="pricing-type-checkbox"
-                                                                              checked={
-                                                                                  selectedPricingType ===
-                                                                                  "hourly"
-                                                                              }
-                                                                              onChange={() =>
-                                                                                  setSelectedPricingType(
-                                                                                      "hourly"
-                                                                                  )
-                                                                              }
-                                                                          />
-                                                                      </div>
-
-                                                                      <div className="option-2 option">
-                                                                          <label for="view-pricing">
-                                                                              Per
-                                                                              View
-                                                                          </label>
-                                                                          <input
-                                                                              type="checkbox"
-                                                                              id="view-pricing"
-                                                                              name="pricing-type-checkbox"
-                                                                              checked={
-                                                                                  selectedPricingType ===
-                                                                                  "view"
-                                                                              }
-                                                                              onChange={() =>
-                                                                                  setSelectedPricingType(
-                                                                                      "view"
-                                                                                  )
-                                                                              }
-                                                                              disabled
-                                                                          />
-                                                                      </div>
-                                                                  </div>
-                                                              </div>
-                                                              {selectedPricingType ===
-                                                              "hourly" ? (
-                                                                  <div className="price">
-                                                                      <span className="material-symbols-outlined">
-                                                                          payments
-                                                                      </span>
-                                                                      <strong>
-                                                                          $
-                                                                          {service.pricing.map(
-                                                                              (
-                                                                                  price
-                                                                              ) => {
-                                                                                  if (
-                                                                                      price.pricing_type ===
-                                                                                      "hourly"
-                                                                                  ) {
-                                                                                      return price.price;
-                                                                                  }
-                                                                              }
-                                                                          )}
-                                                                      </strong>
-                                                                      <input
-                                                                          type="number"
-                                                                          placeholder="Enter live hours"
-                                                                      />
-                                                                  </div>
-                                                              ) : (
-                                                                  <div className="price">
-                                                                      <span className="material-symbols-outlined">
-                                                                          payments
-                                                                      </span>
-                                                                      <strong>
-                                                                          $
-                                                                          {service.pricing.map(
-                                                                              (
-                                                                                  price
-                                                                              ) => {
-                                                                                  if (
-                                                                                      price.pricing_type ===
-                                                                                      "view"
-                                                                                  ) {
-                                                                                      return price.price;
-                                                                                  }
-                                                                              }
-                                                                          )}
-                                                                      </strong>
-                                                                      <input
-                                                                          type="number"
-                                                                          placeholder="Enter max. views"
-                                                                      />
-                                                                  </div>
-                                                              )}
-                                                              <div className="request-service">
-                                                                  <button
-                                                                      type="button"
-                                                                      onClick={() => {
-                                                                          requestService(
-                                                                              account_id,
-                                                                              localStorage.getItem(
-                                                                                  "username"
-                                                                              ),
-                                                                              service.id,
-                                                                              "requested"
-                                                                          );
-                                                                      }}
-                                                                  >
-                                                                      Request
-                                                                      Service
-                                                                  </button>
-                                                              </div>
-                                                          </div>
-                                                      );
-                                                  }
-                                              })
-                                            : null}
-                                    </div>
-                                ) : null}
-                                {/* {servicePage === "other-service" ? (
-                                    <div className="content other-service"></div>
-                                ) : null} */}
-                            </div>
-                        </div>
-                    </div>
-                ) : null}
-                {page === "analytics" ? (
-                    <div className="analytics">
-                        <div className="analytics-engagement">
-                            <div className="title">
-                                <p>Engagement Metrics</p>
-                            </div>
-                            <div className="sub-header">
-                                <div className="navigation">
-                                    {account_type === "instagram" ? <>
-                                    <div
-                                        className={
-                                            engagementPage == "account-metrics"
-                                                ? "nav selected"
-                                                : "nav"
-                                        }
-                                        onClick={() => {
-                                            setEngagementPage(
-                                                "account-metrics"
-                                            );
-                                        }}
-                                    >
-                                        <p>Account Metrics</p>
-                                    </div>
-                                    <div
-                                        className={
-                                            engagementPage == "post-metrics"
-                                                ? "nav selected"
-                                                : "nav"
-                                        }
-                                        onClick={() => {
-                                            setEngagementPage("post-metrics");
-                                        }}
-                                    >
-                                        <p>Post Metrics</p>
-                                    </div>
-                                    <div
-                                        className={
-                                            engagementPage == "reel-metrics"
-                                                ? "nav selected"
-                                                : "nav"
-                                        }
-                                        onClick={() => {
-                                            setEngagementPage("reel-metrics");
-                                        }}
-                                    >
-                                        <p>Reel Metrics</p>
-                                    </div>
-                                    </> : account_type === "youtube" ? <>
-                                    <div
-                                        className={
-                                            engagementPage == "account-metrics"
-                                                ? "nav selected"
-                                                : "nav"
-                                        }
-                                        onClick={() => {
-                                            setEngagementPage(
-                                                "account-metrics"
-                                            );
-                                        }}
-                                    >
-                                        <p>Account Metrics</p>
-                                    </div>
-                                    <div
-                                        className={
-                                            engagementPage == "post-metrics"
-                                                ? "nav selected"
-                                                : "nav"
-                                        }
-                                        onClick={() => {
-                                            setEngagementPage("post-metrics");
-                                        }}
-                                    >
-                                        <p>Post Metrics</p>
-                                    </div>
+                                    {feedContentProvider == "influencer" && <span>$<span id="rate">{feedPrice?.filter((entry) => {
+                                                                            return entry.content_provider === "influencer";
+                                                                        })[0]?.price || "N/A"}</span></span>}
                                     
-                                    </> : null}
                                 </div>
+                                <div className="content duration">
+                                    <label for="days">Select Duration:</label>
+                                    <input type="number" id="days" min="1" value={feedDuration} onChange={(e) => {
+                                        setFeedDuration(e.target.value);
+                                    }}/>
+                                </div>
+                                <div className="content duration">
+                                    <label for="posts">Num. Posts:</label>
+                                    <input type="number" id="days" min="1" value={numPosts} onChange={(e) => {
+                                        setNumPosts(e.target.value);
+                                    }}/>
+                                </div>
+                                <div className="content price-display">
+                                    Total: $<span id="total-price">{feedTotalPrice}</span>
+                                </div>
+                                {/* <div className="content pricing-method">
+                                    <div className="content-header">
+                                        <span>Pricing Method</span>
+                                    </div>
+                                    <div className="pricing-methods content-content">
+                                        <div className="method content-selected" onClick={feedPricingMethodHandler("hourly")} ref={reelPostPricingRef}>
+                                            <span className="method-header">Hourly</span>
+                                            <span className="method-price">$100</span>
+                                        </div>
+                                        <div className="method" onClick={feedPricingMethodHandler("view")} ref={reelViewPricingRef}>
+                                            <span className="method-header">View</span>
+                                            <span className="method-price">$0.09 CPT</span>
+                                        </div>
+                                        <div className="method" onClick={feedPricingMethodHandler("like")} ref={reelLikePricingRef}>
+                                            <span className="method-header">Like</span>
+                                            <span className="method-price">$0.09 CPT</span>
+                                        </div>
+                                    </div>
+                                    <div className="content-header pricing-amount-header">
+                                        <span>Amount</span>
+                                    </div>
+                                    <div className="pricing-amount">
+                                        <input type="number" placeholder="" value={feedAmount} onChange={(e) => {
+                                            setFeedAmount(e.target.value);
+                                        }}/>
+                                    </div>
+                                </div> */}
                                 
-                                <div className="filter">
-                                    <DateRangePicker />
+                                <div className="content action">
+                                    <button className="service-button reels-button" onClick={() => addToCampaignHandler("feed")}>Add to Campaign</button>
                                 </div>
                             </div>
-                            {account_type === "instagram" ? 
-                            <>
-                                {engagementPage === "account-metrics" ? (
-                                    <div className="content account-metrics">
-                                        <div className="graph-container">
-                                            <div className="title">
-                                                <p>Impressions</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={
-                                                        accountMetrics.impressions
-                                                            .label
-                                                    }
-                                                    labels={
-                                                        accountMetrics.impressions
-                                                            .labels
-                                                    }
-                                                    data={
-                                                        accountMetrics.impressions
-                                                            .data
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container">
-                                            <div className="title">
-                                                <p>Reach</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={
-                                                        accountMetrics.reach.label
-                                                    }
-                                                    labels={
-                                                        accountMetrics.reach.labels
-                                                    }
-                                                    data={accountMetrics.reach.data}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container">
-                                            <div className="title">
-                                                <p>Likes</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={
-                                                        accountMetrics.likes.label
-                                                    }
-                                                    labels={
-                                                        accountMetrics.likes.labels
-                                                    }
-                                                    data={accountMetrics.likes.data}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container">
-                                            <div className="title">
-                                                <p>Views</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={
-                                                        accountMetrics.views.label
-                                                    }
-                                                    labels={
-                                                        accountMetrics.views.labels
-                                                    }
-                                                    data={accountMetrics.views.data}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container">
-                                            <div className="title">
-                                                <p>Shares</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={
-                                                        accountMetrics.shares.label
-                                                    }
-                                                    labels={
-                                                        accountMetrics.shares.labels
-                                                    }
-                                                    data={
-                                                        accountMetrics.shares.data
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container">
-                                            <div className="title">
-                                                <p>Comments</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={
-                                                        accountMetrics.comments
-                                                            .label
-                                                    }
-                                                    labels={
-                                                        accountMetrics.comments
-                                                            .labels
-                                                    }
-                                                    data={
-                                                        accountMetrics.comments.data
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container website-clicks">
-                                            <div className="title">
-                                                <p>Websites Clicks</p>
-                                            </div>
-                                            <div className="graph">
-                                                <div className="content">
-                                                    <LineGraph
-                                                        label={
-                                                            accountMetrics
-                                                                .website_clicks
-                                                                .label
-                                                        }
-                                                        labels={
-                                                            accountMetrics
-                                                                .website_clicks
-                                                                .labels
-                                                        }
-                                                        data={
-                                                            accountMetrics
-                                                                .website_clicks.data
-                                                        }
-                                                    />
-                                                </div>
-                                                <div className="changes">
-                                                    <div className="quantity">
-                                                        <p>6M</p>
-                                                    </div>
-                                                    <div className="increase">
-                                                        <span className="material-symbols-outlined">
-                                                            arrow_upward
-                                                        </span>
-                                                        <span>12%</span>
-                                                    </div>
-                                                    <div className="text">
-                                                        <p>vs last month</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="graph-container sentiment">
-                                            <div className="title">
-                                                <p>Sentiment Analysis</p>
-                                            </div>
-                                            <div className="graph">
-                                                <div className="content">
-                                                    <SentimentChart />
-                                                </div>
-                                                <div className="value">
-                                                    <p>75</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="graph-container follow-unfollow">
-                                            <div className="title">
-                                                <p>Follow-Unfollow</p>
-                                            </div>
-                                            <div className="graph">
-                                                <FollowUnfollowChart />
-                                            </div>
-                                        </div>
-                                    </div>
-                                ) : null}
-
-                                {engagementPage === "post-metrics" ? (
-                                    <div className="content post-metrics">
-                                        <div className="graph-container impressions">
-                                            <div className="title">
-                                                <p>Impressions</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={
-                                                        postMetrics.impressions
-                                                            .label
-                                                    }
-                                                    labels={
-                                                        postMetrics.impressions
-                                                            .labels
-                                                    }
-                                                    data={
-                                                        postMetrics.impressions.data
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container reach">
-                                            <div className="title">
-                                                <p>Reach</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={postMetrics.reach.label}
-                                                    labels={
-                                                        postMetrics.reach.labels
-                                                    }
-                                                    data={postMetrics.reach.data}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container likes">
-                                            <div className="title">
-                                                <p>Likes</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={
-                                                        postMetrics.like_count.label
-                                                    }
-                                                    labels={
-                                                        postMetrics.like_count
-                                                            .labels
-                                                    }
-                                                    data={
-                                                        postMetrics.like_count.data
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container views">
-                                            <div className="title">
-                                                <p>Views</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container shares">
-                                            <div className="title">
-                                                <p>Shares</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={postMetrics.shares.label}
-                                                    labels={
-                                                        postMetrics.shares.labels
-                                                    }
-                                                    data={postMetrics.shares.data}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container comments">
-                                            <div className="title">
-                                                <p>Comments</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={
-                                                        postMetrics.comments_count
-                                                            .label
-                                                    }
-                                                    labels={
-                                                        postMetrics.comments_count
-                                                            .labels
-                                                    }
-                                                    data={
-                                                        postMetrics.comments_count
-                                                            .data
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container saves">
-                                            <div className="title">
-                                                <p>Saves</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={postMetrics.saved.label}
-                                                    labels={
-                                                        postMetrics.saved.labels
-                                                    }
-                                                    data={postMetrics.saved.data}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container video-views">
-                                            <div className="title">
-                                                <p>Video Views</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={
-                                                        postMetrics.video_views
-                                                            .label
-                                                    }
-                                                    labels={
-                                                        postMetrics.video_views
-                                                            .labels
-                                                    }
-                                                    data={
-                                                        postMetrics.video_views.data
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container hidden"></div>
-                                    </div>
-                                ) : null}
-
-                                {engagementPage === "reel-metrics" ? (
-                                    <div className="content reel-metrics">
-                                        <div className="graph-container reels-avg-watch-time">
-                                            <div className="title">
-                                                <p>Reels Avg. Watch Time</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container plays">
-                                            <div className="title">
-                                                <p>Plays</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container reels-view-total-time">
-                                            <div className="title">
-                                                <p>Reels View Total Time</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph />
-                                            </div>
-                                        </div>
-                                        {/* <div className="graph-container reels-avg-watch-time">
-                                            <div className="title">
-                                                <p>Reels Avg. Watch Time</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph />
-                                            </div>
-                                        </div> */}
-                                    </div>
-                                ) : null}
-                            </>
-                            : account_type === "youtube" ? <>
-                                {engagementPage === "account-metrics" ? (
-                                    <div className="content account-metrics">
-                                        <div className="graph-container">
-                                            <div className="title">
-                                                <p>Subscriber Count</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={
-                                                        youtubeChannelInformation.subscriber_count.label
-                                                    }
-                                                    labels={
-                                                        youtubeChannelInformation.subscriber_count
-                                                            .labels
-                                                    }
-                                                    data={
-                                                        youtubeChannelInformation.subscriber_count
-                                                            .data
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container">
-                                            <div className="title">
-                                                <p>Video Count</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={
-                                                        youtubeChannelInformation.video_count.label
-                                                    }
-                                                    labels={
-                                                        youtubeChannelInformation.video_count.labels
-                                                    }
-                                                    data={youtubeChannelInformation.video_count.data}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container">
-                                            <div className="title">
-                                                <p>Views</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={
-                                                        youtubeChannelAnalytics.views.label
-                                                    }
-                                                    labels={
-                                                        youtubeChannelAnalytics.views.labels
-                                                    }
-                                                    data={youtubeChannelAnalytics.views.data}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container">
-                                            <div className="title">
-                                                <p>Likes</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={
-                                                        youtubeChannelAnalytics.likes.label
-                                                    }
-                                                    labels={
-                                                        youtubeChannelAnalytics.likes.labels
-                                                    }
-                                                    data={youtubeChannelAnalytics.likes.data}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container">
-                                            <div className="title">
-                                                <p>Dislikes</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={
-                                                        youtubeChannelAnalytics.dislikes.label
-                                                    }
-                                                    labels={
-                                                        youtubeChannelAnalytics.dislikes.labels
-                                                    }
-                                                    data={youtubeChannelAnalytics.dislikes.data}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container">
-                                            <div className="title">
-                                                <p>Comments</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={
-                                                        youtubeChannelAnalytics.comments.label
-                                                    }
-                                                    labels={
-                                                        youtubeChannelAnalytics.comments.labels
-                                                    }
-                                                    data={
-                                                        youtubeChannelAnalytics.comments.data
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container">
-                                            <div className="title">
-                                                <p>Shares</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={
-                                                        youtubeChannelAnalytics.shares
-                                                            .label
-                                                    }
-                                                    labels={
-                                                        youtubeChannelAnalytics.shares
-                                                            .labels
-                                                    }
-                                                    data={
-                                                        youtubeChannelAnalytics.shares.data
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container">
-                                            <div className="title">
-                                                <p>Est. Minutes Watched</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={
-                                                        youtubeChannelAnalytics.estimated_minutes_watched
-                                                            .label
-                                                    }
-                                                    labels={
-                                                        youtubeChannelAnalytics.estimated_minutes_watched
-                                                            .labels
-                                                    }
-                                                    data={
-                                                        youtubeChannelAnalytics.estimated_minutes_watched.data
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container sentiment">
-                                            <div className="title">
-                                                <p>Sentiment Analysis</p>
-                                            </div>
-                                            <div className="graph">
-                                                <div className="content">
-                                                    <SentimentChart />
-                                                </div>
-                                                <div className="value">
-                                                    <p>75</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ) : null}
-
-                                {engagementPage === "post-metrics" ? (
-                                    <div className="content post-metrics">
-                                        <div className="graph-container impressions">
-                                            <div className="title">
-                                                <p>Impressions</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={
-                                                        youtubeVideoAnalytics.impressions
-                                                            .label
-                                                    }
-                                                    labels={
-                                                        youtubeVideoAnalytics.impressions
-                                                            .labels
-                                                    }
-                                                    data={
-                                                        youtubeVideoAnalytics.impressions.data
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container reach">
-                                            <div className="title">
-                                                <p>Reach</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={youtubeVideoAnalytics.reach.label}
-                                                    labels={
-                                                        youtubeVideoAnalytics.reach.labels
-                                                    }
-                                                    data={youtubeVideoAnalytics.reach.data}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container views">
-                                            <div className="title">
-                                                <p>Views</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container likes">
-                                            <div className="title">
-                                                <p>Likes</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={
-                                                        youtubeVideoAnalytics.likes.label
-                                                    }
-                                                    labels={
-                                                        youtubeVideoAnalytics.likes
-                                                            .labels
-                                                    }
-                                                    data={
-                                                        youtubeVideoAnalytics.likes.data
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container likes">
-                                            <div className="title">
-                                                <p>Dislikes</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={
-                                                        youtubeVideoAnalytics.dislikes.label
-                                                    }
-                                                    labels={
-                                                        youtubeVideoAnalytics.dislikes
-                                                            .labels
-                                                    }
-                                                    data={
-                                                        youtubeVideoAnalytics.dislikes.data
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container shares">
-                                            <div className="title">
-                                                <p>Shares</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={youtubeVideoAnalytics.shares.label}
-                                                    labels={
-                                                        youtubeVideoAnalytics.shares.labels
-                                                    }
-                                                    data={youtubeVideoAnalytics.shares.data}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container comments">
-                                            <div className="title">
-                                                <p>Comments</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={
-                                                        youtubeVideoAnalytics.comments
-                                                            .label
-                                                    }
-                                                    labels={
-                                                        youtubeVideoAnalytics.comments
-                                                            .labels
-                                                    }
-                                                    data={
-                                                        youtubeVideoAnalytics.comments
-                                                            .data
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container saves">
-                                            <div className="title">
-                                                <p>Avg. View Duration</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={youtubeVideoAnalytics.average_view_duration.label}
-                                                    labels={
-                                                        youtubeVideoAnalytics.average_view_duration.labels
-                                                    }
-                                                    data={youtubeVideoAnalytics.average_view_duration.data}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container saves">
-                                            <div className="title">
-                                                <p>Est. Minutes Watched</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph
-                                                    label={youtubeVideoAnalytics.estimated_minutes_watched.label}
-                                                    labels={
-                                                        youtubeVideoAnalytics.estimated_minutes_watched.labels
-                                                    }
-                                                    data={youtubeVideoAnalytics.estimated_minutes_watched.data}
-                                                />
-                                            </div>
-                                        </div>
-                                        {/* <div className="graph-container hidden"></div> */}
-                                    </div>
-                                ) : null}
-
-                                {engagementPage === "reel-metrics" ? (
-                                    <div className="content reel-metrics">
-                                        <div className="graph-container reels-avg-watch-time">
-                                            <div className="title">
-                                                <p>Reels Avg. Watch Time</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container plays">
-                                            <div className="title">
-                                                <p>Plays</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph />
-                                            </div>
-                                        </div>
-                                        <div className="graph-container reels-view-total-time">
-                                            <div className="title">
-                                                <p>Reels View Total Time</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph />
-                                            </div>
-                                        </div>
-                                        {/* <div className="graph-container reels-avg-watch-time">
-                                            <div className="title">
-                                                <p>Reels Avg. Watch Time</p>
-                                            </div>
-                                            <div className="graph">
-                                                <LineGraph />
-                                            </div>
-                                        </div> */}
-                                    </div>
-                                ) : null}
-                            </> : null} 
                         </div>
-                        <div className="analytics-demographics">
-                            <div className="title">Audience Demographics</div>
-                            <div className="sub-header">
-                                <div className="navigation">
-                                    <div
-                                        className={
-                                            demographicsPage == "country"
-                                                ? "nav selected"
-                                                : "nav"
-                                        }
-                                        onClick={() => {
-                                            setDemographicsPage("country");
-                                        }}
-                                    >
-                                        <p>Country</p>
-                                    </div>
-                                    <div
-                                        className={
-                                            demographicsPage == "city"
-                                                ? "nav selected"
-                                                : "nav"
-                                        }
-                                        onClick={() => {
-                                            setDemographicsPage("city");
-                                        }}
-                                    >
-                                        <p>City</p>
-                                    </div>
-                                    <div
-                                        className={
-                                            demographicsPage == "age"
-                                                ? "nav selected"
-                                                : "nav"
-                                        }
-                                        onClick={() => {
-                                            setDemographicsPage("age");
-                                        }}
-                                    >
-                                        <p>Age</p>
-                                    </div>
-                                    <div
-                                        className={
-                                            demographicsPage == "gender"
-                                                ? "nav selected"
-                                                : "nav"
-                                        }
-                                        onClick={() => {
-                                            setDemographicsPage("gender");
-                                        }}
-                                    >
-                                        <p>Gender</p>
-                                    </div>
-                                </div>
-                                <div className="filter">
-                                    <DateRangePicker />
-                                </div>
+                        <div className="service story-service">
+                            {/* <div className="coming-soon"></div> */}
+                            <div className="service-header">
+                                <h2>Story</h2>
                             </div>
-                            {demographicsPage === "country" ? (
-                                <div className="content">
-                                    <div className="follower-demographics">
-                                        <div className="title">
-                                            <p>Follower Demographics</p>
+                            {/* <div className="service-content">
+                                <div className="content pricing-method">
+                                    <div className="content-header">
+                                        <span>Pricing Method</span>
+                                    </div>
+                                    <div className="pricing-methods content-content">
+                                        <div className="method content-selected" onClick={storyPricingMethodHandler("hourly")} ref={storyPostPricingRef}>
+                                            <span className="method-header">Hourly</span>
+                                            <span className="method-price">$100</span>
                                         </div>
-                                        <div className="content">
-                                            <div className="row">
-                                                <div className="column">
-                                                    <p>Country</p>
-                                                </div>
-                                                <div className="column">
-                                                    <p>#</p>
-                                                </div>
-                                            </div>
-                                            {countryDemographics.follower_demographics.map(
-                                                (item) => {
-                                                    return (
-                                                        <div className="row">
-                                                            <div className="column">
-                                                                <p>
-                                                                    {
-                                                                        item.this_week_country
-                                                                    }
-                                                                </p>
-                                                            </div>
-                                                            <div className="column">
-                                                                <p>
-                                                                    {
-                                                                        item.this_week_follower_count
-                                                                    }
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                }
-                                            )}
+                                        <div className="method" onClick={storyPricingMethodHandler("view")} ref={storyViewPricingRef}>
+                                            <span className="method-header">View</span>
+                                            <span className="method-price">$0.09 CPT</span>
+                                        </div>
+                                        <div className="method" onClick={storyPricingMethodHandler("like")} ref={storyLikePricingRef}>
+                                            <span className="method-header">Like</span>
+                                            <span className="method-price">$0.09 CPT</span>
                                         </div>
                                     </div>
-                                    <div className="engaged-demographics">
-                                        <div className="title">
-                                            <p>Engaged Demographics</p>
-                                        </div>
-                                        <div className="content">
-                                            <div className="row">
-                                                <div className="column">
-                                                    <p>Country</p>
-                                                </div>
-                                                <div className="column">
-                                                    <p>#</p>
-                                                </div>
-                                            </div>
-                                            {countryDemographics.engaged_audience_demographics.map(
-                                                (item) => {
-                                                    return (
-                                                        <div className="row">
-                                                            <div className="column">
-                                                                <p>
-                                                                    {
-                                                                        item.this_week_country
-                                                                    }
-                                                                </p>
-                                                            </div>
-                                                            <div className="column">
-                                                                <p>
-                                                                    {
-                                                                        item.this_week_follower_count
-                                                                    }
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                }
-                                            )}
-                                        </div>
+                                    <div className="content-header pricing-amount-header">
+                                        <span>Amount</span>
                                     </div>
-                                    <div className="reached-demographics">
-                                        <div className="title">
-                                            <p>Reached Demographics</p>
+                                    <div className="pricing-amount">
+                                        <input type="number" placeholder="" />
+                                    </div>
+                                </div>
+                                <div className="content content-provider">
+                                    <div className="content-header">
+                                        <span>Content Provider</span>
+                                    </div>
+                                    <div className="content-providers content-content">
+                                        <div className="provider content-selected" onClick={storyContentProviderHandler("business")} ref={storyBusinessContentProviderRef}>
+                                            <span>Business</span>
                                         </div>
-                                        <div className="content">
-                                            <div className="row">
-                                                <div className="column">
-                                                    <p>Country</p>
-                                                </div>
-                                                <div className="column">
-                                                    <p>#</p>
-                                                </div>
-                                            </div>
-                                            {countryDemographics.reached_audience_demographics.map(
-                                                (item) => {
-                                                    return (
-                                                        <div className="row">
-                                                            <div className="column">
-                                                                <p>
-                                                                    {
-                                                                        item.this_week_country
-                                                                    }
-                                                                </p>
-                                                            </div>
-                                                            <div className="column">
-                                                                <p>
-                                                                    {
-                                                                        item.this_week_follower_count
-                                                                    }
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                }
-                                            )}
+                                        <div className="provider" onClick={storyContentProviderHandler("influencer")} ref={storyInfluencerContentProviderRef}>
+                                            <span>Influencer</span>
                                         </div>
                                     </div>
                                 </div>
-                            ) : null}
-                            {demographicsPage === "city" ? (
-                                <div className="content">
-                                    <div className="follower-demographics">
-                                        <div className="title">
-                                            <p>Follower Demographics</p>
+                                <div className="content action">
+                                    <button className="service-button story-button" onClick={() => addToCampaignHandler("story")} disabled>Add to Campaign</button>
+                                </div>
+                            </div> */}
+                        </div>
+                        <div className="service live-service">
+                            {/* <div className="coming-soon"></div> */}
+                            <div className="service-header">
+                                <h2>Live</h2>
+                            </div>
+                            {/* <div className="service-content">
+                                <div className="content pricing-method">
+                                    <div className="content-header">
+                                        <span>Pricing Method</span>
+                                    </div>
+                                    <div className="pricing-methods content-content">
+                                        <div className="method content-selected" onClick={livePricingMethodHandler("hourly")} ref={livePostPricingRef}>
+                                            <span className="method-header">Hourly</span>
+                                            <span className="method-price">$100</span>
                                         </div>
-                                        <div className="content">
-                                            <div className="row">
-                                                <div className="column">
-                                                    <p>City</p>
-                                                </div>
-                                                <div className="column">
-                                                    <p>#</p>
-                                                </div>
-                                            </div>
-                                            {cityDemographics.follower_demographics.map(
-                                                (item) => {
-                                                    return (
-                                                        <div className="row">
-                                                            <div className="column">
-                                                                <p>
-                                                                    {item.this_week_city
-                                                                        .split(
-                                                                            ","
-                                                                        )[0]
-                                                                        .substring(
-                                                                            2
-                                                                        )}
-                                                                </p>
-                                                            </div>
-                                                            <div className="column">
-                                                                <p>
-                                                                    {
-                                                                        item.this_week_follower_count
-                                                                    }
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                }
-                                            )}
+                                        <div className="method" onClick={livePricingMethodHandler("view")} ref={liveViewPricingRef}>
+                                            <span className="method-header">View</span>
+                                            <span className="method-price">$0.09 CPT</span>
+                                        </div>
+                                        <div className="method" onClick={livePricingMethodHandler("like")} ref={liveLikePricingRef}>
+                                            <span className="method-header">Like</span>
+                                            <span className="method-price">$0.09 CPT</span>
                                         </div>
                                     </div>
-                                    <div className="engaged-demographics">
-                                        <div className="title">
-                                            <p>Engaged Demographics</p>
-                                        </div>
-                                        <div className="content">
-                                            <div className="row">
-                                                <div className="column">
-                                                    <p>City</p>
-                                                </div>
-                                                <div className="column">
-                                                    <p>#</p>
-                                                </div>
-                                            </div>
-                                            {cityDemographics.engaged_audience_demographics.map(
-                                                (item) => {
-                                                    return (
-                                                        <div className="row">
-                                                            <div className="column">
-                                                                <p>
-                                                                    {item.this_week_city
-                                                                        .split(
-                                                                            ","
-                                                                        )[0]
-                                                                        .substring(
-                                                                            2
-                                                                        )}
-                                                                </p>
-                                                            </div>
-                                                            <div className="column">
-                                                                <p>
-                                                                    {
-                                                                        item.this_week_follower_count
-                                                                    }
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                }
-                                            )}
-                                        </div>
+                                    <div className="content-header pricing-amount-header">
+                                        <span>Amount</span>
                                     </div>
-                                    <div className="reached-demographics">
-                                        <div className="title">
-                                            <p>Reached Demographics</p>
+                                    <div className="pricing-amount">
+                                        <input type="number" placeholder="" />
+                                    </div>
+                                </div>
+                                <div className="content content-provider">
+                                    <div className="content-header">
+                                        <span>Content Provider</span>
+                                    </div>
+                                    <div className="content-providers content-content">
+                                        <div className="provider content-selected" onClick={liveContentProviderHandler("business")} ref={liveBusinessContentProviderRef}>
+                                            <span>Business</span>
                                         </div>
-                                        <div className="content">
-                                            <div className="row">
-                                                <div className="column">
-                                                    <p>City</p>
-                                                </div>
-                                                <div className="column">
-                                                    <p>#</p>
-                                                </div>
-                                            </div>
-                                            {cityDemographics.reached_audience_demographics.map(
-                                                (item) => {
-                                                    return (
-                                                        <div className="row">
-                                                            <div className="column">
-                                                                <p>
-                                                                    {item.this_week_city
-                                                                        .split(
-                                                                            ","
-                                                                        )[0]
-                                                                        .substring(
-                                                                            2
-                                                                        )}
-                                                                </p>
-                                                            </div>
-                                                            <div className="column">
-                                                                <p>
-                                                                    {
-                                                                        item.this_week_follower_count
-                                                                    }
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                }
-                                            )}
+                                        <div className="provider" onClick={liveContentProviderHandler("influencer")} ref={liveInfluencerContentProviderRef}>
+                                            <span>Influencer</span>
                                         </div>
                                     </div>
                                 </div>
-                            ) : null}
-                            {demographicsPage === "age" ? (
-                                <div className="content age">
-                                    <div className="follower-demographics">
-                                        <div className="title">
-                                            <p>Follower Demographics</p>
-                                        </div>
-                                        <div className="content">
-                                            <AgeGroupChart
-                                                data={
-                                                    ageDemographics.follower_demographics
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="engaged-demographics">
-                                        <div className="title">
-                                            <p>Engaged Demographics</p>
-                                        </div>
-                                        <div className="content">
-                                            <AgeGroupChart
-                                                data={
-                                                    ageDemographics.engaged_audience_demographics
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="reached-demographics">
-                                        <div className="title">
-                                            <p>Reached Demographics</p>
-                                        </div>
-                                        <div className="content">
-                                            <AgeGroupChart
-                                                data={
-                                                    ageDemographics.reached_audience_demographics
-                                                }
-                                            />
-                                        </div>
-                                    </div>
+                                <div className="content action">
+                                    <button className="service-button reels-button" onClick={() => addToCampaignHandler("live")} disabled>Add to Campaign</button>
                                 </div>
-                            ) : null}
-                            {demographicsPage === "gender" ? (
-                                <div className="content">
-                                    <div className="follower-demographics">
-                                        <div className="title">
-                                            <p>Follower Demographics</p>
-                                        </div>
-                                        <div className="content">
-                                            <GenderChart
-                                                data={
-                                                    genderDemographics.follower_demographics
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="engaged-demographics">
-                                        <div className="title">
-                                            <p>Engaged Demographics</p>
-                                        </div>
-                                        <div className="content">
-                                            <GenderChart
-                                                data={
-                                                    genderDemographics.engaged_audience_demographics
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="reached-demographics">
-                                        <div className="title">
-                                            <p>Reached Demographics</p>
-                                        </div>
-                                        <div className="content">
-                                            <GenderChart
-                                                data={
-                                                    genderDemographics.reached_audience_demographics
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : null}
+                            </div> */}
                         </div>
                     </div>
                 ) : null}
+                {page === "analytics" ? (<div className="influencer-analytics" onScroll={influencerAnalyticsScrollHandler}>
+                        <div className="summary-container">
+                            <div className="header">
+                                <h2>Summary</h2>
+                            </div>
+                            <div className="content">
+                                <div className="summary-top">
+                                    <div className="profile-picture">
+                                        <img src={phylloAccountSummary.phyllo_image_url} />
+                                    </div>
+                                    <div className="profile-information">
+                                        <div className="profile-name">
+                                            <p>{phylloAccountSummary[0].phyllo_account_platform_username}</p>
+                                        </div>
+                                        <div className="profile-account">
+                                            <p>@{phylloAccountSummary[0].phyllo_account_platform_username}</p>
+                                        </div>
+                                        <div className="profile-bio">
+                                            {/* <p>This is my bio!</p> */}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="summary-middle">
+                                    <div className="summary followers">
+                                        <div className="top-align">
+                                            <div className="icon">
+                                                <i class="pi pi-users"></i>
+                                            </div>
+                                            <div className="amount">
+                                                <p>{phylloAccountSummary[0].phyllo_reputation_follower_count}</p>
+                                            </div>
+                                        </div>
+                                        <div className="bottom-align">
+                                            <div className="title"><p>Followers</p></div>
+                                        </div>
+                                    </div>
+                                    <div className="summary engagement-rate">
+                                        <div className="top-align">
+                                            <div className="icon">
+                                                <i class="pi pi-bell"></i>
+                                            </div>
+                                            <div className="amount">
+                                                <p>{phylloAccountSummary[0].engagement_rate}%</p>
+                                            </div>
+                                        </div>
+                                        <div className="bottom-align">
+                                            <div className="title"><p>Engagement</p></div>
+                                        </div>
+                                    </div>
+                                    <div className="summary average-views">
+                                        <div className="top-align">
+                                            <div className="icon">
+                                                <i class="pi pi-eye"></i>
+                                            </div>
+                                            <div className="amount">
+                                                <p>{phylloAccountSummary[0].avg_view_count}</p>
+                                            </div>
+                                        </div>
+                                        <div className="bottom-align">
+                                            <div className="title"><p>Average Views</p></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="summary-bottom">
+                                    <div className="summary average-likes">
+                                        <div className="top-align">
+                                            <div className="icon">
+                                                <i class="pi pi-heart"></i>
+                                            </div>
+                                            <div className="amount">
+                                                <p>{phylloAccountSummary[0].avg_like_count}</p>
+                                            </div>
+                                        </div>
+                                        <div className="bottom-align">
+                                            <div className="title"><p>Average Likes</p></div>
+                                        </div>
+                                    </div>
+                                    <div className="summary average-comments">
+                                        <div className="top-align">
+                                            <div className="icon">
+                                                <i class="pi pi-comment"></i>
+                                            </div>
+                                            <div className="amount">
+                                                <p>100</p>
+                                            </div>
+                                        </div>
+                                        <div className="bottom-align">
+                                            <div className="title"><p>Average Comments</p></div>
+                                        </div>
+                                    </div>
+                                    <div className="summary average-shares">
+                                        <div className="top-align">
+                                            <div className="icon">
+                                                <i class="pi pi-share-alt"></i>
+                                            </div>
+                                            <div className="amount">
+                                                <p>{phylloAccountSummary[0].avg_share_count}</p>
+                                            </div>
+                                        </div>
+                                        <div className="bottom-align">
+                                            <div className="title"><p>Average Shares</p></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="engagement-metrics">
+                            <div className="header">
+                                <h2>Engagement Metrics</h2>
+                            </div>
+                            <div className="content">
+                                <div className="navigation">
+                                    <div className="nav-element account selected" ref={engagementAccountNavRef} onClick={() => {
+                                        setEngagementMetricsNavButton(0);
+                                        engagementAccountNavRef.current.classList.add("selected");
+                                        engagementPostNavRef.current.classList.remove("selected");
+                                        }}>
+                                        <span>Account</span>
+                                    </div>
+                                    <div className="nav-element post" ref={engagementPostNavRef} onClick={() => {
+                                        setEngagementMetricsNavButton(1);
+                                        engagementAccountNavRef.current.classList.remove("selected");
+                                        engagementPostNavRef.current.classList.add("selected");
+                                        }}>
+                                        <span>Post</span>
+                                    </div>
+                                </div>
+                                {engagementMetricsNavButton == 0 ? 
+                                    <div className="chart-container account">
+                                        <div className="chart impressions">
+                                            <div className="chart-title">
+                                                <p>Impressions</p>
+                                            </div>
+                                            <div className="chart-chart">
+                                                {/* <Chart type="line" data={chartData} options={chartOptions} /> */}
+                                                <InfluencerChart data={phylloContentDataDaily.impression_organic_count} labels={phylloContentDataDaily.published_at}/>
+                                            </div>
+                                        </div>
+                                        <div className="chart reach">
+                                            <div className="chart-title">
+                                                <p>Reach</p>
+                                            </div>
+                                            <div className="chart-chart">
+                                                {/* <Chart type="line" data={chartData} options={chartOptions} />    */}
+                                                <InfluencerChart data={phylloContentDataDaily.reach_organic_count} labels={phylloContentDataDaily.published_at} />
+                                            </div>
+                                        </div>
+                                        <div className="chart likes">
+                                            <div className="chart-title">
+                                                <p>Likes</p>
+                                            </div>
+                                            <div className="chart-chart">
+                                                {/* <Chart type="line" data={chartData} options={chartOptions} />    */}
+                                                <InfluencerChart data={phylloContentDataDaily.like_count} labels={phylloContentDataDaily.published_at} />
+                                            </div>
+                                        </div>
+                                        <div className="chart views">
+                                            <div className="chart-title">
+                                                <p>Views</p>
+                                            </div>
+                                            <div className="chart-chart">
+                                                {/* <Chart type="line" data={chartData} options={chartOptions} /> */}
+                                                <InfluencerChart data={phylloContentDataDaily.view_count} labels={phylloContentDataDaily.published_at} />
+                                            </div>
+                                        </div>
+                                        <div className="chart shares">
+                                            <div className="chart-title">
+                                                <p>Shares</p>
+                                            </div>
+                                            <div className="chart-chart">
+                                                {/* <Chart type="line" data={chartData} options={chartOptions} /> */}
+                                                <InfluencerChart data={phylloContentDataDaily.share_count} labels={phylloContentDataDaily.published_at} />
+                                            </div>
+                                        </div>
+                                        <div className="chart comments">
+                                            <div className="chart-title">
+                                                <p>Comments</p>
+                                            </div>
+                                            <div className="chart-chart">
+                                                {/* <Chart type="line" data={chartData} options={chartOptions} /> */}
+                                                <InfluencerChart data={phylloContentDataDaily.comment_count} labels={phylloContentDataDaily.published_at} />
+                                            </div>
+                                        </div>
+                                        {/* <div className="chart website-clicks">
+                                            <div className="chart-title">
+                                                <p>Website Clicks</p>
+                                            </div>
+                                            <div className="chart-chart">
+                                                <Chart type="line" data={chartData} options={chartOptions} />
+                                                <InfluencerChart data={phylloContentDataDaily.view_count} labels={phylloContentDataDaily.published_at} />
+                                            </div>
+                                        </div> */}
+                                        <div className="chart paid-impressions">
+                                            <div className="chart-title">
+                                                <p>Paid Impressions</p>
+                                            </div>
+                                            <div className="chart-chart">
+                                                {/* <Chart type="line" data={chartData} options={chartOptions} /> */}
+                                                <InfluencerChart data={phylloContentDataDaily.impression_paid_count} labels={phylloContentDataDaily.published_at} />
+                                            </div>
+                                        </div>
+                                        <div className="chart paid-reach">
+                                            <div className="chart-title">
+                                                <p>Paid Reach</p>
+                                            </div>
+                                            <div className="chart-chart">
+                                                {/* <Chart type="line" data={chartData} options={chartOptions} /> */}
+                                                <InfluencerChart data={phylloContentDataDaily.reach_paid_count} labels={phylloContentDataDaily.published_at} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                : null}
+                                {engagementMetricsNavButton == 1 ? 
+                                    <div className="chart-container post">
+                                        <div className="chart impressions">
+                                            <div className="chart-title">
+                                                <p>Impressions</p>
+                                            </div>
+                                            <div className="chart-chart">
+                                                {/* <Chart type="line" data={chartData} options={chartOptions} /> */}
+                                                <InfluencerChart data={phylloContentData.impression_organic_count} labels={phylloContentDataDaily.content_id} />
+                                            </div>
+                                        </div>
+                                        <div className="chart reach">
+                                            <div className="chart-title">
+                                                <p>Reach</p>
+                                            </div>
+                                            <div className="chart-chart">
+                                                {/* <Chart type="line" data={chartData} options={chartOptions} />    */}
+                                                <InfluencerChart data={phylloContentData.reach_organic_count} labels={phylloContentDataDaily.content_id} />
+                                            </div>
+                                        </div>
+                                        <div className="chart likes">
+                                            <div className="chart-title">
+                                                <p>Likes</p>
+                                            </div>
+                                            <div className="chart-chart">
+                                                {/* <Chart type="line" data={chartData} options={chartOptions} />    */}
+                                                <InfluencerChart data={phylloContentData.like_count} labels={phylloContentDataDaily.content_id} />
+                                            </div>
+                                        </div>
+                                        <div className="chart views">
+                                            <div className="chart-title">
+                                                <p>Views</p>
+                                            </div>
+                                            <div className="chart-chart">
+                                                {/* <Chart type="line" data={chartData} options={chartOptions} /> */}
+                                                <InfluencerChart data={phylloContentData.view_count} labels={phylloContentDataDaily.content_id} />
+                                            </div>
+                                        </div>
+                                        <div className="chart shares">
+                                            <div className="chart-title">
+                                                <p>Shares</p>
+                                            </div>
+                                            <div className="chart-chart">
+                                                {/* <Chart type="line" data={chartData} options={chartOptions} /> */}
+                                                <InfluencerChart data={phylloContentData.share_count} labels={phylloContentDataDaily.content_id} />
+                                            </div>
+                                        </div>
+                                        <div className="chart comments">
+                                            <div className="chart-title">
+                                                <p>Comments</p>
+                                            </div>
+                                            <div className="chart-chart">
+                                                {/* <Chart type="line" data={chartData} options={chartOptions} /> */}
+                                                <InfluencerChart data={phylloContentData.comment_count} labels={phylloContentDataDaily.content_id} />
+                                            </div>
+                                        </div>
+                                        {/* <div className="chart website-clicks">
+                                            <div className="chart-title">
+                                                <p>Website Clicks</p>
+                                            </div>
+                                            <div className="chart-chart">
+                                                <Chart type="line" data={chartData} options={chartOptions} />
+                                            </div>
+                                        </div> */}
+                                        <div className="chart paid-impressions">
+                                            <div className="chart-title">
+                                                <p>Paid Impressions</p>
+                                            </div>
+                                            <div className="chart-chart">
+                                                {/* <Chart type="line" data={chartData} options={chartOptions} /> */}
+                                                <InfluencerChart data={phylloContentData.impression_paid_count} labels={phylloContentDataDaily.content_id} />
+                                            </div>
+                                        </div>
+                                        <div className="chart paid-reach">
+                                            <div className="chart-title">
+                                                <p>Paid Reach</p>
+                                            </div>
+                                            <div className="chart-chart">
+                                                {/* <Chart type="line" data={chartData} options={chartOptions} /> */}
+                                                <InfluencerChart data={phylloContentData.reach_paid_count} labels={phylloContentDataDaily.content_id} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                : null}
+                                
+                            </div>
+                        </div>
+                        <div className="audience-demographics">
+                            <div className="header">
+                                <h2>Audience Demographics</h2>
+                            </div>
+                            <div className="content">
+                                <div className="navigation">
+                                    <div className="nav-element location selected" ref={audienceLocationNavRef} onClick={() => {
+                                        setAudienceDemographicsNavButton(0);
+                                        audienceLocationNavRef.current.classList.add("selected");
+                                        audienceGenderAgeNavRef.current.classList.remove("selected");
+                                        
+                                    }}>
+                                        <span>Location</span>
+                                    </div>
+                                    <div className="nav-element gender-age" ref={audienceGenderAgeNavRef} onClick={() => {
+                                        setAudienceDemographicsNavButton(1);
+                                        audienceLocationNavRef.current.classList.remove("selected");
+                                        audienceGenderAgeNavRef.current.classList.add("selected");
+                                    }}>
+                                        <span>Gender & Age</span>
+                                    </div>
+                                </div>
+                                <div className="chart-container">
+                                    {audienceDemographicsNavButton == 0 ? 
+                                        <div className="chart location">
+                                            <div className="country-chart">
+                                                <div className="chart-header">
+                                                    <h2>Countries</h2>
+                                                </div>
+                                                <Chart type="bar" data={chartCountryData} options={chartCountryOptions} plugins={[ChartDataLabels]}/>
+                                            </div>
+                                            <div className="city-chart">
+                                                <div className="chart-header">
+                                                    <h2>Cities</h2>
+                                                </div>
+                                                <Chart type="bar" data={chartCityData} options={chartCityOptions} plugins={[ChartDataLabels]}/>
+                                            </div>                                        
+                                        </div>
+                                    : null}
+                                    
+                                    {audienceDemographicsNavButton == 1 ? 
+                                        <div className="chart gender-age">
+                                            <div className="gender-chart">
+                                                <div className="chart-header">
+                                                    <h2>Gender Distribution</h2>
+                                                </div>
+                                                <Chart type="doughnut" data={chartGenderData} options={chartGenderOptions} />
+                                            </div>
+                                            <div className="age-chart">
+                                                <div className="chart-header">
+                                                    <h2>Age Distribution</h2>
+                                                </div>
+                                                <Chart type="bar" data={chartAgeData} options={chartAgeOptions} plugins={[ChartDataLabels]}/>
+                                            </div>
+                                        </div>
+                                    : null}
+                                    
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        {/* <Chart type="line" data={chartData} options={chartOptions} /> */}
+                    </div>) : null}
             </div>
         </div>
     );

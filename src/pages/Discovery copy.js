@@ -7,13 +7,6 @@ import ChatSearch from "../components/ChatSearch";
 import { baseUrl } from "../shared";
 import ReactFlagsSelect from "react-flags-select";
 import NicheSelect from "../components/NicheSelect";
-// import {  Table,  TableHeader,  TableBody,  TableColumn,  TableRow,  TableCell} from "@nextui-org/table";
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { InputText } from 'primereact/inputtext';
-import { FilterMatchMode } from 'primereact/api';
-
-
 
 export default function Discovery() {
     const [loggedIn, setLoggedIn] = useContext(LoginContext);
@@ -32,47 +25,6 @@ export default function Discovery() {
     const [selectedCountry, setSelectedCountry] = useState([]);
     const [filterResponse, setFilterResponse] = useState([]);
     const [selectedNiches, setSelectedNiches] = useState([]);
-
-    // const customers = [
-    //     { id: 1, username: "James Butt", platform: "Instagram", followers: 12000, engagement: "4.5%", views: 1500, likes: 340, location: "Algeria" },
-    //     { id: 2, username: "Josephine Darakjy", platform: "YouTube", followers: 54000, engagement: "8.2%", views: 8400, likes: 1200, location: "Egypt" },
-    //     { id: 3, username: "Art Venere", platform: "TikTok", followers: 30000, engagement: "7.0%", views: 3200, likes: 800, location: "Panama" },
-    //     { id: 4, username: "Lenna Paprocki", platform: "Instagram", followers: 45000, engagement: "5.1%", views: 5000, likes: 1500, location: "Slovenia" },
-    //     { id: 5, username: "Donette Foller", platform: "Facebook", followers: 20000, engagement: "3.3%", views: 2800, likes: 400, location: "South Africa" },
-    //     { id: 6, username: "Simona Morasca", platform: "YouTube", followers: 34000, engagement: "6.4%", views: 6700, likes: 900, location: "Egypt" },
-    //     { id: 7, username: "Mitsue Tollner", platform: "TikTok", followers: 15000, engagement: "5.0%", views: 1900, likes: 600, location: "Paraguay" },
-    //     { id: 8, username: "Leota Dilliard", platform: "Instagram", followers: 60000, engagement: "10.2%", views: 10200, likes: 2100, location: "Serbia" }
-    // ];
-    
-    const [filters, setFilters] = useState({
-        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-        username: { operator: 'and', constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-        platform: { operator: 'and', constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-        followers: { operator: 'and', constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-    });
-    
-    const [loading, setLoading] = useState(false); // Loading state
-    
-
-    const renderHeader = () => {
-        return (
-            <div className="table-header">
-                <span className="p-input-icon-left">
-                    <i className="pi pi-search" />
-                    <InputText
-                        type="search"
-                        onInput={(e) =>
-                            setFilters({ ...filters, global: { value: e.target.value, matchMode: FilterMatchMode.CONTAINS } })
-                        }
-                        placeholder="Keyword Search"
-                    />
-                </span>
-            </div>
-        );
-    };
-    
-    const header = renderHeader();
-    
 
     useEffect(() => {
         console.log("selected niches", selectedNiches);
@@ -110,28 +62,28 @@ export default function Discovery() {
     // }
 
     // Filter Youtube Results
-    // function filterResults() {
-    //     const url =
-    //         baseUrl +
-    //         `api/youtube/filter?username=${filterValues.username}&name=${filterValues.name}&followers=${filterValues.followers}&price=${filterValues.price}&location=${filterValues.location}`;
-    //     fetch(url, {
-    //         method: "GET",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //             "Authorization": "Bearer " + localStorage.getItem("access"),
-    //         }
-    //     })
-    //     .then((response) => {
-    //         if (!response.ok) {
-    //             throw new Error("Error fetching data");
-    //         }
-    //         return response.json();
-    //     })
-    //     .then((data) => {
-    //         console.log("YOUTUBE DATA", data);
-    //     })
-    //     .catch((error) => {console.log(error)});
-    // }
+    function filterResults() {
+        const url =
+            baseUrl +
+            `api/youtube/filter?username=${filterValues.username}&name=${filterValues.name}&followers=${filterValues.followers}&price=${filterValues.price}&location=${filterValues.location}`;
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("access"),
+            }
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Error fetching data");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log("YOUTUBE DATA", data);
+        })
+        .catch((error) => {console.log(error)});
+    }
 
     function updateSelectedCountry(code) {
         setSelected(code);
@@ -204,56 +156,15 @@ export default function Discovery() {
 
     //Youtube 
 
-    // useEffect(() => {
-    //     const countryCodes = selectedCountry.map((country) => country.code);
-    //     const url = new URL(baseUrl + `api/youtube/filter`);
-    //     const params = {
-    //         username: filterValues.username,
-    //         name: filterValues.name,
-    //         followers: filterValues.followers,
-    //         price: filterValues.price,
-    //         location: countryCodes,
-    //     };
-
-    //     Object.keys(params).forEach((key) =>
-    //         url.searchParams.append(key, params[key])
-    //     );
-
-    //     console.log("URL", url);
-
-    //     fetch(url, {
-    //         method: "GET",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //             Authorization: "Bearer " + localStorage.getItem("access"),
-    //         },
-    //     })
-    //         .then((response) => {
-    //             if (!response.ok) {
-    //                 throw new Error("Error fetching data");
-    //             }
-    //             return response.json();
-    //         })
-    //         .then((data) => {
-    //             console.log(data);
-    //             setFilterResponse(data);
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //         });
-    // }, [selectedCountry, filterValues]);
-
     useEffect(() => {
         const countryCodes = selectedCountry.map((country) => country.code);
-        const url = new URL(baseUrl + 'api/phyllo/account/filter');
+        const url = new URL(baseUrl + `api/youtube/filter`);
         const params = {
-            phyllo_account_platform_username: filterValues.username,
-            phyllo_user_name: filterValues.name,
-            phyllo_reputation_follower_count_min: filterValues.followers,
-            // price: filterValues.price,
-            // location: countryCodes,
-            country: countryCodes, 
-            // city: countryCodes,
+            username: filterValues.username,
+            name: filterValues.name,
+            followers: filterValues.followers,
+            price: filterValues.price,
+            location: countryCodes,
         };
 
         Object.keys(params).forEach((key) =>
@@ -276,64 +187,13 @@ export default function Discovery() {
                 return response.json();
             })
             .then((data) => {
-                console.log("Filtered data", data);
-                setFilterResponse([]);
-                setFilterResponse(data.map((item) => ({
-                    id: item.id,
-                    username: item.phyllo_account_platform_username,
-                    platform: item.phyllo_work_platform_name,
-                    followers: item.phyllo_reputation_follower_count,
-                    engagement: item.engagement_rate, 
-                    views: item.avg_view_count, 
-                    likes: item.avg_like_count,
-                    location: item.phyllo_country,
-                    account_id: item.phyllo_accountid,
-                })));
+                console.log(data);
+                setFilterResponse(data);
             })
             .catch((error) => {
                 console.log(error);
             });
     }, [selectedCountry, filterValues]);
-
-    const customers = [
-        { id: 1, username: "James Butt", platform: "Instagram", followers: 12000, engagement: "4.5%", views: 1500, likes: 340, location: "Algeria" },
-        { id: 2, username: "Josephine Darakjy", platform: "YouTube", followers: 54000, engagement: "8.2%", views: 8400, likes: 1200, location: "Egypt" },
-        { id: 3, username: "Art Venere", platform: "TikTok", followers: 30000, engagement: "7.0%", views: 3200, likes: 800, location: "Panama" },
-        { id: 4, username: "Lenna Paprocki", platform: "Instagram", followers: 45000, engagement: "5.1%", views: 5000, likes: 1500, location: "Slovenia" },
-        { id: 5, username: "Donette Foller", platform: "Facebook", followers: 20000, engagement: "3.3%", views: 2800, likes: 400, location: "South Africa" },
-        { id: 6, username: "Simona Morasca", platform: "YouTube", followers: 34000, engagement: "6.4%", views: 6700, likes: 900, location: "Egypt" },
-        { id: 7, username: "Mitsue Tollner", platform: "TikTok", followers: 15000, engagement: "5.0%", views: 1900, likes: 600, location: "Paraguay" },
-        { id: 8, username: "Leota Dilliard", platform: "Instagram", followers: 60000, engagement: "10.2%", views: 10200, likes: 2100, location: "Serbia" }
-    ];
-
-    // function filterResults() {
-    //     const countryCodes = selectedCountry.map((country) => country.code);
-    //     const url =
-    //         baseUrl +
-    //         `api/phyllo/account/filter?phyllo_account_platform_username=${filterValues.username}&phyllo_user_name=${filterValues.name}&phyllo_reputation_follower_count_min=${filterValues.followers}&country=${countryCodes}`; //price=${filterValues.price}&location=${filterValues.location}`;
-    //     fetch(url, {
-    //         method: "GET",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //             "Authorization": "Bearer " + localStorage.getItem("access"),
-    //         }
-    //     })
-    //     .then((response) => {
-    //         if (!response.ok) {
-    //             throw new Error("Error fetching data");
-    //         }
-    //         return response.json();
-    //     })
-    //     .then((data) => {
-    //         console.log("Phyllo Data", data);
-    //     })
-    //     .catch((error) => {console.log(error)});
-    // }
-
-    function influencerTableRowClickHandler(event) {
-        navigate(`/profile/${event.data.platform}/${event.data.account_id}`);
-    }
-    
 
     return (
         <div className="main-container">
@@ -358,7 +218,7 @@ export default function Discovery() {
                                         ...filterValues,
                                         username: e.target.value,
                                     });
-                                    // filterResults();
+                                    filterResults();
                                 }}
                             />
                         </div>
@@ -377,7 +237,7 @@ export default function Discovery() {
                                         ...filterValues,
                                         name: e.target.value,
                                     });
-                                    // filterResults();
+                                    filterResults();
                                 }}
                             />
                         </div>
@@ -400,7 +260,7 @@ export default function Discovery() {
                                         ...filterValues,
                                         followers: e.target.value,
                                     });
-                                    // filterResults();
+                                    filterResults();
                                 }}
                             />
                             <p>{filterValues.followers}</p>
@@ -424,7 +284,7 @@ export default function Discovery() {
                                         ...filterValues,
                                         price: e.target.value,
                                     });
-                                    // filterResults();
+                                    filterResults();
                                 }}
                             />
                             <p>{filterValues.price}</p>
@@ -566,67 +426,235 @@ export default function Discovery() {
                     </div> */}
                 </div>
                 <div className="results-table">
-                    <DataTable
-                        value={filterResponse}
-                        paginator
-                        showGridlines
-                        rows={10}
-                        loading={loading}
-                        dataKey="id"
-                        filters={filters}
-                        globalFilterFields={['username', 'platform', 'followers', 'engagement', 'views', 'likes', 'location']}
-                        // header="Customer Table"
-                        // header={header}
-                        emptyMessage="No accounts found"
-                        onFilter={(e) => setFilters(e.filters)}
-                        onRowClick={influencerTableRowClickHandler}
-                    >
-                        <Column
-                            field="username"
-                            header="Username"
-                            filter
-                            filterPlaceholder="Search by Username"
-                            style={{ minWidth: '7rem' }}
-                        />
-                        <Column
-                            field="platform"
-                            header="Platform"
-                            filter
-                            filterPlaceholder="Search by Platform"
-                            style={{ minWidth: '4rem' }}
-                        />
-                        <Column
-                            field="followers"
-                            header="Followers"
-                            filter
-                            style={{ minWidth: '4rem' }}
-                        />
-                        <Column
-                            field="engagement"
-                            header="Engagement"
-                            filter
-                            style={{ minWidth: '4rem' }}
-                        />
-                        <Column
-                            field="views"
-                            header="Views"
-                            filter
-                            style={{ minWidth: '4rem' }}
-                        />
-                        <Column
-                            field="likes"
-                            header="Likes"
-                            filter
-                            style={{ minWidth: '4rem' }}
-                        />
-                        <Column
-                            field="location"
-                            header="Audience Location"
-                            filter
-                            style={{ minWidth: '4rem' }}
-                        />
-                    </DataTable>
-                    
+                    <div className="title-row">
+                        <div className="title profile">
+                            <div className="icon">
+                                <span class="material-symbols-outlined">
+                                    account_circle
+                                </span>
+                            </div>
+                            <div className="text">
+                                <p>Profile</p>
+                            </div>
+                        </div>
+                        <div className="title username">
+                            <div className="icon">
+                                <span class="material-symbols-outlined">
+                                    person
+                                </span>
+                            </div>
+                            <div className="text">
+                                <p>Username</p>
+                            </div>
+                        </div>
+                        <div className="title followers">
+                            <div className="icon">
+                                <span class="material-symbols-outlined">
+                                    people_alt
+                                </span>
+                            </div>
+                            <div className="text">
+                                <p>Followers</p>
+                            </div>
+                        </div>
+                        <div className="title location">
+                            <div className="icon">
+                                <span class="material-symbols-outlined">
+                                    location_on
+                                </span>
+                            </div>
+                            <div className="text">
+                                <p>Audience Location</p>
+                            </div>
+                        </div>
+                        <div className="title engagement">
+                            <div className="icon">
+                                <span class="material-symbols-outlined">
+                                    percent
+                                </span>
+                            </div>
+                            <div className="text">
+                                <p>Engagement</p>
+                            </div>
+                        </div>
+                        <div className="title niche">
+                            <div className="icon">
+                                <span class="material-symbols-outlined">
+                                    category
+                                </span>
+                            </div>
+                            <div className="text">
+                                <p>Niche</p>
+                            </div>
+                        </div>
+                        <div className="title price">
+                            <div className="icon">
+                                <span class="material-symbols-outlined">
+                                    payments
+                                </span>
+                            </div>
+                            <div className="text">
+                                <p>Price</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="results">
+                        {filterResponse.map((result) => {
+                            // YOUTUBE
+                            return (
+                                <div
+                                    className="result"
+                                    data-channel-id={result.youtube_channel_information.channel_id}
+                                    data-account-type="youtube"
+                                    onClick={(e) => {
+                                        console.log(
+                                            e.currentTarget.getAttribute(
+                                                "data-channel-id"
+                                            )
+                                        );
+                                        navigate(
+                                            `/profile/${e.currentTarget.getAttribute("data-account-type")}/${e.currentTarget.getAttribute(
+                                                "data-channel-id"
+                                            )}`
+                                        );
+                                    }}
+                                >
+                                    <div className="profile">
+                                        <img
+                                            src={
+                                                result
+                                                    .youtube_channel_information.thumbnail_url
+                                            }
+                                        />
+                                    </div>
+                                    <div className="username">
+                                        <p>
+                                            {
+                                                result
+                                                    .youtube_channel_information.custom_url
+                                            }
+                                        </p>
+                                    </div>
+                                    <div className="followers">
+                                        <p>
+                                            {
+                                                result
+                                                    .youtube_channel_information.subscriber_count
+                                            }
+                                        </p>
+                                    </div>
+                                    <div className="location">
+                                        <p>
+                                            {
+                                                result
+                                                    ?.youtube_geographic_demographics
+                                            }
+                                        </p>
+                                    </div>
+                                    <div className="engagement">
+                                        <p>{result.engagement}</p>
+                                    </div>
+                                    <div className="niche">
+                                        <p>{result.niche}</p>
+                                    </div>
+                                    <div className="price">
+                                        <p>{result.lowest_price}</p>
+                                    </div>
+                                </div>
+                            );
+                            // INSTAGRAM
+                            // return (
+                            //     <div
+                            //         className="result"
+                            //         data-influencer-id={result.influencer}
+                            //         data-instagram-id={result.instagram_id}
+                            //         onClick={(e) => {
+                            //             console.log(
+                            //                 e.currentTarget.getAttribute(
+                            //                     "data-instagram-id"
+                            //                 )
+                            //             );
+                            //             navigate(
+                            //                 `/profile/${e.currentTarget.getAttribute(
+                            //                     "data-instagram-id"
+                            //                 )}`
+                            //             );
+                            //         }}
+                            //     >
+                            //         <div className="profile">
+                            //             <img
+                            //                 src={
+                            //                     result
+                            //                         .instagram_initial_information
+                            //                         .profile_picture_url
+                            //                 }
+                            //             />
+                            //         </div>
+                            //         <div className="username">
+                            //             <p>
+                            //                 {
+                            //                     result
+                            //                         .instagram_initial_information
+                            //                         .username
+                            //                 }
+                            //             </p>
+                            //         </div>
+                            //         <div className="followers">
+                            //             <p>
+                            //                 {
+                            //                     result
+                            //                         .instagram_initial_information
+                            //                         .followers_count
+                            //                 }
+                            //             </p>
+                            //         </div>
+                            //         <div className="location">
+                            //             <p>
+                            //                 {
+                            //                     result
+                            //                         .instagram_country_demographics
+                            //                         .this_week_country
+                            //                 }
+                            //             </p>
+                            //         </div>
+                            //         <div className="engagement">
+                            //             <p>{result.engagement}</p>
+                            //         </div>
+                            //         <div className="niche">
+                            //             <p>{result.niche}</p>
+                            //         </div>
+                            //         <div className="price">
+                            //             <p>{result.price}</p>
+                            //         </div>
+                            //     </div>
+                            // );
+                        })}
+                        {/* <img src="https://picsum.photos/200" /> */}
+
+                        {/* <div className="result">
+                            <div className="profile">
+                                <img src="https://picsum.photos/202" />
+                            </div>
+                            <div className="username">
+                                <strong>@ananya</strong>
+                            </div>
+                            <div className="followers">
+                                <p>100k</p>
+                            </div>
+                            <div className="location">
+                                <p>USA</p>
+                            </div>
+                            <div className="engagement">
+                                <p>10</p>
+                            </div>
+                            <div className="niche">
+                                <p>Beauty</p>
+                            </div>
+                            <div className="price">
+                                <p>10</p>
+                            </div>
+                        </div> */}
+                    </div>
                 </div>
             </div>
         </div>

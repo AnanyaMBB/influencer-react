@@ -1,5 +1,5 @@
 import "./CampaignManagement.css";
-import { useEffect, useState, useContext, useRef } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import LineGraph from "../components/LineGraph";
 import SentimentChart from "../components/SentimentChart";
@@ -11,11 +11,6 @@ import { baseUrl } from "../shared";
 import FileManager from "../components/FileManager";
 import PayPalButton from "../components/PayPalButton";
 import { LoginContext } from "../App";
-import { BreadCrumb } from 'primereact/breadcrumb';
-import 'primeicons/primeicons.css'
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { FilterMatchMode } from "primereact/api";
 
 
 export default function CampaignManagement() {
@@ -172,34 +167,6 @@ export default function CampaignManagement() {
         }
     }, []);
 
-    const items = [
-        {label: 'Campaigns', 'url': '/campaigns'}
-        // { label: 'Home', url: '/' },
-        // { label: 'Home', url: '/' },
-        // { label: 'Home', url: '/' },
-        // { label: 'Home', url: '/' },
-    ];
-
-    // const home = { label: 'Campaigns', url: '/campaigns'};
-    const home = { icon: 'pi pi-home', url: '' };
-
-
-    // const campaigns_table = [
-    //     {id: 1, campaign_name: "Fitness Campaign", num_influencers: 100, active_influencers: 70, views: '100k', likes: '10k', shares: '1k', date:"12-3-2024"},
-    //     {id: 1, campaign_name: "Fitness Campaign", num_influencers: 100, active_influencers: 70, views: '100k', likes: '10k', shares: '1k', date:"12-3-2024"},
-    //     {id: 1, campaign_name: "Fitness Campaign", num_influencers: 100, active_influencers: 70, views: '100k', likes: '10k', shares: '1k', date:"12-3-2024"}
-    // ];
-
-    const [campaignsTable, setCampaignsTable] = useState([]);
-    const [filters, setFilters] = useState({
-
-    });
-
-    const [loading, setLoading] = useState(false);
-
-    const newCampaignOverlayRef = useRef(null);
-    const [newCampaignValue, setNewCampaignValue] = useState("");
-
     useEffect(() => {
         const url =
             baseUrl + `api/instagram/data/media?instagram_id=${instagram_id}`;
@@ -263,178 +230,149 @@ export default function CampaignManagement() {
             });
     }, []);
 
-    function handleRowClick (event) {
-        navigate(`/campaigns/${event.data.id}`);
-    }
-
-    function newCampaignBtnHandler(event) {
-        newCampaignOverlayRef.current.classList.toggle("not-visible");
-    }
-
-    function newCampaignCancelHandler(event) {
-        newCampaignOverlayRef.current.classList.add("not-visible");
-    }
-
-    function newCampaignSaveHandler(event) {
-        const url = baseUrl + "api/campaign/add"
-        fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + localStorage.getItem("access"),
-            },
-            body: JSON.stringify({
-                "campaign_name": newCampaignValue,
-                "username": localStorage.getItem("username")
-            })
-        })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Response not ok")
-            }
-            alert("Campaign Saved");
-            newCampaignOverlayRef.current.classList.add("not-visible");
-            return response.json()
-
-        })
-        .catch((error) => {
-            alert("Error in saving campaign");
-        })
-    }
-
-    useEffect(() => {
-        const url = baseUrl + `api/campaign/get?username=${localStorage.getItem("username")}`;
-        fetch(url, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + localStorage.getItem("access"),
-            }
-        })
-        .then((response) => {
-            if(!response.ok) {
-                throw new Error("Grabbing campaigns failed");
-            }
-            return response.json();
-        })
-        .then((data) => {
-            console.log("CAMPAIGNS GRABBED: ", data);
-            setCampaignsTable([]);
-            data.map((item) => {
-                
-                setCampaignsTable((prev) => {
-                    return [...prev, {
-                        id: item.id,
-                        campaign_name: item.campaign_name,
-                        // num_influencers: item.num_influencers,
-                        // active_influencers: item.active_influencers,
-                        // views: item.views,
-                        // likes: item.likes,
-                        // shares: item.shares,
-                        // location: item.location,
-                        date: item.date
-                    }]
-                })
-            });
-        })
-        .catch((error) => {})
-    }, []);
     
     return (
         <>
             {page == "campaigns" ? (
                 <div className="campaign-management-container">
-                    <div className="header">
-                        <BreadCrumb model={items} home={home} />
-                        <button onClick={newCampaignBtnHandler}>
-                            <i className="pi pi-plus"></i>
-                            <p>New Campaign</p>
-                        </button>
-                    </div>
-                    <div className="new-campaign-overlay not-visible" ref={newCampaignOverlayRef}>
-                        <div className="new-campaign-header">
-                            <h2>Create New Campaign</h2>
-                        </div>
-                        <div className="new-campaign-content">
-                            <label>Campaign Name</label>
-                            <input type="text" placeholder="Campaign Name" value={newCampaignValue} onChange={(e) => {
-                                setNewCampaignValue(e.target.value);
-                            }} />
-                        </div>
-                        <div className="new-campaign-action">
-                            <button onClick={newCampaignCancelHandler}>Cancel</button>
-                            <button onClick={newCampaignSaveHandler}>Save</button>
-                        </div>
-                    </div>
-
+                    <div className="header"></div>
                     <div className="campaigns">
-                        <DataTable
-                            value={campaignsTable}
-                            paginator
-                            showGridlines
-                            rows={10}
-                            loading={loading}
-                            dataKey="id"
-                            filters={filters}
-                            globalFilterFields={['campaign_name', 'num_influencers', 'active_influencers', 'views', 'likes', 'shares', 'location']}
-                            // header="Customer Table"
-                            // header={header}
-                            emptyMessage="No accounts found"
-                            onFilter={(e) => setFilters(e.filters)}
-                            onRowClick={handleRowClick}
-                        >
-                            <Column
-                                field="campaign_name"
-                                header="Campaign Name"
-                                filter
-                                filterPlaceholder="Search by Campaign"
-                                style={{ minWidth: '7rem' }}
-                            />
-                            <Column
-                                field="num_influencers"
-                                header="Requested Influencers"
-                                filter
-                                filterPlaceholder="Search by Platform"
-                                style={{ minWidth: '4rem' }}
-                            />
-                            <Column
-                                field="active_influencers"
-                                header="Active Influencers"
-                                filter
-                                style={{ minWidth: '4rem' }}
-                            />
-                            <Column
-                                field="views"
-                                header="Total Views"
-                                filter
-                                style={{ minWidth: '4rem' }}
-                            />
-                            <Column
-                                field="likes"
-                                header="Total Likes"
-                                filter
-                                style={{ minWidth: '4rem' }}
-                            />
-                            <Column
-                                field="shares"
-                                header="Total Shares"
-                                filter
-                                style={{ minWidth: '4rem' }}
-                            />
-                            {/* <Column
-                                field="location"
-                                header="Audience Location"
-                                filter
-                                style={{ minWidth: '4rem' }}
-                            /> */}
-                            <Column 
-                                field="date"
-                                header="Date"
-                                stype={{ minWidth: '4rem' }}
-                            />
-                        </DataTable>
-                        
+                        <div className="campaign title">
+                            <div className="column">
+                                <p>Business</p>
+                            </div>
+                            <div className="column">
+                                <p>Influencer</p>
+                            </div>
+                            <div className="column">
+                                <p>Contract</p>
+                            </div>
+                            <div className="column">
+                                <p>File</p>
+                            </div>
+                            <div className="column">
+                                <p>Publishing Date</p>
+                            </div>
+                            <div className="column">
+                                <p>Published</p>
+                            </div>
+                            <div className="column">
+                                <p></p>
+                            </div>
+                            {/* <div className="column">
+                                <p>Impressions</p>
+                            </div>
+                            <div className="column">
+                                <p>Likes</p>
+                            </div> */}
+                        </div>
+                        <div className="scroll-container">
+                            {campaigns.map((campaign) => {
+                                return (
+                                    <div className="campaign" data-contract-id={campaign.contract} data-version-id={campaign.contract_version}>
+                                        <div className="column">
+                                            <p>{campaign.business}</p>
+                                        </div>
+                                        <div className="column">
+                                            <p>{campaign.influencer}</p>
+                                        </div>
+                                        <div className="column contract">
+                                            <p onClick={() => {
+                                                navigate(`/contract/${campaign.contract}/${campaign.contract_version}`)
+                                            }}>Contract</p>
+                                        </div>
+                                        <div
+                                            className="column file"
+                                            onClick={() => {
+                                                setFileDialogOpen(true);
+                                                setSelectedContractID(campaign.contract);
+                                                setSelectedVersionID(campaign.contract_version);
 
+                                                setSelectedCampaignFile({
+                                                    "id": campaign.file,
+                                                    "file_name": campaign.file_name,   
+                                                    "file_size": campaign.file_size, 
+                                                    "file_date": campaign.file_date,
+                                                });
+                                            }}
+                                        >
+                                            <p>File</p>
+                                        </div>
+                                        <div className="column">
+                                            <p>Publishing Date</p>
+                                        </div>
+                                        <div className="column published">
+                                            <p>Published</p>
+                                        </div>
+                                        <div className="column analytics-action">
+                                            <p onClick={() => {
+                                                setPage("analytics");
+                                            }}>Analytics</p>
+                                        </div>
+                                        {/* <div className="column">
+                                            <p>Impressions</p>
+                                        </div>
+                                        <div className="column">
+                                            <p>Likes</p>
+                                        </div> */}
+                                    </div>
+                                );
+                            })}
+
+                            {/* <div className="campaign">
+                                <div className="column">
+                                    <p>Business</p>
+                                </div>
+                                <div className="column">
+                                    <p>Influencer</p>
+                                </div>
+                                <div className="column contract">
+                                    <p>Contract</p>
+                                </div>
+                                <div className="column file">
+                                    <p>File</p>
+                                </div>
+                                <div className="column">
+                                    <p>Publishing Date</p>
+                                </div>
+                                <div className="column waiting">
+                                    <p>Waiting</p>
+                                </div>
+                                <div className="column">
+                                    <p>Impressions</p>
+                                </div>
+                                <div className="column">
+                                    <p>Likes</p>
+                                </div>
+                            </div>
+
+                            <div className="campaign">
+                                <div className="column">
+                                    <p>Business</p>
+                                </div>
+                                <div className="column">
+                                    <p>Influencer</p>
+                                </div>
+                                <div className="column contract">
+                                    <p>Contract</p>
+                                </div>
+                                <div className="column file">
+                                    <p>File</p>
+                                </div>
+                                <div className="column">
+                                    <p>Publishing Date</p>
+                                </div>
+                                <div className="column failed">
+                                    <p>Failed</p>
+                                </div>
+                                <div className="column">
+                                    <p>Impressions</p>
+                                </div>
+                                <div className="column">
+                                    <p>Likes</p>
+                                </div>
+                            </div> */}
+                        </div>
                     </div>
                     <FileManager
                         fileDialogOpen={fileDialogOpen}

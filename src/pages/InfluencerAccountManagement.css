@@ -1,7 +1,13 @@
 .account-container {
-    display: flex;
+    /* display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: flex-start; */
+
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    grid-template-areas: 
+    'header services'
+    'connected-accounts services';
 }
 
 .account-container .header {
@@ -11,19 +17,21 @@
     width: 100%;
     height: 5vh;
     /* line-height: 10vh; */
-    padding-left: 2%;
+    padding-left: 3.5%;
     padding-right: 2%;
     color: gray;
+    grid-area: header;
+    border-right: 2px solid lightgray;
     
 }
 
 .account-container .header .title {
-    padding-top: 1vh;
+    /* padding-top: 1vh; */
 }
 
 .account-container .header .add-container {
-    padding-top: 1vh;
-    width: 50%;
+    /* padding-top: 1vh; */
+    width: 60%;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
@@ -34,15 +42,27 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    margin-right: 2%;
-    height: 5vh;
+    margin-right: 1%;
+    height: 4.5vh;
     line-height: 2vh;
-    border: 2px solid #1878F1;
+    border: 2px solid lightgray;
     color: #1878F1;
-    padding-left: 15px;
-    padding-right: 20px;
-    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
     cursor: pointer;
+    color: #000;
+    /* font-weight: bold; */
+
+}
+
+.account-container .header .add-container .tiktok-add-button {
+    margin-right: 2%;
+}
+
+.account-container .header .add-container .tiktok-add-button img {
+    width: 25px;
+    height: 25px;
 }
 
 .account-container .header .add-container .instagram-add-button {
@@ -84,26 +104,65 @@
 
 .account-container .connected-accounts {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: flex-start;
-    width: 100%;
-    height: 10vh;
-    border-bottom: 1px solid #f29219;
-    border-bottom: 1px solid lightgray;
+    align-items: center;
+    /* width: 100%; */
+    height: 87vh;
+    /* border-bottom: 1px solid #f29219; */
+    /* border-bottom: 1px solid lightgray; */
+    border-right: 2px solid lightgray;
     padding-left: 2%;
+    padding-top: 2vh;
+    grid-area: connected-accounts;
+
 }
 
 .account-container .connected-accounts .account {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    width: 17%;
-    min-width: 250px;
+    width: 95%;
+    /* min-width: 250px; */
     height: 8vh;
-    border-radius: 15px;
+    border-radius: 5px;
     border: 1px solid lightgray;
     cursor: pointer;
     margin-right: 1%;
+    margin-bottom: 1vh;
+}
+
+.account-container .connected-accounts .account:hover {
+    background-color: #1878F1;
+    background-color: #83b6f8;
+    color: #fff;
+}
+
+.account-container .connected-accounts .account .settings {
+    display: flex;
+    flex-direction: row; 
+    justify-content: center; 
+    align-items: center;
+    width: 15%;
+}
+.account-container .connected-accounts .account .settings button {
+    display: flex;
+    flex-direction: row; 
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+}
+
+.account-container .connected-accounts .account .settings button:hover {
+    opacity: 0.9;
+}
+
+.account-container .connected-accounts .account:hover .text .username {
+    color: #fff;
+}
+
+.account-container .connected-accounts .account:hover .text .followers {
+    color: #fff;
 }
 
 .account-container .connected-accounts .account .instagram-id {
@@ -131,16 +190,18 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    width: 45%;
 }
 
 .account-container .connected-accounts .account .text .username {
-    color: #f29219;
+    /* color: #f29219; */
     font-size: 1em;
     font-weight: bold;
 }
 
 .account-container .connected-accounts .account .text .followers {
-    color: #1878F1;
+    /* color: #1878F1; */
+    color: #000;
 }
 
 .account-container .services {
@@ -148,12 +209,18 @@
     height: 78vh;
     /* padding-left: 2%;
     padding-right: 2%; */
+    grid-area: services;
+    padding-top: 0.25vh;
+    padding-bottom: 2vh;
+    padding-left: 3%;
+    padding-right: 3%;
 }
 
 .account-container .services .navigation {
     width: 100%;
     height: 5vh;
     display: flex;
+    min-width: 440px;
     flex-direction: row;
     justify-content: flex-start;
     padding-left: 2%;
@@ -328,3 +395,512 @@
 }
 
 */
+
+
+.p-tabmenu .p-tabmenu-nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    /* gap: 10px; */
+    height: 5vh;
+    background-color: #83b6f8;
+    background-color: #1878F1;
+    /* padding-left: 10px; */
+    padding-right: 10px;
+    border-radius: 5px;
+}
+
+.p-tabmenu .p-tabmenu-nav .p-tabmenuitem { 
+    height: 4vh;
+    background-color: red;
+}
+
+.p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link {
+    display: flex;
+    flex-direction: row; 
+    justify-content: flex-start;
+    gap: 5px;
+    background-color: #83b6f8;
+    background-color: #1878F1;
+    height: 4vh;
+    color: #fff;
+    padding-right: 10px;
+    padding-left: 10px;
+    border-right: 1px solid #fff;
+    border-radius: 0px;
+
+}
+
+.p-tabmenu .p-tabmenu-nav li:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.p-tabmenu .p-tabmenu-nav li:first-child .p-menuitem-link {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link:hover {
+    background-color: #83b6f8;
+}
+
+
+.services .influencer-campaigns {
+    margin-top: 1vh;
+}
+
+.services .influencer-requests {
+    margin-top: 1vh;
+}
+
+.services .influencer-requests .button-container {
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between;
+}
+
+.services .influencer-requests .accept-btn {
+    background-color: lightgreen;
+    width: 48%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+}
+
+.services .influencer-requests .reject-btn {
+    background-color: lightcoral;
+    width: 48%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+}
+
+.services .influencer-analytics {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow-x: hidden; 
+    overflow-y: auto; 
+    scrollbar-width: none;
+    height: 88vh;
+}
+
+.services .influencer-analytics .engagement-metrics,
+.services .influencer-analytics .audience-demographics,
+.services .influencer-analytics .summary-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column; 
+    justify-content: flex-start;
+}
+
+.services .influencer-analytics .engagement-metrics .header,
+.services .influencer-analytics .audience-demographics .header,
+.services .influencer-analytics .summary-container .header {
+    height: 5vh;
+    border-bottom: 2px solid #f29219;
+    padding-left: 0.5%;
+    color: #000;
+    font-size: 1.1em;
+    border-right: none;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: flex-start;
+    /* background-color: red; */
+    font-weight: bold;
+    font-size: 1.3em;
+    font-family: "Nunito";
+
+}
+
+.services .influencer-analytics .summary-container .content {
+    height: 85vh;
+    display: flex;
+    flex-direction: column; 
+    justify-content: flex-start;
+}
+
+.services .influencer-analytics .summary-container .content .summary-top {
+    display: flex;
+    flex-direction: row; 
+    justify-content: flex-start;
+    height: 20vh;
+    margin-top: 1vh;
+}
+
+.services .influencer-analytics .summary-container .content .summary-top .profile-picture {
+    width: 20%; 
+    display: flex;
+    flex-direction: row; 
+    justify-content: center; 
+    align-items: center;
+}
+
+.services .influencer-analytics .summary-container .content .summary-top .profile-picture img {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+}
+
+.services .influencer-analytics .summary-container .content .summary-top .profile-information {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: flex-start;
+}
+
+.services .influencer-analytics .summary-container .content .summary-top .profile-information .profile-name {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.services .influencer-analytics .summary-container .content .summary-top .profile-information .profile-account {
+    
+}
+
+.services .influencer-analytics .summary-container .content .summary-top .profile-information .profile-bio {
+    
+}
+
+.services .influencer-analytics .summary-container .content .summary-middle {
+    display: flex;
+    flex-direction: row; 
+    justify-content: flex-start;
+    gap: 2%;
+    margin-top: 5vh;
+}
+
+.services .influencer-analytics .summary-container .content .summary-middle .summary {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center;
+    
+    width: 32%; 
+    height: 25vh;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    background-color: #f29219;
+    background-color: #1878F1;
+    color: #fff;
+}
+
+.services .influencer-analytics .summary-container .content .summary-middle .top-align {
+    display: flex;
+    flex-direction: row; 
+    justify-content: flex-start;
+    font-size: 2.3em;
+    font-weight: bold;
+}
+
+.services .influencer-analytics .summary-container .content .summary-middle .top-align .icon {
+    margin-right: 20%;
+}
+
+.services .influencer-analytics .summary-container .content .summary-middle .top-align .icon i {
+    font-size: 1.5em;
+}
+
+.services .influencer-analytics .summary-container .content .summary-middle .bottom-align {
+    font-size: 1.2em;
+    color: gray;
+    color: #fff;
+}
+
+.services .influencer-analytics .summary-container .content .summary-bottom {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 2%;
+    row-gap: 1vh;
+    flex-wrap: wrap;
+    margin-top: 2vh;
+}
+
+.services .influencer-analytics .summary-container .content .summary-bottom .summary {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
+    font-size: 2.3em;
+    width: 32%;
+    height: 19vh;
+    height: 25vh;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    background-color: #f29219;
+    background-color: #83b6f8;
+    background-color: #1878F1;
+    color: #fff;
+
+}
+
+.services .influencer-analytics .summary-container .content .summary-bottom .summary .top-align {
+    display: flex;
+    flex-direction: row; 
+    justify-content: flex-start;
+    font-weight: bold;
+}
+
+.services .influencer-analytics .summary-container .content .summary-bottom .summary .top-align .icon {
+    margin-right: 20%; 
+}
+
+.services .influencer-analytics .summary-container .content .summary-bottom .summary .top-align .icon i {
+    font-size: 1.5em;
+    /* color: #f29219; */
+}
+
+.services .influencer-analytics .summary-container .content .summary-bottom .summary .bottom-align {
+    font-size: 20px;
+    color: gray;
+    color: #fff;
+}
+
+.services .influencer-analytics .engagement-metrics .content,
+.services .influencer-analytics .audience-demographics .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; 
+    /* padding-bottom: 1vh; */
+}
+
+.services .influencer-analytics .engagement-metrics .content .navigation,
+.services .influencer-analytics .audience-demographics .content .navigation {
+    width: 100%; 
+    height: 5vh;
+    /* background-color: red; */
+    background-color: #fff;
+}   
+
+.services .influencer-analytics .engagement-metrics .content .chart-container {
+    width: 100%; 
+    display: flex;
+    flex-direction: row; 
+    justify-content: flex-start; 
+    gap: 1.1%;
+    row-gap: 1vh;
+    flex-wrap: wrap;
+    /* padding-left: 1%;
+    padding-right: 1%; */
+}
+
+.services .influencer-analytics .engagement-metrics .content .chart-container .chart {
+    width: 32.6%; 
+    height: 25vh;
+    /* border: 1px solid lightgray;
+    border: 1px solid #1878F1;
+    border: 1px solid #f29219; */
+    border-radius: 5px;    
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.services .influencer-analytics .engagement-metrics .content .chart-container .chart .chart-title {
+    width: 100%; 
+    height: 3vh;
+    border-bottom: 1px solid #1878F1;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: flex-start;
+
+}
+
+
+.influencer-analytics {
+    scroll-snap-type: y mandatory; /* Enable vertical snapping */
+    overflow-y: scroll; /* Allow vertical scrolling */
+    height: 100vh; /* Set height to the full viewport */
+}
+
+.engagement-metrics, .summary-container {
+    scroll-snap-align: start; /* Snap these sections to the top when scrolling */
+    flex: 0 0 auto; /* Prevent resizing */
+    height: 87vh; /* Each section takes up the full viewport height */
+    width: 100%; /* Ensure full width of the container */
+    
+}
+
+
+.engagement-metrics, .engagement-metrics {
+    scroll-snap-align: start; /* Snap these sections to the top when scrolling */
+    flex: 0 0 auto; /* Prevent resizing */
+    height: 87vh; /* Each section takes up the full viewport height */
+    width: 100%; /* Ensure full width of the container */
+    
+}
+
+
+.engagement-metrics, .audience-demographics {
+    scroll-snap-align: start; /* Snap these sections to the top when scrolling */
+    flex: 0 0 auto; /* Prevent resizing */
+    width: 100%; /* Ensure full width of the container */
+    
+}
+
+.services .influencer-analytics .audience-demographics {
+    height: 88vh;
+}
+
+.services .influencer-analytics .engagement-metrics .content .navigation,
+.services .influencer-analytics .audience-demographics .content .navigation {
+    display: flex;
+    flex-direction: row; 
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    width: 40%;
+    background-color: #83b6f8;
+    margin-top: 1vh;
+    border-radius: 20px;
+    border-radius: 5px;
+    font-weight: 500;
+    height: 5vh;
+    margin-bottom: 1vh;
+}
+
+.services .influencer-analytics .engagement-metrics .content .navigation .nav-element,
+.services .influencer-analytics .audience-demographics .content .navigation .nav-element {
+    width: 40%;
+    height: 4vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    border-radius: 5px;
+    color: #fff;
+}
+
+.services .influencer-analytics .engagement-metrics .content .navigation .nav-element.selected,
+.services .influencer-analytics .audience-demographics .content .navigation .nav-element.selected {
+    color: #1878F1;
+    background-color: #fff;
+}
+
+
+.account-container .p-datatable .p-datatable-wrapper .p-datatable-table .p-datatable-thead {
+    background: transparent;
+    height: 5vh;
+    color: #fff;
+    
+}
+
+.account-container .p-datatable .p-datatable-wrapper .p-datatable-table .p-datatable-thead th {
+    background: #83b6f8;
+    background-color: #1878F1;
+    /* background: #1878F1;    
+    color: #fff; */
+    color: #fff;
+    font-weight: bold;
+    
+}
+
+.account-container .p-datatable .p-datatable-wrapper .p-datatable-table .p-datatable-thead th:first-child {
+    border-top-left-radius: 5px;
+}
+
+.account-container .p-datatable .p-datatable-wrapper .p-datatable-table .p-datatable-thead th:last-child {
+    border-top-right-radius: 5px;
+}
+
+.account-container .p-datatable .p-datatable-wrapper .p-datatable-table .p-datatable-tbody tr {
+    height: 5vh;
+    color: #000;
+}
+
+.account-container thead .p-column-header-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-family: "Nunito";
+    padding-left: 10px;
+}
+
+.account-container thead .p-column-filter button {
+    margin-right: 10px;
+    /* color: #1878F1; */
+    font-weight: bold;
+    background-color: rgb(235, 231, 231);
+    background-color: #fff;
+    /* color: #83b6f8; */
+    padding: 5px;
+    border-radius: 50%;
+}
+
+.account-container .p-datatable .p-datatable-wrapper .p-datatable-table .p-datatable-tbody tr td {
+    padding-left: 10px;
+}
+
+.account-container .p-datatable .p-datatable-wrapper .p-datatable-table .p-datatable-tbody tr:hover {
+    background-color: #83b6f8;
+    cursor: pointer;
+    color: #fff;
+} 
+
+.services .influencer-analytics .audience-demographics .content .chart-container {
+    width: 100%; 
+    
+}
+
+.services .influencer-analytics .audience-demographics .content .chart-container .chart.location {
+    width: 100%; 
+    height: 70vh;
+    display: flex;
+    flex-direction: row; 
+    justify-content: flex-start;
+}
+
+.services .influencer-analytics .audience-demographics .content .chart-container .chart.location .country-chart,
+.services .influencer-analytics .audience-demographics .content .chart-container .chart.location .city-chart {
+    width: 50%;
+    height: 70vh;
+    /* overflow-y: auto; */
+}
+
+
+.services .influencer-analytics .audience-demographics .content .chart-container .chart.location .chart-header,
+.services .influencer-analytics .audience-demographics .content .chart-container .chart.gender-age .chart-header {
+    font-weight: bold; 
+    font-size: 1.2em;
+    padding-left: 10px;
+    /* background-color: red; */
+}
+
+.services .influencer-analytics .audience-demographics .content .chart-container .chart.gender-age .chart-header  {
+    margin-bottom: 5vh;
+}
+
+.services .influencer-analytics .audience-demographics .content .chart-container .chart.location .country-chart .p-chart,
+.services .influencer-analytics .audience-demographics .content .chart-container .chart.location .city-chart .p-chart {
+    width: 90%;
+    height: 70vh;
+    overflow-y: auto;
+}
+
+.services .influencer-analytics .audience-demographics .content .chart-container .chart.location .country-chart .p-chart canvas {
+    max-height: 100%;
+    display: block;
+}
+
+.services .influencer-analytics .audience-demographics .content .chart-container .chart.gender-age {
+    width: 100%; 
+    height: 50vh;
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between;
+}
+
+.services .influencer-analytics .audience-demographics .content .chart-container .chart.gender-age .gender-chart, 
+.services .influencer-analytics .audience-demographics .content .chart-container .chart.gender-age .age-chart {
+    width: 45%; 
+    height: 50vh;
+    display: flex;
+    flex-direction: column; 
+    justify-content: flex-start;
+}

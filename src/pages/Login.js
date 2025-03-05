@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LoginContext } from "../App";
 import { baseUrl } from "../shared";
+import buzz_findr_text_bg_removed from '../components/buzz_findr_text_bg_removed.png';
 
 export default function Login() {
     const [loggedIn, setLoggedIn] = useContext(LoginContext);
@@ -29,6 +30,13 @@ export default function Login() {
                 return response.json();
             })
             .then((data) => {
+                console.log("LOGIN DATA 1 ", data);
+                if (!data.access || !data.refresh){
+                    alert("Invalid username or password");
+                    return;
+                }   
+                    
+
                 localStorage.setItem("access", data.access);
                 localStorage.setItem("refresh", data.refresh);
                 localStorage.setItem("username", username);
@@ -39,103 +47,119 @@ export default function Login() {
                     return response.json();
                 })
                 .then((data) => {
+                    console.log("LOGIN DATA", data);
                     localStorage.setItem("accountType", data.accountType);
+                    if (data.accountType === "business") {
+                        // navigate(
+                        //     location?.state?.previousUrl
+                        //         ? location.state.previousUrl
+                        //         : "/discovery"
+                        // );
+                        navigate("/discovery");
+                    }
+                    else {
+                        // navigate(
+                        //     location?.state?.previousUrl
+                        //         ? location.state.previousUrl
+                        //         : "/account"
+                        // );
+                        navigate("/account");
+                    }   
                 });
+             
                 
-                navigate(
-                    location?.state?.previousUrl
-                        ? location.state.previousUrl
-                        : "/discovery"
-                );
             });
     }
     return (
-        <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-            <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                <img
-                    className="mx-auto h-10 w-auto"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                    alt="Your Company"
-                />
-                <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                    Sign in to your account
-                </h2>
-            </div>
-            <form id="userLogin" onSubmit={login}>
-                <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                    <form className="space-y-6" action="#" method="POST">
-                        <div>
-                            <label
-                                for="email"
-                                className="block text-sm font-medium leading-6 text-gray-900"
-                            >
-                                Email address
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    id="email"
-                                    name="email"
-                                    type="text"
-                                    autocomplete="email"
-                                    required
-                                    className="login-email-input px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    onChange={(e) => {
-                                        setUsername(e.target.value);
-                                    }}
-                                />
-                            </div>
-                        </div>
-
-                        <div>
-                            <div className="flex items-center justify-between">
+        <div className="login-main-container">
+            <div className="login-box-container">
+                <div className="login-header">
+                    <img
+                        className=""
+                        src={buzz_findr_text_bg_removed}
+                        alt="Your Company"
+                        width="150"
+                    />
+                    <h2 className="">
+                        Sign in to your account
+                    </h2>
+                </div>
+                <form id="userLogin" onSubmit={login}>
+                    <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                        <form className="space-y-6" action="#" method="POST">
+                            <div>
                                 <label
-                                    for="password"
+                                    for="email"
                                     className="block text-sm font-medium leading-6 text-gray-900"
                                 >
-                                    Password
+                                    Email address
                                 </label>
-                                <div className="text-sm">
-                                    <a
-                                        href="#"
-                                        className="login-forgot font-semibold"
-                                    >
-                                        Forgot password?
-                                    </a>
+                                <div className="mt-2">
+                                    <input
+                                        id="email"
+                                        name="email"
+                                        type="text"
+                                        autocomplete="email"
+                                        required
+                                        className="login-email-input px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                        onChange={(e) => {
+                                            setUsername(e.target.value);
+                                        }}
+                                    />
                                 </div>
                             </div>
-                            <div className="mt-2">
-                                <input
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    autocomplete="current-password"
-                                    required
-                                    className="login-password-input px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    onChange={(e) => {
-                                        setPassword(e.target.value);
-                                    }}
-                                />
+
+                            <div>
+                                <div className="flex items-center justify-between">
+                                    <label
+                                        for="password"
+                                        className="block text-sm font-medium leading-6 text-gray-900"
+                                    >
+                                        Password
+                                    </label>
+                                    {/* <div className="text-sm">
+                                        <a
+                                            href="#"
+                                            className="login-forgot font-semibold"
+                                        >
+                                            Forgot password?
+                                        </a>
+                                    </div> */}
+                                </div>
+                                <div className="mt-2">
+                                    <input
+                                        id="password"
+                                        name="password"
+                                        type="password"
+                                        autocomplete="current-password"
+                                        required
+                                        className="login-password-input px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                        onChange={(e) => {
+                                            setPassword(e.target.value);
+                                        }}
+                                    />
+                                </div>
                             </div>
-                        </div>
 
-                        <div>
-                            <button
-                                form="userLogin"
-                                className="login-submit flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                            >
-                                Sign in
-                            </button>
-                        </div>
-                    </form>
+                            <div>
+                                <button
+                                    form="userLogin"
+                                    className="login-submit flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                >
+                                    Sign In
+                                </button>
+                            </div>
+                        </form>
 
-                    <p className="mt-10 text-center text-sm text-gray-500">
-                        Not a member?
-                        <a href="#" className="login-14 font-semibold leading-6">
-                            Start a 14 day free trial
-                        </a>
-                    </p>
-                </div>
-            </form>
+                        {/* <p className="mt-10 text-center text-sm text-gray-500">
+                            Not a member?
+                            <a href="#" className="login-14 font-semibold leading-6">
+                                Start a 14 day free trial
+                            </a>
+                        </p> */}
+                    </div>
+                </form>
+            </div>
         </div>
     );
 }

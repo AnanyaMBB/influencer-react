@@ -95,6 +95,12 @@ export default function Contract() {
             });
     }, []);
 
+    useEffect(() => {
+        fetchVersions(contract_id);
+        fetchVersion(contract_id, version_id);
+        getElementDetails(contract_id, version_id);        
+    }, []); 
+
     const handleDownload = () => {
         const content = contentRef.current;
         html2canvas(content, { scale: 2 }).then((canvas) => {
@@ -332,16 +338,18 @@ export default function Contract() {
         }
     };
 
-    function fetchVersions() {
-        let contractID = selectedContractID;
-        if (selectedContractID === null) {
-            contractID = contractIDRef.current.textContent.substring(
-                1,
-                contractIDRef.current.textContent.length
-            );
-            setSelectedContractID(contractID);
-        }
-
+    function fetchVersions(contractID) {
+        // let contractID = selectedContractID;
+        // if (selectedContractID === null) {
+        //     contractID = contractIDRef.current.textContent.substring(
+        //         1,
+        //         contractIDRef.current.textContent.length
+        //     );
+        //     setSelectedContractID(contractID);
+        // }
+        setSelectedContractID(contractID);
+        console.log("setting Contract ID: ", contractID);
+        console.log("checking contract before: ", selectedContractID);
         const url =
             baseUrl + `api/contract/version/get?contract_id=${contractID}`;
 
@@ -359,7 +367,6 @@ export default function Contract() {
                 return response.json();
             })
             .then((data) => {
-                console.log("Versions Data: ", data);
                 setContractVersions(data);
                 data.forEach((version) => {
                     setVersionHighlighted((prev) => ({
@@ -378,7 +385,8 @@ export default function Contract() {
 
     console.log("Versions Highlighted: ", versionHighlighted);
 
-    function fetchVersion(version_id) {
+    function fetchVersion(selectedContractID, version_id) {
+        console.log("CHECK CONTRACT ID ", selectedContractID);
         setSelectedVersionID(version_id);
         const url =
             baseUrl +
@@ -398,6 +406,13 @@ export default function Contract() {
             })
             .then((data) => {
                 contentRef.current.innerHTML = data.contract_text;
+                console.log("Highlighted versions: ", versionHighlighted);
+                setVersionHighlighted((prev) => {
+                    return {
+                        ...prev, 
+                        [version_id]: true
+                    }
+                });
             })
             .catch((error) => {
                 console.error(
@@ -670,6 +685,7 @@ export default function Contract() {
                         },
                         body: JSON.stringify({
                             contract_id: selectedContractID,
+                            
                         }),
                     })
                         .then((response) => {
@@ -691,7 +707,7 @@ export default function Contract() {
         });
     }
 
-    function getElementDetails() {
+    function getElementDetails(selectedContractID, selectedVersionID) {
         const url =
             baseUrl +
             `api/element/details?contract_id=${selectedContractID}&version_id=${selectedVersionID}`;
@@ -895,6 +911,7 @@ export default function Contract() {
                                 }
                                 data-version-id={version.contract_version}
                                 onClick={(e) => {
+                                    console.log("=======>", version.contract_version);
                                     if (
                                         e.target.classList.contains("version")
                                     ) {
@@ -907,12 +924,15 @@ export default function Contract() {
                                         );
 
                                         fetchVersion(
+                                            version.contract, 
                                             e.target.getAttribute(
                                                 "data-version-id"
                                             )
                                         );
 
-                                        getElementDetails();
+                                        getElementDetails(version.contract,e.target.getAttribute(
+                                            "data-version-id"
+                                        ));
                                     } else {
                                         Object.keys(versionHighlighted).forEach(
                                             (key) => {
@@ -923,11 +943,14 @@ export default function Contract() {
                                         );
 
                                         fetchVersion(
+                                            version.contract, 
                                             e.target.parentElement.getAttribute(
                                                 "data-version-id"
                                             )
                                         );
-                                        getElementDetails();
+                                        getElementDetails(version.contract, e.target.getAttribute(
+                                            "data-version-id"
+                                        ));
                                     }
                                 }}
                             >
@@ -994,6 +1017,7 @@ export default function Contract() {
                                             });
 
                                             fetchVersion(
+                                                version.contract,
                                                 e.target.querySelector(
                                                     ".version-id"
                                                 ).textContent
@@ -1015,6 +1039,7 @@ export default function Contract() {
                                                     );
                                             });
                                             fetchVersion(
+                                                version.contract,
                                                 e.target.parentElement.querySelector(
                                                     ".version-id"
                                                 ).textContent
@@ -1032,6 +1057,7 @@ export default function Contract() {
                                                     );
                                             });
                                             fetchVersion(
+                                                version.contract,
                                                 e.target.parentElement.parentElement.querySelector(
                                                     ".version-id"
                                                 ).textContent
@@ -1084,7 +1110,7 @@ export default function Contract() {
                             return (
                                 <div
                                     className="contract"
-                                    onClick={fetchVersions}
+                                    onClick={() => fetchVersions(contract.contract_id)}
                                 >
                                     <div
                                         className="contract-id"

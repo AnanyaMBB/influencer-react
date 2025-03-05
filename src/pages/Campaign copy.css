@@ -1,0 +1,192 @@
+.campaign-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    font-family: 'Nunito';
+}
+
+.campaign-container .campaign-sidebar {
+    /* background-color: red; */
+    width: 15%;
+    height: 95vh;
+    border-right: 2px solid lightgray;
+    padding-top: 3vh;
+}
+
+.campaign-container .campaign-main {
+    /* background-color: green; */
+    width: 85%;
+    height: 95vh;
+    display: flex;
+    flex-direction: column; 
+    justify-content: flex-start;
+}
+
+.campaign-container .campaign-sidebar ol {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 90vh;
+}
+
+.campaign-container .p-steps .p-steps-item::before {
+    content: '';
+    
+    width: 2px;
+    height: 5vh;
+    background-color: lightgray;
+    /* border: 2px solid red; */
+    position: absolute;
+    top: -20%; 
+    left: 50%;
+    z-index: 1;
+}
+
+.campaign-container .p-steps .p-steps-item:first-child::before {
+    display: none;
+}
+
+.campaign-container .p-steps .p-steps-item.p-highlight.p-steps-current .p-steps-number {
+    background-color: #83b6f8;
+    background-color: #1878F1;
+    color: #fff;
+}
+
+
+.campaign-container .campaign-main .campaign-main-header {
+    width: 100%;
+    height: 5vh;    
+    padding: 20px;
+    padding-left: 0;
+    padding-right: 0;
+    font-family: 'Nunito';
+    font-size: 1.1em;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    color: #000;
+
+    -webkit-box-shadow: 2px 10px 39px -18px rgba(0,0,0,0.75);
+    -moz-box-shadow: 2px 10px 39px -18px rgba(0,0,0,0.75);
+    box-shadow: 2px 10px 39px -18px rgba(0,0,0,0.75);
+    
+}
+
+.campaign-container .campaign-main .campaign-main-header .left {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.campaign-container .campaign-main .campaign-main-header .right button {
+    background-color: #1878F1;
+    color: #fff;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+
+    display: flex;
+    flex-direction: row; 
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.campaign-container .campaign-main .campaign-main-header .right button:hover {
+    opacity: 0.8;
+}
+
+.campaign-container .campaign-main .campaign-main-header .right button:hover span {
+    opacity: 1;
+}
+
+.campaign-container .campaign-main .campaign-main-header .right button i {
+    color: #fff;
+    padding-right: 5px;
+}
+
+.campaign-container .campaign-main .campaign-main-header h2 {
+    margin-right: 15px;
+    color: gray;
+    color: #000;
+    font-weight: bold;
+}
+
+.campaign-container .campaign-main .campaign-main-header i {
+    color: #000;
+    /* color: #1878F1; */
+    /* color: #83b6f8; */
+    font-weight: bold;
+    cursor: pointer;
+    /* font-size: 0.8em; */
+}
+
+.campaign-container .campaign-main .campaign-main-header i:hover {
+    color: gray;
+}
+
+.campaign-container .campaign-main .campaign-main-edit-campaign {
+    width: 98%;
+    height: 95vh;
+    margin:auto;
+    border-radius: 10px;
+    /* background-color: red; */
+    -webkit-box-shadow: 2px 10px 39px -18px rgba(0,0,0,0.75);
+    -moz-box-shadow: 2px 10px 39px -18px rgba(0,0,0,0.75);
+    box-shadow: 2px 10px 39px -18px rgba(0,0,0,0.75);
+}
+
+/* .campaign-container .campaign-main .campaign-main-add-influencer {
+    width: 98%;
+    margin-left: auto;
+    margin-right: auto;
+} */
+
+.campaign-container .campaign-main > div{
+    width: 98%;
+    /* display: flex;
+    flex-direction: row;
+    justify-content: center; */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.campaign-container .campaign-main .p-datatable-wrapper {
+    scrollbar-width: none;
+    overflow-y: hidden;
+}
+
+.campaign-container .campaign-main .p-datatable-wrapper .p-datatable-table {
+    overflow: hidden;
+}
+
+.campaign-container .campaign-main .p-datatable-wrapper .p-datatable-table .p-datatable-thead tr th {
+    color: #000;
+}
+
+.campaign-container .campaign-main .p-datatable-wrapper .p-datatable-table .p-datatable-thead tr th:first-child {
+    border-top-left-radius: 5px;
+}
+
+.campaign-container .campaign-main .p-datatable-wrapper .p-datatable-table .p-datatable-thead tr th:last-child {
+    border-top-right-radius: 5px;
+}
+
+.campaign-container .campaign-main .p-datatable-wrapper .p-datatable-table .p-datatable-tbody tr {
+    color: #000;
+}
+
+.campaign-container .campaign-main .p-datatable-wrapper .p-datatable-table .p-datatable-tbody tr:hover {
+    color: #fff;
+}
+
+.platform-icon-container {
+    width: 100%;
+    padding: 10%;
+    color: #1878F1;
+    font-weight: bold;
+}

@@ -1,0 +1,353 @@
+.account-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.account-container .header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: 5vh;
+    /* line-height: 10vh; */
+    padding-left: 2%;
+    padding-right: 2%;
+    color: gray;
+    
+}
+
+.account-container .header .title {
+    /* padding-top: 1vh; */
+}
+
+.account-container .header .add-container {
+    /* padding-top: 1vh; */
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.account-container .header .add-container button {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-right: 1%;
+    height: 5vh;
+    line-height: 2vh;
+    border: 2px solid #1878F1;
+    color: #1878F1;
+    padding-left: 15px;
+    padding-right: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.account-container .header .add-container .tiktok-add-button {
+    margin-right: 2%;
+}
+
+.account-container .header .add-container .tiktok-add-button img {
+    width: 25px;
+    height: 25px;
+}
+
+.account-container .header .add-container .instagram-add-button {
+    margin-right: 0;
+}
+
+.account-container .header .add-container button:hover {
+    background-color: #1878F1;
+    color: #fff;
+}
+
+.account-container .header .add-container button img {
+    display: inline-block;
+    width: 30px;
+    height: 35px;
+    margin-right: 5px;
+}
+
+.account-container .header .add-container .instagram-add-button img {
+    width: 25px;
+    height: 25px;
+}
+
+.account-container .header .add-container .instagram-add-button {
+    height: 5vh;
+    line-height: 2vh;
+    border: 2px solid #1878F1;
+    color: #1878F1;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.account-container .header .add-container .add-button:hover {
+    background-color: #1878F1;
+    color: #fff;
+}
+
+.account-container .connected-accounts {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 10vh;
+    border-bottom: 1px solid #f29219;
+    border-bottom: 1px solid lightgray;
+    padding-left: 2%;
+}
+
+.account-container .connected-accounts .account {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 17%;
+    min-width: 250px;
+    height: 8vh;
+    border-radius: 5px;
+    border: 1px solid lightgray;
+    cursor: pointer;
+    margin-right: 1%;
+}
+
+.account-container .connected-accounts .account:hover {
+    background-color: #1878F1;
+    color: #fff;
+}
+
+.account-container .connected-accounts .account:hover .text .username {
+    color: #fff;
+}
+
+.account-container .connected-accounts .account:hover .text .followers {
+    color: #fff;
+}
+
+.account-container .connected-accounts .account .instagram-id {
+    display: none;
+}
+
+.account-container .connected-accounts .account .icon {
+    width: 35%;
+    height: 8vh;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center
+
+}
+
+.account-container .connected-accounts .account .icon img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.account-container .connected-accounts .account .text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.account-container .connected-accounts .account .text .username {
+    color: #f29219;
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.account-container .connected-accounts .account .text .followers {
+    color: #1878F1;
+}
+
+.account-container .services {
+    width: 100%;
+    height: 78vh;
+    /* padding-left: 2%;
+    padding-right: 2%; */
+}
+
+.account-container .services .navigation {
+    width: 100%;
+    height: 5vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding-left: 2%;
+    padding-right: 2%;
+
+    background-color: #edf5ff;
+    /* padding-top: 0.25vh; */
+}
+
+.account-container .services .navigation div {
+    width: 7%;
+    min-width: 200px;
+    height: 5vh;
+    line-height: 5vh;
+    text-align: center;
+    cursor: pointer;
+}
+
+.account-container .services .navigation div:nth-of-type(1) {
+    border-top-left-radius: 5px;
+}
+
+.account-container .services .navigation div:nth-of-type(5) {
+    border-top-right-radius: 5px;
+}
+
+.account-container .services .navigation .selected-navigation {
+    /* background-color: #83b6f8; */
+    border-bottom: 2px solid #f29219;
+}
+
+.account-container .services .table-container {
+    width: 100%;
+    height: 71vh;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+
+.account-container .services .table-container .table-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+    height: 5vh;
+    line-height: 5vh;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between; 
+}
+
+.account-container .services .table-container .table-header .table-title {
+    /* width: 75%; */
+    font-weight: bold;
+    font-size: 1.3em;
+}
+
+.account-container .services .table-container .table-header .add-service {
+    /* width: 25%; */
+    text-align: right;
+}
+
+.account-container .services .table-container .table-header .add-service > button {
+    background-color: #1878F1;
+    color: #fff;
+    height: 5vh;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 15px;
+    min-width: 138px;
+}
+
+.account-container .services .table-container .table-header .add-service > button:hover {
+    background-color: #83b6f8;
+    /* background-color: #fff;
+    border: 2px solid #1878F1;
+    color: #1878F1; */
+}
+
+.account-container .services .table-container table {
+    border-radius: 50px;
+}
+
+.account-container .services .table-container table thead {
+    /* background-color: #83b6f8; */
+    background-color: #1878F1;
+    color: #fff;
+    /* border-bottom: 2px solid #f29219; */
+}
+
+/*
+
+.account-container .services {
+    width: 100%;
+    height: 75vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.account-container .services .services-title {
+    width: 100%;
+    height: 5vh;
+    line-height: 5vh;
+    padding-left: 2%;
+    color: gray;
+}
+
+.account-container .services .services-container {
+    width: 100%;
+    height: 70vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 2%;
+}
+
+.account-container .services .services-container .service {
+    width: 20%;
+    height: 25vh;
+    border-radius: 15px;
+    border: 2px solid lightgray;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 1%;
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+.account-container .services .services-container .service .service-title-delete {
+    width: 100%;
+    height: 4vh;
+    line-height: 4vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.account-container .services .services-container .service .service-title-delete .service-title {
+    width: 80%;
+    height: 4vh;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.account-container .services .services-container .service .service-title-delete .delete-button {
+    width: 20%;
+    height: 4vh;
+    line-height: 5vh;
+    text-align: center;
+    cursor: pointer;
+}
+
+.account-container .services .services-container .service .service-title-delete .delete-button:hover {
+    color: #1878F1;
+}
+
+.account-container .services .services-container .service .service-description {
+    height: 15vh;
+    padding-top: 2vh;
+    color: #1878F1;
+}
+
+.account-container .services .services-container .service .service-price {
+    height: 6vh;
+    text-align: center;
+    line-height: 6vh;
+    font-size: 1.3em;
+}
+
+*/

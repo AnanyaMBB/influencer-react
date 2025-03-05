@@ -113,6 +113,22 @@
     padding-right: 2%;
 }
 
+/* .profile-container .profile-contents .services-container .story-service .coming-soon {
+    left: 44%;
+} */
+
+/* .profile-container .profile-contents .services-container .coming-soon {
+    position: absolute; 
+    background-color: black;
+    width: 25%; 
+    height: 60vh;
+    top: 22vh;
+    left: 74%;
+    z-index: 100;
+    border-radius: 10px;
+    opacity: 0.5;
+} */
+
 .profile-container .profile-contents .services-container .services .services-title {
     width: 100%;
     height: 7vh;
@@ -611,3 +627,707 @@
 .profile-container .profile-contents .analytics .analytics-demographics .age .follower-demographics .content {
     width: 100%;
 } 
+
+
+.profile-container .profile-contents .services-container {
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 1%;
+    padding-right: 1%;
+    height: 80vh;
+}
+
+.profile-container .profile-contents .services-container .service {
+    width: 30%; 
+    height: 60vh;
+    border: 2px solid lightgray;
+    border-radius: 5px;
+    font-family: "Nunito";
+}
+
+.profile-container .profile-contents .services-container .service .service-header {
+    display: flex;
+    flex-direction: row; 
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.5em;
+    border-bottom: 1px solid lightgray;
+    height: 7vh;
+}
+
+.profile-container .profile-contents .services-container .service .service-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content {
+    width: 100%; 
+    height: 13vh;
+    /* padding-left: 10px;
+    padding-right: 10px; */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content.pricing-method {
+    height: 23vh;
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content.price {
+    background: #eef3f9;
+    height: 6vh;
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between;
+    align-items: center;
+    color: #1878F1;
+    font-size: 17px;
+    font-weight: bold;
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content.duration {
+    background: #eef3f9;
+    height: 6vh;
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between;
+    align-items: center;
+    color: #1878F1;
+    font-size: 17px;
+    font-weight: bold;
+    border-radius: 5px;
+    margin-top: 3vh;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content.duration input {
+    width: 50%;
+    text-align: center;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border-radius: 5px;
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content.price-display {
+    text-align: center;
+    display: flex;
+    flex-direction: row; 
+    justify-content: center;
+    height: 5vh;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 15px 0;
+    color: #f29219;
+    padding: 10px;
+    background: #fff3e0;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content.pricing-method .pricing-amount-header {
+    margin-top: 1vh;
+    margin-bottom: 0;
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content .content-header {
+    margin-bottom: 2vh;
+    font-weight: bold;
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content.pricing-method .pricing-amount input {
+    border: 1px solid gray;
+    outline-color: #1878F1;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border-radius: 5px;
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content .pricing-methods {
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between;
+    background-color: #1878F1;
+    color: #fff;
+    /* padding-left: 5px; */
+    /* padding-right: 5px;   */
+    border-radius: 5px;
+    width: 100%;
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content .pricing-methods .method {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #1878F1;
+    border-right: 1px solid #fff;
+    width: 34%;
+    /* padding-left: 5px; */
+    cursor: pointer;
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content .pricing-methods .method:hover {
+    background-color: #83b6f8;
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content .pricing-methods .method.content-selected {
+    background-color: #83b6f8;
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content .pricing-methods .method:last-child {
+    border-right: none;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content .pricing-methods .method:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content .pricing-methods .method .method-header {
+    /* color: gray; */
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content.content-provider {
+    /* margin-bottom: 2vh; */
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content .content-providers {
+    display: flex;
+    flex-direction: row; 
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%; 
+    background-color: #1878F1;
+    height: 5vh;
+    color: #fff;
+    border-radius: 5px;
+    /* padding-left: 5px; */
+
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content .content-providers .provider {
+    width: 50%;
+    text-align: center;
+    height: 5vh;
+    display: flex;
+    flex-direction: row; 
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content .content-providers .provider:first-child {
+    border-right: 1px solid #fff;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content .content-providers .provider:hover {
+    background-color: #83b6f8;
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content .content-providers .provider.content-selected {
+    background-color: #83b6f8;
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content.action .service-button {
+    background-color: #1878F1;
+    color: #fff;
+    border-radius: 5px;
+    width: 100%;
+    height: 5vh;
+}
+
+.profile-container .profile-contents .services-container .service .service-content .content.action .service-button:hover {
+    background-color: #83b6f8;
+}
+
+.profile-container .profile-contents .influencer-analytics {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow-x: hidden; 
+    overflow-y: auto; 
+    scrollbar-width: none;
+    height: 88vh;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+
+.profile-container .profile-contents .influencer-analytics .engagement-metrics,
+.profile-container .profile-contents .influencer-analytics .audience-demographics,
+.profile-container .profile-contents .influencer-analytics .summary-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column; 
+    justify-content: flex-start;
+}
+
+.profile-container .profile-contents .influencer-analytics .engagement-metrics .header,
+.profile-container .profile-contents .influencer-analytics .audience-demographics .header,
+.profile-container .profile-contents .influencer-analytics .summary-container .header {
+    height: 5vh;
+    border-bottom: 2px solid #f29219;
+    padding-left: 0.5%;
+    color: #000;
+    font-size: 1.1em;
+    border-right: none;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: flex-start;
+    /* background-color: red; */
+    font-weight: bold;
+    font-size: 1.3em;
+    font-family: "Nunito";
+
+}
+
+.profile-container .profile-contents .influencer-analytics .summary-container .content {
+    height: 85vh;
+    display: flex;
+    flex-direction: column; 
+    justify-content: flex-start;
+}
+
+.profile-container .profile-contents .influencer-analytics .summary-container .content .summary-top {
+    display: flex;
+    flex-direction: row; 
+    justify-content: flex-start;
+    height: 20vh;
+    margin-top: 1vh;
+}
+
+.profile-container .profile-contents .influencer-analytics .summary-container .content .summary-top .profile-picture {
+    width: 20%; 
+    display: flex;
+    flex-direction: row; 
+    justify-content: center; 
+    align-items: center;
+}
+
+.profile-container .profile-contents .influencer-analytics .summary-container .content .summary-top .profile-picture img {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+}
+
+.profile-container .profile-contents .influencer-analytics .summary-container .content .summary-top .profile-information {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: flex-start;
+}
+
+.profile-container .profile-contents .influencer-analytics .summary-container .content .summary-top .profile-information .profile-name {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.profile-container .profile-contents .influencer-analytics .summary-container .content .summary-top .profile-information .profile-account {
+    
+}
+
+.profile-container .profile-contents .influencer-analytics .summary-container .content .summary-top .profile-information .profile-bio {
+    
+}
+
+.profile-container .profile-contents .influencer-analytics .summary-container .content .summary-middle {
+    display: flex;
+    flex-direction: row; 
+    justify-content: flex-start;
+    gap: 2%;
+    margin-top: 5vh;
+}
+
+.profile-container .profile-contents .influencer-analytics .summary-container .content .summary-middle .summary {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center;
+    
+    width: 32%; 
+    height: 25vh;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    background-color: #f29219;
+    background-color: #1878F1;
+    color: #fff;
+}
+
+.profile-container .profile-contents .influencer-analytics .summary-container .content .summary-middle .top-align {
+    display: flex;
+    flex-direction: row; 
+    justify-content: flex-start;
+    font-size: 2.3em;
+    font-weight: bold;
+}
+
+.profile-container .profile-contents .influencer-analytics .summary-container .content .summary-middle .top-align .icon {
+    margin-right: 20%;
+}
+
+.profile-container .profile-contents .influencer-analytics .summary-container .content .summary-middle .top-align .icon i {
+    font-size: 1.5em;
+}
+
+.profile-container .profile-contents .influencer-analytics .summary-container .content .summary-middle .bottom-align {
+    font-size: 1.2em;
+    color: gray;
+    color: #fff;
+}
+
+.profile-container .profile-contents .influencer-analytics .summary-container .content .summary-bottom {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 2%;
+    row-gap: 1vh;
+    flex-wrap: wrap;
+    margin-top: 2vh;
+}
+
+.profile-container .profile-contents .influencer-analytics .summary-container .content .summary-bottom .summary {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
+    font-size: 2.3em;
+    width: 32%;
+    height: 19vh;
+    height: 25vh;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    background-color: #f29219;
+    background-color: #83b6f8;
+    background-color: #1878F1;
+    color: #fff;
+
+}
+
+.profile-container .profile-contents .influencer-analytics .summary-container .content .summary-bottom .summary .top-align {
+    display: flex;
+    flex-direction: row; 
+    justify-content: flex-start;
+    font-weight: bold;
+}
+
+.profile-container .profile-contents .influencer-analytics .summary-container .content .summary-bottom .summary .top-align .icon {
+    margin-right: 20%; 
+}
+
+.profile-container .profile-contents .influencer-analytics .summary-container .content .summary-bottom .summary .top-align .icon i {
+    font-size: 1.5em;
+    /* color: #f29219; */
+}
+
+.profile-container .profile-contents .influencer-analytics .summary-container .content .summary-bottom .summary .bottom-align {
+    font-size: 20px;
+    color: gray;
+    color: #fff;
+}
+
+.profile-container .profile-contents .influencer-analytics .engagement-metrics .content,
+.profile-container .profile-contents .influencer-analytics .audience-demographics .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; 
+    /* padding-bottom: 1vh; */
+}
+
+.profile-container .profile-contents .influencer-analytics .engagement-metrics .content .navigation,
+.profile-container .profile-contents .influencer-analytics .audience-demographics .content .navigation {
+    width: 100%; 
+    height: 5vh;
+    /* background-color: red; */
+    background-color: #fff;
+    padding-left: 10px;
+}   
+
+.profile-container .profile-contents .influencer-analytics .engagement-metrics .content .chart-container {
+    width: 100%; 
+    display: flex;
+    flex-direction: row; 
+    justify-content: flex-start; 
+    gap: 1.1%;
+    row-gap: 1vh;
+    flex-wrap: wrap;
+    /* padding-left: 1%;
+    padding-right: 1%; */
+}
+
+.profile-container .profile-contents .influencer-analytics .engagement-metrics .content .chart-container .chart {
+    width: 32.6%; 
+    height: 25vh;
+    /* border: 1px solid lightgray;
+    border: 1px solid #1878F1;
+    border: 1px solid #f29219; */
+    border-radius: 5px;    
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.profile-container .profile-contents .influencer-analytics .engagement-metrics .content .chart-container .chart .chart-title {
+    width: 100%; 
+    height: 3vh;
+    border-bottom: 1px solid #1878F1;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: flex-start;
+
+}
+
+
+.influencer-analytics {
+    scroll-snap-type: y mandatory; /* Enable vertical snapping */
+    overflow-y: scroll; /* Allow vertical scrolling */
+    height: 100vh; /* Set height to the full viewport */
+}
+
+
+.profile-container .profile-contents .influencer-analytics .audience-demographics {
+    height: 88vh;
+}
+
+.profile-container .profile-contents .influencer-analytics .engagement-metrics .content .navigation,
+.profile-container .profile-contents .influencer-analytics .audience-demographics .content .navigation {
+    display: flex;
+    flex-direction: row; 
+    justify-content:center;
+    align-items: center;
+    gap: 10px;
+    width: 30%;
+    background-color: #83b6f8;
+    margin-top: 1vh;
+    border-radius: 20px;
+    border-radius: 5px;
+    font-weight: 500;
+    height: 5vh;
+    margin-bottom: 1vh;
+    cursor: pointer;
+    min-width: 400px;
+}
+
+.profile-container .profile-contents .influencer-analytics .engagement-metrics .content .navigation .nav-element,
+.profile-container .profile-contents .influencer-analytics .audience-demographics .content .navigation .nav-element {
+    width: 40%;
+    height: 4vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    border-radius: 5px;
+    color: #fff;
+}
+
+.profile-container .profile-contents .influencer-analytics .engagement-metrics .content .navigation .nav-element.selected,
+.profile-container .profile-contents .influencer-analytics .audience-demographics .content .navigation .nav-element.selected {
+    color: #1878F1;
+    background-color: #fff;
+}
+
+
+.profile-container .profile-contents .influencer-analytics .audience-demographics .content .chart-container {
+    width: 100%; 
+    
+}
+
+.profile-container .profile-contents .influencer-analytics .audience-demographics .content .chart-container .chart.location {
+    width: 100%; 
+    height: 70vh;
+    display: flex;
+    flex-direction: row; 
+    justify-content: flex-start;
+}
+
+.profile-container .profile-contents .influencer-analytics .audience-demographics .content .chart-container .chart.location .country-chart,
+.profile-container .profile-contents .influencer-analytics .audience-demographics .content .chart-container .chart.location .city-chart {
+    width: 50%;
+    height: 70vh;
+    /* overflow-y: auto; */
+}
+
+
+.profile-container .profile-contents .influencer-analytics .audience-demographics .content .chart-container .chart.location .chart-header,
+.profile-container .profile-contents .influencer-analytics .audience-demographics .content .chart-container .chart.gender-age .chart-header {
+    font-weight: bold; 
+    font-size: 1.2em;
+    padding-left: 10px;
+    /* background-color: red; */
+}
+
+.profile-container .profile-contents .influencer-analytics .audience-demographics .content .chart-container .chart.gender-age .chart-header  {
+    margin-bottom: 5vh;
+}
+
+.profile-container .profile-contents .influencer-analytics .audience-demographics .content .chart-container .chart.location .country-chart .p-chart,
+.profile-container .profile-contents .influencer-analytics .audience-demographics .content .chart-container .chart.location .city-chart .p-chart {
+    width: 90%;
+    height: 70vh;
+    overflow-y: auto;
+}
+
+.profile-container .profile-contents .influencer-analytics .audience-demographics .content .chart-container .chart.location .country-chart .p-chart canvas {
+    max-height: 100%;
+    display: block;
+}
+
+.profile-container .profile-contents .influencer-analytics .audience-demographics .content .chart-container .chart.gender-age {
+    width: 100%; 
+    height: 50vh;
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between;
+}
+
+.profile-container .profile-contents .influencer-analytics .audience-demographics .content .chart-container .chart.gender-age .gender-chart, 
+.profile-container .profile-contents .influencer-analytics .audience-demographics .content .chart-container .chart.gender-age .age-chart {
+    width: 45%; 
+    height: 50vh;
+    display: flex;
+    flex-direction: column; 
+    justify-content: flex-start;
+}
+
+.profile-container .profile-contents .services-container .add-campaign-overlay {
+    position: absolute; 
+    top: 15vh;
+    left: 35%;
+    width: 30%; 
+    min-width: 400px;
+    height: 60vh;
+    border-radius: 5px;
+    background-color: #fff;
+    border: 1px solid #1878F1;
+}
+
+.profile-container .profile-contents .services-container .add-campaign-overlay .add-campaign-overlay-header {
+    width: 100%; 
+    display: flex;
+    flex-direction: row; 
+    justify-content: center;
+    align-items: center; 
+    font-size: 1.1em;
+    font-weight: bold;
+    border-bottom: 1px solid lightgray;
+    height: 5vh;
+}
+
+.profile-container .profile-contents .services-container .add-campaign-overlay .campaigns {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%; 
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.profile-container .profile-contents .services-container .add-campaign-overlay .campaigns .campaign-search input {
+    width: 100%; 
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 5px;    
+    outline-color: #83b6f8;
+}
+
+.profile-container .profile-contents .services-container .add-campaign-overlay .campaigns .campaign-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-top: 1vh;
+
+    overflow-x: hidden;
+    overflow-y: auto;   
+    height: 40vh;
+}
+
+.profile-container .profile-contents .services-container .add-campaign-overlay .campaigns .campaign-content .campaign {
+    display: flex;
+    flex-direction: row; 
+    justify-content: flex-start;
+    gap: 10px;
+    background-color: #83b6f8;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 5px;
+}
+
+.profile-container .profile-contents .services-container .add-campaign-overlay .campaigns .campaign-content .p-datatable .p-datatable-table .p-datatable-thead {
+    height: 5vh;    
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;   
+    color: #000;
+}
+
+.profile-container .profile-contents .services-container .add-campaign-overlay .campaigns .campaign-content .p-datatable .p-datatable-wrapper .p-datatable-table .p-datatable-thead th:first-child {
+    border-top-left-radius: 5px;
+    display: flex;
+    flex-direction: row; 
+    justify-content: flex-start;    
+    align-items: center;
+    height: 5vh;
+    width: 100%;
+    
+}
+
+.profile-container .profile-contents .services-container .add-campaign-overlay .campaigns .campaign-content .p-datatable .p-datatable-wrapper .p-datatable-table .p-datatable-thead th:last-child {
+    border-top-right-radius: 5px;
+}
+
+.profile-container .profile-contents .services-container .add-campaign-overlay .campaigns .campaign-content .p-datatable .p-datatable-wrapper .p-datatable-table .p-datatable-tbody .p-checkbox-box {
+    background-color: #83b6f8;
+    background-color: #1878F1;
+}
+
+.profile-container .profile-contents .services-container .add-campaign-overlay .campaign-selection-action { 
+    width: 100%; 
+    height: 5vh;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between;
+}
+
+.profile-container .profile-contents .services-container .add-campaign-overlay .campaign-selection-action button {
+    width: 48%; 
+    height: 5vh;
+    background-color: #1878F1;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.profile-container .profile-contents .services-container .add-campaign-overlay .campaign-selection-action .select-campaign-cancel-button {
+    background-color: lightcoral;
+}
+
+.profile-container .profile-contents .services-container .add-campaign-overlay .campaign-selection-action .select-campaign-cancel-button:hover {
+    opacity: 0.9;
+}
+
+.profile-container .profile-contents .services-container .add-campaign-overlay .campaign-selection-action .select-campaign-add-button:hover {
+    background-color: #83b6f8;
+}
+

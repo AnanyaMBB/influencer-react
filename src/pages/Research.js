@@ -33,6 +33,7 @@ export default function Research() {
     const [videoSource, setVideoSource] = useState("");
 
     const [platformCheckBox, setPlatformCheckBox] = useState("youtube");
+    const [languageCheckBox, setLanguageCheckBox] = useState("en");
     const actionRef = useRef(null);
     const resultRef = useRef(null);
     const generatedContainerRef = useRef(null);
@@ -74,7 +75,7 @@ export default function Research() {
         const keywords = selectedKeywords.join(",");
         const url =
             baseUrl +
-            `api/research/search?query=${searchQuery}&username=${usernames}&tokens=${keywords}&likes_count=${filterValues.likes_count}&comments_count=${filterValues.comments_count}&platform=${platformCheckBox}&action=${actionQuery}`;
+            `api/research/search?query=${searchQuery}&username=${usernames}&tokens=${keywords}&likes_count=${filterValues.likes_count}&comments_count=${filterValues.comments_count}&platform=${platformCheckBox}&action=${actionQuery}&language=${languageCheckBox}`;
         fetch(url, {
             method: "GET",
             headers: {
@@ -159,6 +160,42 @@ export default function Research() {
                                                 setPlatformCheckBox("instagram");
                                             }
                                         }} checked={platformCheckBox === "instagram"} />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="filter platform">
+                        <div className="filter-title">
+                            <span class="material-symbols-outlined">
+                                app_shortcut
+                            </span>
+                            <p>Language</p>
+                        </div>
+                        <div className="filter-content">
+                            <div className="checkbox-container">
+                                <div className="cb checkbox-1">
+                                    <div className="title">
+                                        <p>English</p>
+                                    </div>
+                                    <div className="input-container">
+                                        <input type="checkbox" onChange={(e) => {
+                                            if (languageCheckBox === "other") {
+                                                setLanguageCheckBox("en");
+                                            }
+                                        }} checked={languageCheckBox === "en"} />
+                                    </div>
+                                </div>
+                                <div className="cb checkbox-1">
+                                    <div className="title">
+                                        <p>Other</p>
+                                    </div>
+                                    <div className="input-container">
+                                        <input type="checkbox" onChange={(e) => {
+                                            if (languageCheckBox === "en") {
+                                                setLanguageCheckBox("other");
+                                            }
+                                        }} checked={languageCheckBox === "other"} />
                                     </div>
                                 </div>
                             </div>
@@ -641,6 +678,7 @@ export default function Research() {
                                     <p
                                         onClick={() => {
                                             // window.location.href = "https://www.instagram.com/reels/" + result.media_id + "/";
+                                            
                                             window.open(
                                                 "https://www.instagram.com/reels/" +
                                                     result.media_id +

@@ -72,11 +72,12 @@ export default function InfluencerRegister() {
                 localStorage.setItem("access", data.accesss);
                 localStorage.setItem("refresh", data.refresh);
                 setLoggedIn(true);
-                navigate(
-                    location?.state?.previousUrl
-                        ? location.state.previousUrl
-                        : "/discovery"
-                );
+                navigate("/login");
+                // navigate(
+                //     location?.state?.previousUrl
+                //         ? location.state.previousUrl
+                //         : "/discovery"
+                // );
             })
             .catch((error) => {
                 console.error(error);
@@ -185,7 +186,7 @@ export default function InfluencerRegister() {
                                             name="email"
                                             id="email"
                                             class="register-input register-email-input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full px-2.5 py-1.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="name@company.com"
+                                            placeholder=""
                                             required=""
                                             value={registrationData.email}
                                             onChange={(e) => {
@@ -247,7 +248,7 @@ export default function InfluencerRegister() {
                                             }}
                                         />
                                     </div>
-                                    <div class="flex items-start">
+                                    {/* <div class="flex items-start">
                                         <div class="flex items-center h-5">
                                             <input
                                                 id="terms"
@@ -275,7 +276,7 @@ export default function InfluencerRegister() {
                                                 </a>
                                             </label>
                                         </div>
-                                    </div>
+                                    </div> */}
                                     <button
                                     type="submit"
                                     form="registerForm"
@@ -285,7 +286,7 @@ export default function InfluencerRegister() {
                                 </button>
                                 <p class="text-sm font-light">
                                     Already have an account?{" "}
-                                    <a href="#" class="font-medium">
+                                    <a href="/login" class="font-medium">
                                         Login here
                                     </a>
                                 </p>

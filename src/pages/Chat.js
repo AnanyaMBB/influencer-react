@@ -27,14 +27,38 @@ export default function Chat() {
 
     // let client;
     const [client, setClient] = useState();
+    // useEffect(() => {
+    //     setClient(
+    //         new W3CWebSocket(
+    //             `ws://127.0.0.1:8000/ws/chat/${selectedChat}/?user=${localStorage.getItem(
+    //                 "username"
+    //             )}`
+    //         )
+    //     );
+    // }, [selectedChat]);
     useEffect(() => {
-        setClient(
-            new W3CWebSocket(
-                `ws://127.0.0.1:8000/ws/chat/${selectedChat}/?user=${localStorage.getItem(
-                    "username"
-                )}`
-            )
+        if (!selectedChat) return;
+    
+        const newClient = new W3CWebSocket(
+            `ws://127.0.0.1:8000/ws/chat/${selectedChat}/?user=${localStorage.getItem("username")}`
         );
+    
+        newClient.onopen = () => console.log("WebSocket Connected!");
+        newClient.onclose = () => console.log("WebSocket Disconnected!");
+        newClient.onerror = (error) => console.error("WebSocket Error:", error);
+    
+        newClient.onmessage = (message) => {
+            const dataFromServer = JSON.parse(message.data);
+            console.log("Received message", dataFromServer);
+            setMessages((prevMessages) => [dataFromServer, ...prevMessages]);
+        };
+    
+        setClient(newClient);
+    
+        return () => {
+            console.log("Closing WebSocket...");
+            newClient.close();
+        };
     }, [selectedChat]);
 
     if (client && client.readyState === client.OPEN) {
@@ -202,22 +226,22 @@ export default function Chat() {
 
     const scrollableRef = useRef(null);
 
-    useEffect(() => {
-        const handleWheel = (event) => {
-            if (event.deltaY !== 0) {
-                event.preventDefault(); // Prevent vertical scroll
-                scrollableRef.current.scrollLeft += event.deltaY; // Scroll horizontally
-            }
-        };
+    // useEffect(() => {
+    //     const handleWheel = (event) => {
+    //         if (event.deltaY !== 0) {
+    //             event.preventDefault(); // Prevent vertical scroll
+    //             scrollableRef.current.scrollLeft += event.deltaY; // Scroll horizontally
+    //         }
+    //     };
 
-        const scrollableDiv = scrollableRef.current;
-        scrollableDiv.addEventListener("wheel", handleWheel);
+    //     const scrollableDiv = scrollableRef.current;
+    //     scrollableDiv.addEventListener("wheel", handleWheel);
 
-        // Cleanup the event listener on component unmount
-        return () => {
-            scrollableDiv.removeEventListener("wheel", handleWheel);
-        };
-    }, []);
+    //     // Cleanup the event listener on component unmount
+    //     return () => {
+    //         scrollableDiv.removeEventListener("wheel", handleWheel);
+    //     };
+    // }, []);
 
     const handleDownload = (file_id) => {
         const url = baseUrl + `api/file/download?file_id=${file_id}`;
@@ -305,7 +329,7 @@ export default function Chat() {
                                 </p>
                             </div>
                             <div className="chat-last-message">
-                                <p>{chat.last_message.substring(0, 20)}</p>
+                                <p>{chat?.last_message?.substring(0, 20)}</p>
                             </div>
                             <div className="chat-time">
                                 <div className="icon">
@@ -316,7 +340,7 @@ export default function Chat() {
                                 <div className="date">
                                     <p>
                                         {
-                                            chat.last_message_timestamp.split(
+                                            chat?.last_message_timestamp?.split(
                                                 "T"
                                             )[0]
                                         }
@@ -324,9 +348,9 @@ export default function Chat() {
                                 </div>
                                 <div className="time">
                                     {
-                                        chat.last_message_timestamp
-                                            .split("T")[1]
-                                            .split(".")[0]
+                                        chat?.last_message_timestamp
+                                            ?.split("T")[1]
+                                            ?.split(".")[0]
                                     }
                                 </div>
                             </div>
@@ -433,7 +457,7 @@ export default function Chat() {
                     onFileSelect={handleFileSelect}
                 />
             </div>
-            <div className="files" ref={scrollableRef}>
+            {/* <div className="files" ref={scrollableRef}>
                 {files
                     ? files.map((file) => {
                           return (
@@ -467,7 +491,7 @@ export default function Chat() {
                           );
                       })
                     : null}
-            </div>
+            </div> */}
         </div>
     );
 }
